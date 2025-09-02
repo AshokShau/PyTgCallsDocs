@@ -2,8 +2,8 @@ import json
 import os
 import re
 from typing import List, Dict, Optional
-
 from pydantic import BaseModel, Field
+from xml.etree import ElementTree as ET
 
 
 class SearchResult(BaseModel):
@@ -32,13 +32,22 @@ class MethodInfo(BaseModel):
     description: str = ""
 
 
+class PropertyInfo(BaseModel):
+    """Information about a property."""
+    name: str
+    return_type: str = ""
+    description: str = ""
+
+
 class PathFullInfo(BaseModel):
+    """Full information about a documentation path."""
     path: str
     title: str
     class_info: str = ""
     description: str = ""
     details: str = ""
     parameters: List[ParameterInfo] = Field(default_factory=list)
+    properties: List[PropertyInfo] = Field(default_factory=list)
     enum_members: List[EnumMemberInfo] = Field(default_factory=list)
     methods: List[MethodInfo] = Field(default_factory=list)
     examples: List[str] = Field(default_factory=list)
@@ -181,52 +190,24 @@ class Search:
     @staticmethod
     def _extract_class_info(content: str) -> str:
         class_match = re.search(
-            r'<category-title[^>]*>\s*<shi>class</shi>\s*<ref[^>]*>(.*?)<sb>(.*?)</sb>',
+            r'<category-title[^>]*>\s*<shi>class</shi>\s*<ref[^>]*>.*?<sb>(.*?)</sb>',
             content,
             re.DOTALL
         )
-
+        
         if class_match:
-            namespace = class_match.group(1).strip()
-            class_name = class_match.group(2).strip()
-
-            # Clean up the namespace (remove HTML tags and extra spaces)
-            namespace = re.sub(r'<[^>]+>', '', namespace).strip()
-
-            # If we have both namespace and class name, combine them
-            if namespace and class_name:
-                # Remove trailing dot if present
-                if namespace.endswith('.'):
-                    namespace = namespace[:-1]
-                return f"{namespace}.{class_name}"
-            return class_name or namespace
-
+            return class_match.group(1).strip()
+            
         # If not a class, try to find method signature
         method_match = re.search(
-            r'<category-title[^>]*>\s*<ref[^>]*>(.*?)<sb>(.*?)</sb></ref>\s*(\([^)]*\))?\s*(<shi>->\s*(.*?)</shi>)?',
+            r'<category-title[^>]*>\s*<ref[^>]*>.*?<sb>(.*?)</sb></ref>\s*(\([^)]*\))?\s*(<shi>->\s*(.*?)</shi>)?',
             content,
             re.DOTALL
         )
-
+        
         if method_match:
-            namespace = method_match.group(1).strip()
-            method_name = method_match.group(2).strip()
-            params = method_match.group(3) or "()"
-            return_type = f" -> {method_match.group(5).strip()}" if method_match.group(5) else ""
-
-            # Clean up the namespace
-            namespace = re.sub(r'<[^>]+>', '', namespace).strip()
-
-            # Handle cases where namespace might be empty
-            if not namespace:
-                return f"{method_name}{params}{return_type}"
-
-            # Ensure proper dot notation
-            if not namespace.endswith('.'):
-                namespace += '.'
-
-            return f"{namespace}{method_name}{params}{return_type}"
-
+            return method_match.group(1).strip()
+            
         return ""
 
     @staticmethod
@@ -277,114 +258,119 @@ class Search:
 
         return examples
 
-    @staticmethod
-    def _parse_enum_members(content: str) -> List[EnumMemberInfo]:
-        enum_members = []
-        # This looks for the structure:
-        # <category-title><ref><sb>MEMBER_NAME</sb></ref> <shi>=</shi> MEMBER_VALUE</category-title>
-        # <subtext><text>MEMBER_DESCRIPTION</text></subtext>
-        member_pattern = r'<category-title>.*?<ref><sb>(.*?)</sb></ref>.*?<shi>=</shi>\s*(.*?)</category-title>.*?<subtext><text>(.*?)</text>'
-
-        # Find all matches in the content
-        matches = re.finditer(member_pattern, content, re.DOTALL)
-
-        for match in matches:
-            name = match.group(1).strip()
-            value = match.group(2).strip() if match.group(2) else ""
-            description = match.group(3).strip() if match.group(3) else ""
-
-            # Clean up the description by removing any remaining HTML tags and normalizing whitespace
-            description = re.sub(r'<[^>]+>', '', description)
-            description = re.sub(r'\s+', ' ', description).strip()
-
-            # Add the parsed member to our list
-            enum_members.append(EnumMemberInfo(
-                name=name,
-                value=value,
-                description=description
-            ))
-
-        return enum_members
-
-    def _load_config(self):
-        """Load the config file with parameter definitions."""
-        config_path = os.path.join(self.base_path, 'config.xml')
+    def _load_config(self) -> dict:
+        """Load the config file with all parameter definitions and descriptions."""
+        config_path = os.path.join(self.base_path, 'docsdata', 'config.xml')
         if not os.path.exists(config_path):
             return {}
-
+            
         with open(config_path, 'r', encoding='utf-8') as f:
             content = f.read()
-
+            
+        # First pass: load all config options
         config = {}
-
-        # Extract all options
-        options = re.findall(r'<option id="([^"]+)">(.*?)</option>', content, re.DOTALL)
-
-        for option_id, option_content in options:
-            # Skip description-only options (handled separately)
-            if option_id.endswith('_DESC'):
-                continue
-
-            # This is a parameter definition
-            param_info = {'id': option_id}
-
-            # Extract parameter name and type from category-title
-            # Try pattern for <ref><sb>param_name</sb></ref> format
-            param_match = re.search(
-                r'<category-title>.*?<ref><sb>([^<]+)</sb></ref>\s*:\s*(.*?)(?:<|$)',
-                option_content,
-                re.DOTALL
-            )
-
-            # If first pattern didn't match, try pattern for <ref>param_name</ref> format
-            if not param_match:
-                param_match = re.search(
-                    r'<category-title>.*?<ref>([^<]+)</ref>\s*:\s*(.*?)(?:<|$)',
-                    option_content,
-                    re.DOTALL
-                )
-
-            if param_match:
-                param_name = param_match.group(1).strip()
-                param_type = param_match.group(2).strip()
-
-                # Clean up the type (remove HTML tags but preserve content)
-                param_type = re.sub(r'<[^>]+>', '', param_type)  # Remove all HTML tags
-                param_type = re.sub(r'\s+', ' ', param_type).strip()  # Normalize whitespace
-
-                # Extract description from subtext if available
-                desc_match = re.search(
-                    r'<subtext>\s*<text>(.*?)</text>',
-                    option_content,
-                    re.DOTALL
-                )
-
-                param_info.update({
-                    'name': param_name,
-                    'type': param_type,
-                    'description': re.sub(r'<[^>]*>', ' ', desc_match.group(1)).strip() if desc_match else ''
-                })
-
-                # Handle description references (e.g., CHAT_ID_DESC)
-                desc_ref_match = re.search(
-                    r'<config id="([^"]+_DESC)"',
-                    option_content
-                )
-
-                if desc_ref_match:
-                    desc_ref_id = desc_ref_match.group(1)
-                    desc_ref_content = re.search(
-                        f'<option id="{re.escape(desc_ref_id)}">.*?<text>(.*?)</text>',
-                        content,
-                        re.DOTALL
-                    )
-
-                    if desc_ref_content:
-                        param_info['description'] = re.sub(r'<[^>]*>', ' ', desc_ref_content.group(1)).strip()
-
-                config[option_id] = param_info
-
+        option_pattern = r'<option id="([^"]+)">(.*?)</option>'
+        
+        for match in re.finditer(option_pattern, content, re.DOTALL):
+            option_id = match.group(1)
+            option_content = match.group(2)
+            
+            config[option_id] = {}
+            
+            # Parse category-title if exists
+            category_title = re.search(r'<category-title>(.*?)</category-title>', option_content, re.DOTALL)
+            if category_title:
+                # Clean up the category title to handle both -> and : as type separators
+                title = category_title.group(1).strip()
+                # Replace any HTML formatting that might interfere with type extraction
+                title = re.sub(r'<[^>]+>', ' ', title)  # Replace HTML tags with spaces
+                title = ' '.join(title.split())  # Normalize whitespace
+                config[option_id]['category-title'] = title
+                
+            # Parse subtext and text
+            subtext = re.search(r'<subtext>(.*?)</subtext>', option_content, re.DOTALL)
+            if subtext:
+                text_match = re.search(r'<text>(.*?)</text>', subtext.group(1), re.DOTALL)
+                if text_match:
+                    config[option_id]['text'] = text_match.group(1).strip()
+                else:
+                    # Handle case where subtext doesn't contain text tags
+                    subtext_content = re.sub(r'<[^>]+>', ' ', subtext.group(1))
+                    subtext_content = ' '.join(subtext_content.split()).strip()
+                    if subtext_content:
+                        config[option_id]['subtext'] = subtext_content
+            
+            # Parse nested config references
+            config_ref = re.search(r'<config id="([^"]+)"', option_content)
+            if config_ref:
+                config[option_id]['config'] = {'id': config_ref.group(1)}
+        
+        # Second pass: resolve all nested config references
+        for option_id in list(config.keys()):  # Use list to avoid modifying dict during iteration
+            if option_id in config:  # Check if still exists (might have been merged)
+                self._resolve_nested_configs(option_id, config, set())
+        
         return config
+    
+    def _resolve_nested_configs(self, config_id: str, config: dict, visited: set) -> None:
+        """Recursively resolve nested config references."""
+        if config_id in visited:
+            return
+            
+        visited.add(config_id)
+        
+        if config_id not in config:
+            return
+            
+        option_data = config[config_id]
+        
+        # If this option has a config reference, resolve it
+        if 'config' in option_data and 'id' in option_data['config']:
+            nested_id = option_data['config']['id']
+            
+            # Make sure the nested config is resolved first
+            if nested_id in config and nested_id not in visited:
+                self._resolve_nested_configs(nested_id, config, visited)
+            
+            # Copy fields from the nested config
+            if nested_id in config:
+                nested_config = config[nested_id]
+                
+                # Copy text/subtext if not already present
+                if 'text' not in option_data and 'text' in nested_config:
+                    option_data['text'] = nested_config['text']
+                elif 'subtext' not in option_data and 'subtext' in nested_config:
+                    option_data['subtext'] = nested_config['subtext']
+                
+                # Copy category-title if we don't have a description yet
+                if 'category-title' not in option_data and 'category-title' in nested_config:
+                    option_data['category-title'] = nested_config['category-title']
+
+    def _resolve_config_placeholders(self, text: str) -> str:
+        """Replace config placeholders in the text with their corresponding values.
+        
+        Args:
+            text: The text containing config placeholders
+            
+        Returns:
+            Text with config placeholders replaced by their values
+        """
+        if not text or not hasattr(self, '_config'):
+            return text
+            
+        def replace_match(match):
+            config_id = match.group(1)
+            # Get the config value, or return a placeholder if not found
+            return self._config.get(config_id, f"[Config not found: {config_id}]")
+            
+        # Replace <config id="ID"/> with the corresponding config value
+        text = re.sub(r'<config\s+id="([^"]+)"\s*/>', replace_match, text)
+        
+        # Also handle any remaining config references in the text
+        while '<config ' in text:
+            text = re.sub(r'<config\s+id="([^"]+)"\s*/>', replace_match, text)
+            
+        return text.strip()
 
     def search(self, query: str, limit: int = 20) -> List[SearchResult]:
         """Search through documentation for the given query."""
@@ -483,11 +469,11 @@ class Search:
 
         # Extract return type
         return_type = ""
-        return_match = re.search(r'<ref[^>]*>.*?</ref>\s*<shi>\s*->\s*(.*?)</shi>', content, re.DOTALL)
+        return_match = re.search(r'<ref[^>]*>.*?</ref>\s*<shi>-></shi>\s*<docs-ref[^>]*>([^<]+)</docs-ref>', content, re.DOTALL)
         if return_match:
             return_type = return_match.group(1).strip()
             # Clean up the return type
-            return_type = re.sub(r'<[^>]*>', '', return_type)
+            return_type = re.sub(r'<[^>]+>', '', return_type)
             return_type = ' '.join(return_type.split())
 
         # Extract parameters
@@ -499,11 +485,8 @@ class Search:
         # Extract examples
         examples = self._extract_examples(content)
 
-        # Check if this is an enum and parse its members
-        enum_members = []
-        if "Available Enums" in path:
-            enum_members = self._parse_enum_members(content)
-
+        properties = self._extract_properties(content)
+        enum_members = self._parse_enum_members(content)
         return PathFullInfo(
             path=path,
             title=title,
@@ -511,11 +494,130 @@ class Search:
             description=description,
             details=details,
             parameters=parameters,
+            properties=properties,
             methods=methods,
             enum_members=enum_members,
             examples=examples,
             return_type=return_type
         )
+
+    def _extract_properties(self, content: str) -> List[PropertyInfo]:
+        """Extract properties from the XML content."""
+        properties = []
+        
+        # Look for properties section
+        prop_section = re.search(
+            r'<pg-title>PROPERTIES</pg-title>(.*?)(?=<pg-title>|$)', 
+            content, 
+            re.DOTALL | re.IGNORECASE
+        )
+
+        if not prop_section:
+            return properties
+
+        # First, process all standalone config references
+        standalone_configs = re.finditer(
+            r'<config id="([^"]+)"\s*/>',
+            prop_section.group(1)
+        )
+        
+        for config_match in standalone_configs:
+            config_id = config_match.group(1)
+            if config_id in self._config:
+                config = self._config[config_id]
+                # Check if this config has a nested config reference
+                if 'config' in config and 'id' in config['config']:
+                    nested_id = config['config']['id']
+                    if nested_id in self._config:
+                        # Merge the nested config with the current one
+                        nested_config = self._config[nested_id]
+                        config = {**nested_config, **config}
+                
+                if 'category-title' in config:
+                    # Clean up the title
+                    title = re.sub(r'<[^>]+>', ' ', config['category-title'])
+                    title = ' '.join(title.split())
+                    
+                    # Get description from text or subtext
+                    description = ''
+                    if 'text' in config:
+                        description = config['text']
+                    elif 'subtext' in config:
+                        description = config['subtext']
+                    
+                    # Extract property name from <ref><sb>property_name</sb></ref> format
+                    prop_match = re.search(r'<ref><sb>([^<]+)</sb>', config.get('category-title', ''))
+                    if not prop_match:
+                        # Fall back to other formats if needed
+                        prop_match = re.search(r'<ref>([^<]+)</ref>', config.get('category-title', ''))
+                    
+                    if prop_match:
+                        prop_name = prop_match.group(1).strip()
+                        # Try to extract return type if available
+                        type_match = re.search(r'<shi>-></shi>\s*<docs-ref[^>]*>([^<]+)</docs-ref>', config.get('category-title', ''))
+                        if not type_match:
+                            type_match = re.search(r'<shi>->\s*([^<]+)</shi>', config.get('category-title', ''))
+                        prop_type = type_match.group(1).strip() if type_match else 'Any'
+                        
+                        # Add the property if it's not already in the list
+                        if not any(p.name == prop_name for p in properties):
+                            properties.append(PropertyInfo(
+                                name=prop_name,
+                                return_type=prop_type,
+                                description=description
+                            ))
+            
+        # Then process all regular property definitions
+        prop_blocks = re.finditer(
+            r'<category-title>(.*?)</category-title>\s*<subtext>(.*?)</subtext>',
+            prop_section.group(1),
+            re.DOTALL
+        )
+
+        for match in prop_blocks:
+            title = match.group(1).strip()
+            subtext = match.group(2).strip()
+            
+            # Skip if this is just a config ID without a property
+            if not title.strip():
+                continue
+                
+            # Extract property name and type
+            prop_match = re.search(
+                r'<ref>(?:<sb>)?([^<]+)(?:</sb>)?</ref>\s*<shi>-></shi>\s*(.*?)(?=<|$)',
+                title,
+                re.DOTALL
+            )
+            
+            if not prop_match:
+                continue
+                
+            prop_name = prop_match.group(1).strip()
+            return_type = prop_match.group(2).strip()
+            
+            # Clean up the return type
+            if '<docs-ref' in return_type:
+                # Handle simple type references
+                ref_match = re.search(r'<docs-ref[^>]*>([^<]+)</docs-ref>', return_type, re.DOTALL)
+                if ref_match:
+                    return_type = ref_match.group(1).strip()
+            else:
+                # Clean up any remaining HTML tags
+                return_type = re.sub(r'<[^>]+>', '', return_type).strip()
+            
+            # Extract description
+            desc_match = re.search(r'<text>(.*?)</text>', subtext, re.DOTALL)
+            description = desc_match.group(1).strip() if desc_match else ''
+            
+            # Add the property if it's not already in the list
+            if not any(p.name == prop_name for p in properties):
+                properties.append(PropertyInfo(
+                    name=prop_name,
+                    return_type=return_type,
+                    description=description
+                ))
+            
+        return properties
 
     def _extract_parameters(self, content: str) -> List[ParameterInfo]:
         """Extract parameters from content, handling both NTgCalls and PyTgCalls formats."""
@@ -527,7 +629,11 @@ class Search:
         if not param_section:
             return parameters
 
-        config_matches = list(re.finditer(r'<config id="([^"]+)"', param_section.group(1)))
+        config_matches = list(re.finditer(
+            r'<config id="([^"]+)"',
+            param_section.group(1)
+        ))
+        
         for match in config_matches:
             config_id = match.group(1)
             if config_id in self._config and not any(skip in config_id for skip in ['EXCEPTIONS']):
@@ -556,10 +662,14 @@ class Search:
                         # Get description from subtext if available
                         desc = config.get('description', '')
                         if subtext_content:
-                            desc_match = re.search(r'<text>(.*?)</text>', subtext_content, re.DOTALL)
+                            desc_match = re.search(
+                                r'<text>(.*?)</text>',
+                                subtext_content,
+                                re.DOTALL
+                            )
                             if desc_match:
                                 desc = re.sub(r'<[^>]*>', ' ', desc_match.group(1)).strip()
-
+                        
                         parameters.append(ParameterInfo(
                             name=config['name'],
                             type=config['type'],
@@ -614,7 +724,7 @@ class Search:
                         param_desc = re.sub(r'<[^>]*>', ' ', desc_match.group(1)).strip()
 
                     # If no description in subtext, check for config description
-                    if not param_desc and '<config id=' in subtext_content:
+                    if not param_desc and '<config ' in subtext_content:
                         config_match = re.search(r'<config id="([^"]+)"', subtext_content)
                         if config_match and config_match.group(1) in self._config:
                             config = self._config[config_match.group(1)]
@@ -693,3 +803,68 @@ class Search:
             ))
 
         return methods
+
+    def _parse_enum_members(self, content: str) -> List[EnumMemberInfo]:
+        """Parse enum members from the XML content."""
+        enum_members = []
+
+        # Look for enumeration members section
+        members_section = re.search(
+            r'<pg-title>ENUMERATION MEMBERS</pg-title>(.*?)(?=<pg-title>|$)',
+            content,
+            re.DOTALL | re.IGNORECASE
+        )
+
+        if not members_section:
+            return enum_members
+
+        # Find all member blocks with optional config references
+        member_blocks = re.finditer(
+            r'<category-title>(.*?)</category-title>\s*(?:<config id="([^"]+)"\s*/?>)?',
+            members_section.group(1),
+            re.DOTALL
+        )
+
+        for match in member_blocks:
+            member_title = match.group(1).strip()
+            config_id = match.group(2) if len(match.groups()) > 1 and match.group(2) else None
+
+            # Extract member name and value - handle both formats:
+            # 1. <ref><sb>NAME</sb></ref> <shi>=</shi> VALUE
+            # 2. <ref>NAME</ref> <shi>=</shi> VALUE
+            member_match = re.search(
+                r'<ref>(?:<sb>)?([^<]+)(?:</sb>)?</ref>\s*<shi>=</shi>\s*([^<\s]+)',
+                member_title
+            )
+
+            if not member_match:
+                continue
+
+            name = member_match.group(1).strip()
+            value = member_match.group(2).strip()
+
+            # Get description from config if available
+            description = ""
+            if config_id and hasattr(self, '_config') and config_id in self._config:
+                config = self._config[config_id]
+                if 'text' in config:
+                    description = config['text']
+                elif 'subtext' in config:
+                    description = config['subtext']
+                elif 'category-title' in config:
+                    # Fallback to category-title if no text/subtext
+                    description = config['category-title']
+
+            # Clean up the description
+            if description:
+                description = re.sub(r'<[^>]*>', '', description).strip()
+
+            # Add the enum member if it's not already in the list
+            if not any(m.name == name for m in enum_members):
+                enum_members.append(EnumMemberInfo(
+                    name=name,
+                    value=value,
+                    description=description
+                ))
+
+        return enum_members

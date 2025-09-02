@@ -60,6 +60,30 @@ async def format_doc_info(path: str) -> str:
             result += f"{member_info}\n"
         result += "\n"
 
+    # Add properties section if available
+    if full_info.properties:
+        result += "\n📊 <b>Properties</b>\n"
+        for prop in full_info.properties:
+            # Handle both dictionary and object access
+            prop_name = prop.get('name') if isinstance(prop, dict) else prop.name
+            return_type = prop.get('return_type', '') if isinstance(prop, dict) else (prop.return_type or '')
+            description = prop.get('description', '') if isinstance(prop, dict) else (prop.description or '')
+            
+            prop_info = f"• <code>{html.escape(prop_name)}</code>"
+            
+            # Add return type if available
+            if return_type:
+                prop_info += f" -> {html.escape(return_type)}"
+            
+            # Add description if available
+            if description:
+                clean_desc = ' '.join(description.split())
+                if clean_desc.lower() != prop_name.lower():  # Skip if description is just the property name
+                    prop_info += f": {html.escape(clean_desc)}"
+            
+            result += f"{prop_info}\n"
+        result += "\n"
+
     # Add methods if available
     if full_info.methods:
         result += "\n🔧 <b>Methods</b>\n"
@@ -147,7 +171,7 @@ async def inline_search(c: Client, message: types.UpdateNewInlineQuery):
         return None
 
     search_results = search_engine.search(query, limit=20)
-    c.logger.info(f"Search results: {search_results} for query: {query}")
+    # c.logger.info(f"Search results: {search_results} for query: {query}")
 
     if not search_results:
         ok = await c.answerInlineQuery(
@@ -195,7 +219,7 @@ async def inline_search(c: Client, message: types.UpdateNewInlineQuery):
 
             parse = await c.parseTextEntities(full_doc, types.TextParseModeHTML())
             if isinstance(parse, types.Error):
-                c.logger.warning(f"❌ Error parsing inline result for {result.title}: {parse.message}")
+                # c.logger.warning(f"❌ Error parsing inline result for {result.title}: {parse.message}")
                 continue
 
             result = types.InputInlineQueryResultArticle(
