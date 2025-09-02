@@ -17,11 +17,32 @@ async def format_doc_info(path: str) -> str:
     if not full_info:
         return ""
 
-    result = f"<b>{html.escape(full_info.title)}</b>\n\n"
+    if full_info.class_info and '(' in full_info.class_info:
+        title = f"<code>{html.escape(full_info.class_info)}</code>"
+    else:
+        title = html.escape(full_info.title)
+        if full_info.class_info and full_info.class_info != full_info.title:
+            title = f"<code>{html.escape(full_info.class_info)}</code>"
     
-    # Add description if available
+    result = f"<b>{title}</b>\n"
+    
+    # Clean up and deduplicate description
     if full_info.description and full_info.description.strip() != full_info.title:
-        result += f"{html.escape(full_info.description.strip())}\n\n"
+        description = full_info.description.strip()
+        
+        # If the description is just a repetition of the same text, take the first instance
+        sentences = [s.strip() for s in description.split('.') if s.strip()]
+        if len(sentences) > 1 and all(s.lower() == sentences[0].lower() for s in sentences[1:]):
+            clean_description = sentences[0]
+        else:
+            # For normal descriptions, just clean up whitespace
+            clean_description = ' '.join(description.split())
+        
+        # Add period if missing
+        if clean_description and not clean_description.endswith('.'):
+            clean_description += '.'
+            
+        result += f"\n{html.escape(clean_description)}\n"
     
     # Add details if available and different from description
     if full_info.details and full_info.details.strip() not in [full_info.description, full_info.title]:
@@ -39,6 +60,22 @@ async def format_doc_info(path: str) -> str:
             result += f"{member_info}\n"
         result += "\n"
     
+    # Add methods if available
+    if full_info.methods:
+        result += "\n\n🔧 <b>Methods</b>\n"
+        for method in full_info.methods:
+            method_sig = f"{method.name}{method.signature}"
+            if method.return_type:
+                method_sig += f" -> {method.return_type}"
+                
+            result += f"• <code>{html.escape(method_sig)}</code>"
+            
+            if method.description:
+                # Clean up the description
+                clean_desc = ' '.join(method.description.split())
+                result += f"\n  {html.escape(clean_desc)}"
+            result += "\n"
+    
     # Add parameters section if we have any parameters
     if full_info.parameters and any(p.name.strip() for p in full_info.parameters):
         result += "<b>📝 Parameters</b>\n"
@@ -55,42 +92,46 @@ async def format_doc_info(path: str) -> str:
             # Add description if available and not just a repeat of the name
             if (param.description and 
                 param.description.strip().lower() != param.name.strip().lower()):
-                param_info += f": {html.escape(param.description.strip())}"
+                # Clean up extra whitespace in the description
+                description = ' '.join(param.description.strip().split())
+                param_info += f": {html.escape(description)}"
                 
             result += f"{param_info}\n"
         result += "\n"
     
     # Add examples section if available
     if full_info.examples:
-        result += "<b>💡 Example</b>\n" if len(full_info.examples) == 1 else "<b>💡 Examples</b>\n"
+        result += "\n<b>💡 Example</b>\n" if len(full_info.examples) == 1 else "\n<b>💡 Examples</b>\n"
         
         for example in full_info.examples:
             if not example or not example.strip():
                 continue
                 
             # Clean up the example code
-            lines = [line.rstrip() for line in example.split('\n') if line.strip()]
+            lines = [line.rstrip() for line in example.split('\n') if line.strip() or line == '']
             if not lines:
                 continue
                 
             # Find minimum indentation (skip empty lines and comment-only lines)
-            min_indent = min(
-                len(line) - len(line.lstrip())
-                for line in lines
-                if line.strip() and not line.lstrip().startswith('#')
-            )
+            non_empty_lines = [line for line in lines if line.strip() and not line.lstrip().startswith('#')]
+            if non_empty_lines:  # Only calculate min_indent if there are non-empty lines
+                min_indent = min(
+                    len(line) - len(line.lstrip())
+                    for line in non_empty_lines
+                )
+            else:
+                min_indent = 0
             
             # Format each line with proper indentation
             formatted_lines = []
             for line in lines:
                 if line.strip():
-                    # Remove common indentation and add 4 spaces
-                    formatted_line = line[min_indent:]
-                    # Preserve empty lines
-                    if not formatted_line.strip():
-                        formatted_lines.append('')
-                    else:
-                        formatted_lines.append(formatted_line)
+                    # Remove common indentation and preserve relative indentation
+                    formatted_line = line[min_indent:] if not line.startswith(' ') else line
+                    formatted_lines.append(formatted_line)
+                else:
+                    # Preserve empty lines but don't add extra indentation
+                    formatted_lines.append('')
             
             # Join with newlines and add to result
             formatted_example = '\n'.join(formatted_lines)

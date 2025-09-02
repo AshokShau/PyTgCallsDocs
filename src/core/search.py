@@ -22,13 +22,21 @@ class EnumMemberInfo(BaseModel):
     value: str = ""
     description: str = ""
 
+class MethodInfo(BaseModel):
+    name: str
+    signature: str = ""
+    return_type: str = ""
+    description: str = ""
+
 class PathFullInfo(BaseModel):
     path: str
     title: str
+    class_info: str = ""
     description: str = ""
     details: str = ""
     parameters: List[ParameterInfo] = Field(default_factory=list)
     enum_members: List[EnumMemberInfo] = Field(default_factory=list)
+    methods: List[MethodInfo] = Field(default_factory=list)
     examples: List[str] = Field(default_factory=list)
     return_type: str = ""
 
@@ -164,6 +172,57 @@ class Search:
                 break
 
         return min(100, score)
+
+    @staticmethod
+    def _extract_class_info(content: str) -> str:
+        class_match = re.search(
+            r'<category-title[^>]*>\s*<shi>class</shi>\s*<ref[^>]*>(.*?)<sb>(.*?)</sb>',
+            content,
+            re.DOTALL
+        )
+        
+        if class_match:
+            namespace = class_match.group(1).strip()
+            class_name = class_match.group(2).strip()
+            
+            # Clean up the namespace (remove HTML tags and extra spaces)
+            namespace = re.sub(r'<[^>]+>', '', namespace).strip()
+            
+            # If we have both namespace and class name, combine them
+            if namespace and class_name:
+                # Remove trailing dot if present
+                if namespace.endswith('.'):
+                    namespace = namespace[:-1]
+                return f"{namespace}.{class_name}"
+            return class_name or namespace
+            
+        # If not a class, try to find method signature
+        method_match = re.search(
+            r'<category-title[^>]*>\s*<ref[^>]*>(.*?)<sb>(.*?)</sb></ref>\s*(\([^)]*\))?\s*(<shi>->\s*(.*?)</shi>)?',
+            content,
+            re.DOTALL
+        )
+        
+        if method_match:
+            namespace = method_match.group(1).strip()
+            method_name = method_match.group(2).strip()
+            params = method_match.group(3) or "()"
+            return_type = f" -> {method_match.group(5).strip()}" if method_match.group(5) else ""
+            
+            # Clean up the namespace
+            namespace = re.sub(r'<[^>]+>', '', namespace).strip()
+            
+            # Handle cases where namespace might be empty
+            if not namespace:
+                return f"{method_name}{params}{return_type}"
+                
+            # Ensure proper dot notation
+            if not namespace.endswith('.'):
+                namespace += '.'
+                
+            return f"{namespace}{method_name}{params}{return_type}"
+            
+        return ""
 
     @staticmethod
     def _extract_examples(content: str) -> List[str]:
@@ -381,21 +440,42 @@ class Search:
             content = f.read()
             
         # Extract title
-        title = self._extract_title(content)
+        title = self._extract_title(content) or path
         
-        # Extract description (first paragraph)
+        # Extract class information if available
+        class_info = self._extract_class_info(content)
+        
+        # Extract description and details
         description = ""
-        desc_match = re.search(r'<subtext>\s*<text>([^<]+)', content)
-        if desc_match:
-            description = desc_match.group(1).strip()
-            
-        # Extract details from subtext
         details = ""
-        details_match = re.search(r'<subtext>\s*<text>(.*?)</text>', content, re.DOTALL)
-        if details_match:
-            details = re.sub(r'<[^>]*>', ' ', details_match.group(1))
-            details = ' '.join(details.split())
-
+        
+        # First try to get the full subtext content
+        full_subtext_match = re.search(r'<subtext>\s*<text>(.*?)</text>', content, re.DOTALL)
+        if full_subtext_match:
+            full_text = full_subtext_match.group(1).strip()
+            
+            # Get the first sentence/paragraph as description
+            first_paragraph_match = re.search(r'^([^<\n]+)', full_text)
+            if first_paragraph_match:
+                description = first_paragraph_match.group(1).strip()
+                
+                # Remove any HTML tags from description
+                description = re.sub(r'<[^>]*>', ' ', description)
+                description = ' '.join(description.split())
+                
+                # Get the rest as details, excluding the first paragraph we already have
+                details_start = first_paragraph_match.end()
+                details = full_text[details_start:].strip()
+                
+                # Clean up details
+                if details:
+                    details = re.sub(r'<[^>]*>', ' ', details)
+                    details = ' '.join(details.split())
+                    
+                    # If details starts with the same text as description, remove it
+                    if details.startswith(description):
+                        details = details[len(description):].strip()
+        
         # Extract return type
         return_type = ""
         return_match = re.search(r'<ref[^>]*>.*?</ref>\s*<shi>\s*->\s*(.*?)</shi>', content, re.DOTALL)
@@ -408,6 +488,9 @@ class Search:
         # Extract parameters
         parameters = self._extract_parameters(content)
         
+        # Extract methods
+        methods = self._extract_methods(content)
+        
         # Extract examples
         examples = self._extract_examples(content)
         
@@ -419,9 +502,11 @@ class Search:
         return PathFullInfo(
             path=path,
             title=title,
+            class_info=class_info,  
             description=description,
             details=details,
             parameters=parameters,
+            methods=methods,
             enum_members=enum_members,
             examples=examples,
             return_type=return_type
@@ -537,3 +622,67 @@ class Search:
                 ))
         
         return parameters
+
+    @staticmethod
+    def _extract_methods(content: str) -> List[MethodInfo]:
+        """Extract methods from content."""
+        methods = []
+        
+        # Look for methods section
+        method_section = re.search(r'<pg-title>METHODS</pg-title>(.*?)(?=<pg-title>|$)', content, re.DOTALL | re.IGNORECASE)
+        if not method_section:
+            return methods
+
+        # Find all method blocks
+        method_blocks = re.finditer(
+            r'<category-title>(.*?)</category-title>\s*<subtext>\s*<text>(.*?)</text>',
+            method_section.group(1),
+            re.DOTALL
+        )
+        
+        for method_block in method_blocks:
+            method_title = method_block.group(1)
+            method_desc = method_block.group(2).strip()
+            
+            # Extract method name
+            method_name_match = re.search(
+                r'<ref[^>]*>.*?<sb>(.*?)</sb>',
+                method_title
+            )
+            if not method_name_match:
+                continue
+                
+            method_name = method_name_match.group(1).strip()
+            
+            # Extract method signature (parameters)
+            signature_match = re.search(
+                r'<sb>.*?</sb>\s*(\([^)]*\))',
+                method_title
+            )
+            method_signature = signature_match.group(1) if signature_match else "()"
+            
+            # Extract return type (everything after -> if it exists)
+            return_type = ""
+            if '->' in method_title:
+                # Get everything after ->
+                return_part = method_title.split('->', 1)[1]
+                # Remove any HTML tags and normalize whitespace
+                return_type = re.sub(r'<[^>]+>', '', return_part)
+                return_type = ' '.join(return_type.split())
+            
+            # Clean up the method signature
+            method_signature = re.sub(r'<[^>]+>', '', method_signature)
+            method_signature = ' '.join(method_signature.split())
+            
+            # Clean up the description
+            method_desc = re.sub(r'<[^>]*>', ' ', method_desc)
+            method_desc = ' '.join(method_desc.split())
+            
+            methods.append(MethodInfo(
+                name=method_name,
+                signature=method_signature,
+                return_type=return_type,
+                description=method_desc
+            ))
+        
+        return methods
