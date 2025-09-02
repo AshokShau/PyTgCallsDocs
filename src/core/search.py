@@ -17,12 +17,18 @@ class ParameterInfo(BaseModel):
     type: str
     description: str = ""
 
+class EnumMemberInfo(BaseModel):
+    name: str
+    value: str = ""
+    description: str = ""
+
 class PathFullInfo(BaseModel):
     path: str
     title: str
     description: str = ""
     details: str = ""
     parameters: List[ParameterInfo] = Field(default_factory=list)
+    enum_members: List[EnumMemberInfo] = Field(default_factory=list)
     examples: List[str] = Field(default_factory=list)
     return_type: str = ""
 
@@ -164,30 +170,30 @@ class Search:
         """Extract and format code examples from content."""
         examples = []
         example_blocks = re.findall(r'<syntax-highlight[^>]*>(.*?)</syntax-highlight>', content, re.DOTALL)
-        
+
         for block in example_blocks:
             if not block.strip():
                 continue
-                
+
             # Split into lines and clean up
             lines = [line.rstrip() for line in block.split('\n')]
-            
+
             # Remove leading/trailing empty lines
             while lines and not lines[0].strip():
                 lines.pop(0)
             while lines and not lines[-1].strip():
                 lines.pop()
-                
+
             if not lines:
                 continue
-                
+
             # Find minimum indentation (skip empty lines)
             min_indent = min(
                 len(line) - len(line.lstrip())
                 for line in lines
                 if line.strip()
             )
-            
+
             # Apply indentation and rejoin
             formatted_lines = []
             for line in lines:
@@ -197,15 +203,44 @@ class Search:
                 else:
                     # Keep empty lines as is (but trimmed)
                     formatted_lines.append('')
-            
+
             # Join with proper newlines and clean up
             example = '\n'.join(formatted_lines)
             example = re.sub(r'\n{3,}', '\n\n', example)  # Normalize multiple newlines
-            
+
             if example.strip():
                 examples.append(example)
-                
+
         return examples
+
+    @staticmethod
+    def _parse_enum_members(content: str) -> List[EnumMemberInfo]:
+        enum_members = []
+        # This looks for the structure:
+        # <category-title><ref><sb>MEMBER_NAME</sb></ref> <shi>=</shi> MEMBER_VALUE</category-title>
+        # <subtext><text>MEMBER_DESCRIPTION</text></subtext>
+        member_pattern = r'<category-title>.*?<ref><sb>(.*?)</sb></ref>.*?<shi>=</shi>\s*(.*?)</category-title>.*?<subtext><text>(.*?)</text>'
+        
+        # Find all matches in the content
+        matches = re.finditer(member_pattern, content, re.DOTALL)
+        
+        for match in matches:
+            name = match.group(1).strip()
+            value = match.group(2).strip() if match.group(2) else ""
+            description = match.group(3).strip() if match.group(3) else ""
+            
+            # Clean up the description by removing any remaining HTML tags and normalizing whitespace
+            description = re.sub(r'<[^>]+>', '', description)
+            description = re.sub(r'\s+', ' ', description).strip()
+            
+            # Add the parsed member to our list
+            enum_members.append(EnumMemberInfo(
+                name=name,
+                value=value,
+                description=description
+            ))
+            
+        return enum_members
 
     def _load_config(self):
         """Load the config file with parameter definitions."""
@@ -376,12 +411,18 @@ class Search:
         # Extract examples
         examples = self._extract_examples(content)
         
+        # Check if this is an enum and parse its members
+        enum_members = []
+        if "Available Enums" in path:
+            enum_members = self._parse_enum_members(content)
+
         return PathFullInfo(
             path=path,
             title=title,
             description=description,
             details=details,
             parameters=parameters,
+            enum_members=enum_members,
             examples=examples,
             return_type=return_type
         )

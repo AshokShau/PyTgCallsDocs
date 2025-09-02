@@ -27,6 +27,18 @@ async def format_doc_info(path: str) -> str:
     if full_info.details and full_info.details.strip() not in [full_info.description, full_info.title]:
         result += f"{html.escape(full_info.details.strip())}\n\n"
     
+    # Add Enum members section if this is an Enum type
+    if full_info.enum_members:
+        result += "<b>📊 Enum Members</b>\n"
+        for member in full_info.enum_members:
+            member_info = f"• <code>{html.escape(member.name)}</code>"
+            if member.value:
+                member_info += f" = {html.escape(member.value)}"
+            if member.description:
+                member_info += f": {html.escape(member.description)}"
+            result += f"{member_info}\n"
+        result += "\n"
+    
     # Add parameters section if we have any parameters
     if full_info.parameters and any(p.name.strip() for p in full_info.parameters):
         result += "<b>📝 Parameters</b>\n"
