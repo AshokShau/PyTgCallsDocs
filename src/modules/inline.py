@@ -1,9 +1,10 @@
-import uuid
 import html
 import os
 import re
+import uuid
 
 from pytdbot import Client, types
+
 from src.core.search import Search
 
 # Initialize the search engine
@@ -12,15 +13,6 @@ search_engine = Search(BASE_DIR)
 
 
 async def format_doc_info(path: str) -> str:
-    """
-    Format documentation content for display.
-
-    Args:
-        path: The path to the documentation file
-
-    Returns:
-        Formatted documentation string with proper Markdown/HTML formatting
-    """
     full_info = await search_engine.get_path_full_info(path)
     if not full_info:
         return ""
@@ -101,7 +93,7 @@ async def inline_search(c: Client, message: types.UpdateNewInlineQuery):
     if not query:
         return None
 
-    search_results = search_engine.search(query, limit=8)
+    search_results = search_engine.search(query, limit=20)
     c.logger.info(f"Search results: {search_results} for query: {query}")
     
     if not search_results:
@@ -155,7 +147,7 @@ async def inline_search(c: Client, message: types.UpdateNewInlineQuery):
             result = types.InputInlineQueryResultArticle(
                 id=str(uuid.uuid4()),
                 title=result.title,
-                description=preview,
+                description=re.sub(r"\*{1,2}(.*?)\*{1,2}", r"\1", preview),
                 input_message_content=types.InputMessageText(text=parse),
                 reply_markup=types.ReplyMarkupInlineKeyboard([
                     [

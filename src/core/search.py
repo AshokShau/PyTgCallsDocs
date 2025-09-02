@@ -24,11 +24,13 @@ class PathFullInfo(BaseModel):
     details: str = ""
     parameters: List[ParameterInfo] = Field(default_factory=list)
     examples: List[str] = Field(default_factory=list)
+    return_type: str = ""
 
 class Search:
     def __init__(self, base_path: str):
         self.base_path = base_path
         self.docs_map = self._load_map()
+        self._config = self._load_config()
 
     def _load_map(self) -> Dict[str, str]:
         """Load the documentation map from map.json."""
@@ -36,7 +38,6 @@ class Search:
         with open(map_path, 'r', encoding='utf-8') as f:
             docs_map = json.load(f)
 
-        # Normalize paths to be consistent
         return {path.lstrip('/'): content for path, content in docs_map.items()}
 
     @staticmethod
@@ -52,14 +53,13 @@ class Search:
         text = re.sub(r'<[^>]*>', ' ', content)
         text = ' '.join(text.split())
 
-        # Find the best match position
         best_pos = -1
         best_score = 0
 
         for term in query_terms:
             pos = text.lower().find(term.lower())
             if pos != -1:
-                score = len(text) - pos  # Prefer matches closer to the start
+                score = len(text) - pos
                 if score > best_score:
                     best_score = score
                     best_pos = pos
@@ -90,28 +90,74 @@ class Search:
         """Calculate a relevance score for the given text and query terms."""
         text_lower = text.lower()
         score = 0
-
-        # Check for exact match in title
         title = self._extract_title(text)
-        if title:
-            title_lower = title.lower()
+        title_lower = title.lower() if title else ""
+
+        # Check for exact matches first
+        exact_query = ' '.join(query_terms).lower()
+        
+        # Boost for exact match in title
+        if title and exact_query in title_lower:
+            score += 100
+        
+        # Check for method signature match (e.g., "mute(chat_id: int)")
+        method_match = re.search(r'<ref[^>]*>([^<]+)</ref>\s*\(([^)]*)\)', text, re.IGNORECASE)
+        if method_match:
+            method_name = method_match.group(1).lower()
+            method_params = method_match.group(2).lower()
+            
+            # Exact method name match
+            if exact_query == method_name:
+                score += 95
+            # Partial method name match
+            elif all(term in method_name for term in query_terms):
+                score += 80
+            # Match in method signature
+            elif any(term in method_params for term in query_terms):
+                score += 60
+
+        # Check for parameter matches
+        param_matches = re.findall(r'<ref[^>]*>([^<]+)</ref>\s*:\s*([^<,]+)', text, re.IGNORECASE)
+        for param_name, param_type in param_matches:
+            param_name = param_name.strip().lower()
+            param_type = param_type.strip().lower()
+            
+            # Exact parameter name match
+            if exact_query == param_name:
+                score += 90
+            # Partial parameter name match
+            elif all(term in param_name for term in query_terms):
+                score += 70
+            # Type match
+            elif exact_query in param_type:
+                score += 60
+
+        # Check for matches in title
+        if not score and title:
             if all(term in title_lower for term in query_terms):
-                score = 90
+                score = 50
             elif any(term in title_lower for term in query_terms):
-                score = 70
+                score = 30
 
-        # Check content matches
-        if score == 0:
+        # Check for matches in content
+        if not score:
             if all(term in text_lower for term in query_terms):
-                score = 60
-            elif any(term in text_lower for term in query_terms):
                 score = 40
+            elif any(term in text_lower for term in query_terms):
+                score = 20
 
-        # Bonus for method files
+        # Boost for method files
         if is_method and score > 0:
-            score = min(100, score + 10)
+            score += 10
 
-        return score
+        # Boost for exact matches in code blocks
+        code_blocks = re.findall(r'<syntax-highlight[^>]*>(.*?)</syntax-highlight>', text, re.DOTALL)
+        for block in code_blocks:
+            if exact_query in block.lower():
+                score += 20
+                break
+
+        return min(100, score)
 
     @staticmethod
     def _extract_examples(content: str) -> List[str]:
@@ -171,52 +217,83 @@ class Search:
             content = f.read()
             
         config = {}
-        # Extract all config options
+        
+        # Extract all options
         options = re.findall(r'<option id="([^"]+)">(.*?)</option>', content, re.DOTALL)
         
         for option_id, option_content in options:
-            # Extract parameter name and type
+            # Skip description-only options (handled separately)
+            if option_id.endswith('_DESC'):
+                continue
+                
+            # This is a parameter definition
+            param_info = {'id': option_id}
+            
+            # Extract parameter name and type from category-title
+            # Try pattern for <ref><sb>param_name</sb></ref> format
             param_match = re.search(
-                r'<category-title>.*?<ref[^>]*><sb>([^<]+)</sb></ref>\s*:?\s*<shi>([^<]+)</shi>',
+                r'<category-title>.*?<ref><sb>([^<]+)</sb></ref>\s*:\s*(.*?)(?:<|$)',
                 option_content,
                 re.DOTALL
             )
             
+            # If first pattern didn't match, try pattern for <ref>param_name</ref> format
+            if not param_match:
+                param_match = re.search(
+                    r'<category-title>.*?<ref>([^<]+)</ref>\s*:\s*(.*?)(?:<|$)',
+                    option_content,
+                    re.DOTALL
+                )
+            
             if param_match:
-                param_name = param_match.group(1)
-                param_type = param_match.group(2)
+                param_name = param_match.group(1).strip()
+                param_type = param_match.group(2).strip()
                 
-                # Extract description
+                # Clean up the type (remove HTML tags but preserve content)
+                param_type = re.sub(r'<[^>]+>', '', param_type)  # Remove all HTML tags
+                param_type = re.sub(r'\s+', ' ', param_type).strip()  # Normalize whitespace
+                
+                # Extract description from subtext if available
                 desc_match = re.search(
-                    r'<config id="([^"]+)"',
+                    r'<subtext>\s*<text>(.*?)</text>',
+                    option_content,
+                    re.DOTALL
+                )
+                
+                param_info.update({
+                    'name': param_name,
+                    'type': param_type,
+                    'description': re.sub(r'<[^>]*>', ' ', desc_match.group(1)).strip() if desc_match else ''
+                })
+                
+                # Handle description references (e.g., CHAT_ID_DESC)
+                desc_ref_match = re.search(
+                    r'<config id="([^"]+_DESC)"',
                     option_content
                 )
-                description = ""
-                if desc_match:
-                    desc_id = desc_match.group(1)
-                    desc_content = re.search(
-                        f'<option id="{re.escape(desc_id)}">.*?<text>(.*?)</text>',
+                
+                if desc_ref_match:
+                    desc_ref_id = desc_ref_match.group(1)
+                    desc_ref_content = re.search(
+                        f'<option id="{re.escape(desc_ref_id)}">.*?<text>(.*?)</text>',
                         content,
                         re.DOTALL
                     )
-                    if desc_content:
-                        description = re.sub(r'<[^>]*>', ' ', desc_content.group(1)).strip()
+                    
+                    if desc_ref_content:
+                        param_info['description'] = re.sub(r'<[^>]*>', ' ', desc_ref_content.group(1)).strip()
                 
-                config[option_id] = {
-                    'name': param_name,
-                    'type': param_type,
-                    'description': description
-                }
+                config[option_id] = param_info
         
         return config
 
-    def search(self, query: str, limit: int = 10) -> List[SearchResult]:
+    def search(self, query: str, limit: int = 20) -> List[SearchResult]:
         """Search through documentation for the given query."""
         query = query.strip().lower()
         if not query:
             return []
 
-        query_terms = [term for term in query.split() if term]
+        query_terms = [term for term in query.split() if len(term) > 1]
         results = []
 
         for path, content in self.docs_map.items():
@@ -225,7 +302,11 @@ class Search:
                 continue
 
             # Check if this is a method file
-            is_method = any(x in path.lower() for x in ['basic method', 'stream method'])
+            is_method = any(x in path.lower() for x in ['basic method', 'stream method', 'advanced method'])
+            
+            # Check if this is NTgCalls or PyTgCalls
+            is_ntgcalls = 'ntgcalls' in path.lower()
+            is_pytgcalls = 'pytgcalls' in path.lower()
 
             # Calculate score
             score = self._calculate_score(content, query_terms, is_method)
@@ -234,6 +315,11 @@ class Search:
                 title = self._extract_title(content) or os.path.splitext(os.path.basename(path))[0]
                 preview = self._extract_preview(content, query_terms)
 
+                if is_ntgcalls:
+                    title = f"[NTgCalls] {title}"
+                elif is_pytgcalls:
+                    title = f"[PyTgCalls] {title}"
+
                 results.append(SearchResult(
                     path=path,
                     title=title,
@@ -241,7 +327,7 @@ class Search:
                     preview=preview
                 ))
 
-        # Sort by score (highest first) and limit results
+        # Sort by score (highest first) and then by path
         results.sort(key=lambda x: (-x.score, x.path))
         return results[:limit]
 
@@ -251,120 +337,41 @@ class Search:
 
     async def get_path_full_info(self, path: str) -> PathFullInfo:
         """Get the full information of a documentation file."""
-        # Done ask me how this works :/
-        content = self.get_doc_content(path)
-        if not content:
-            return PathFullInfo(path=path, title=path.split('/')[-1])
+        full_path = os.path.join(self.base_path, path)
+        
+        if not os.path.exists(full_path):
+            return PathFullInfo(path=path, title="Not Found", description="The requested documentation was not found.")
             
-        # Load config if not already loaded
-        if not hasattr(self, '_config'):
-            self._config = self._load_config()
+        with open(full_path, 'r', encoding='utf-8') as f:
+            content = f.read()
             
+        # Extract title
         title = self._extract_title(content)
-        if not title:
-            title = path.split('/')[-1].replace('.xml', '').replace('_', ' ').title()
-
-        # Extract description from text node after the title
+        
+        # Extract description (first paragraph)
         description = ""
-        desc_match = re.search(r'<h1>.*?</h1>\s*<text>(.*?)</text>', content, re.DOTALL)
-        if not desc_match:
-            # Try alternative description location
-            desc_match = re.search(r'<text>This method (.*?)</text>', content, re.DOTALL)
+        desc_match = re.search(r'<subtext>\s*<text>([^<]+)', content)
         if desc_match:
-            description = re.sub(r'<[^>]*>', ' ', desc_match.group(1)).strip()
-            description = ' '.join(description.split())  # Normalize whitespace
-            description = description[0].upper() + description[1:]  # Capitalize first letter
-
+            description = desc_match.group(1).strip()
+            
         # Extract details from subtext
         details = ""
         details_match = re.search(r'<subtext>\s*<text>(.*?)</text>', content, re.DOTALL)
         if details_match:
             details = re.sub(r'<[^>]*>', ' ', details_match.group(1))
-            details = ' '.join(details.split())  # Normalize whitespace
+            details = ' '.join(details.split())
+
+        # Extract return type
+        return_type = ""
+        return_match = re.search(r'<ref[^>]*>.*?</ref>\s*<shi>\s*->\s*(.*?)</shi>', content, re.DOTALL)
+        if return_match:
+            return_type = return_match.group(1).strip()
+            # Clean up the return type
+            return_type = re.sub(r'<[^>]*>', '', return_type)
+            return_type = ' '.join(return_type.split())
 
         # Extract parameters
-        parameters = []
-        
-        # Look for parameters section
-        param_section = re.search(r'<pg-title>PARAMETERS</pg-title>(.*?)(?=<pg-title>|$)', content, re.DOTALL | re.IGNORECASE)
-        if param_section:
-            # Handle config-based parameters first
-            config_matches = list(re.finditer(r'<config id="([^"]+)"', param_section.group(1)))
-            
-            for match in config_matches:
-                config_id = match.group(1)
-                # Skip certain configs that aren't parameters
-                if any(skip in config_id for skip in ['CALL_CONFIG_DESC', 'EXCEPTIONS']):
-                    continue
-                    
-                # Get the next sibling element after the config
-                next_part = param_section.group(1)[match.end():match.end()+200]  # Look ahead 200 chars
-                
-                # Check if this is a parameter with a category-title following it
-                param_match = re.search(r'<category-title>(.*?)</category-title>', next_part, re.DOTALL)
-                if param_match:
-                    # This is a parameter with a custom definition
-                    param_text = param_match.group(1)
-                    # Extract parameter name and type
-                    name_type_match = re.search(r'<ref[^>]*>([^<]+)</ref>\s*:\s*<shi>([^<]+)</shi>', param_text)
-                    if name_type_match:
-                        param_name = name_type_match.group(1).strip()
-                        param_type = name_type_match.group(2).strip()
-                        
-                        # Look for parameter description
-                        desc_start = match.end() + param_match.end()
-                        desc_end = param_section.group(1).find('<category-title>', desc_start)
-                        if desc_end == -1:
-                            desc_end = len(param_section.group(1))
-                        
-                        param_desc = param_section.group(1)[desc_start:desc_end]
-                        # Clean up the description
-                        param_desc = re.sub(r'<[^>]*>', ' ', param_desc).strip()
-                        param_desc = ' '.join(param_desc.split())  # Normalize whitespace
-                        
-                        parameters.append(ParameterInfo(
-                            name=param_name,
-                            type=param_type,
-                            description=param_desc
-                        ))
-                
-                # Handle simple config parameters (eg: ARG_CHAT_ID)
-                elif config_id.startswith('ARG_') and not any(p.name == 'chat_id' for p in parameters):
-                    parameters.append(ParameterInfo(
-                        name='chat_id',
-                        type='int',
-                        description='Unique identifier of a chat'
-                    ))
-            
-            # Also look for direct parameter definitions that might have been missed
-            direct_params = re.finditer(
-                r'<category-title>\s*<ref[^>]*>([^<]+)</ref>\s*:\s*<shi>([^<]+)</shi>',
-                param_section.group(1)
-            )
-            
-            for match in direct_params:
-                param_name = match.group(1).strip()
-                param_type = match.group(2).strip()
-                
-                # Skip if we already have this parameter
-                if any(p.name == param_name for p in parameters):
-                    continue
-                
-                # Look for parameter description
-                param_desc = ""
-                desc_match = re.search(
-                    rf'<category-title>\s*<ref[^>]*>{re.escape(param_name)}</ref>\s*:\s*<shi>[^<]*</shi>.*?<subtext>\s*<text>(.*?)</text>',
-                    param_section.group(1),
-                    re.DOTALL
-                )
-                if desc_match:
-                    param_desc = re.sub(r'<[^>]*>', ' ', desc_match.group(1)).strip()
-                
-                parameters.append(ParameterInfo(
-                    name=param_name,
-                    type=param_type,
-                    description=param_desc
-                ))
+        parameters = self._extract_parameters(content)
         
         # Extract examples
         examples = self._extract_examples(content)
@@ -375,5 +382,117 @@ class Search:
             description=description,
             details=details,
             parameters=parameters,
-            examples=examples
+            examples=examples,
+            return_type=return_type
         )
+
+    def _extract_parameters(self, content: str) -> List[ParameterInfo]:
+        """Extract parameters from content, handling both NTgCalls and PyTgCalls formats."""
+        parameters = []
+        
+        # Look for parameters section
+        param_section = re.search(r'<pg-title>PARAMETERS</pg-title>(.*?)(?=<pg-title>|$)', content, re.DOTALL | re.IGNORECASE)
+        if not param_section:
+            return parameters
+
+        config_matches = list(re.finditer(r'<config id="([^"]+)"', param_section.group(1)))
+        for match in config_matches:
+            config_id = match.group(1)
+            if config_id in self._config and not any(skip in config_id for skip in ['EXCEPTIONS']):
+                config = self._config[config_id]
+                if isinstance(config, dict) and 'name' in config and 'type' in config:
+                    param_type = config['type']
+                    if not any(p.name == config['name'] for p in parameters):
+                        parameters.append(ParameterInfo(
+                            name=config['name'],
+                            type=param_type,
+                            description=config.get('description', '')
+                        ))
+
+        param_blocks = re.findall(
+            r'(?:<category-title>(.*?)</category-title>|<config id="([^"]+)"\s*/>)\s*(<subtext>.*?</subtext>)?',
+            param_section.group(1),
+            re.DOTALL
+        )
+        
+        for category_content, config_id, subtext_content in param_blocks:
+            # Handle config parameters
+            if config_id and config_id in self._config and not any(skip in config_id for skip in ['EXCEPTIONS']):
+                config = self._config[config_id]
+                if isinstance(config, dict) and 'name' in config and 'type' in config:
+                    if not any(p.name == config['name'] for p in parameters):
+                        # Get description from subtext if available
+                        desc = config.get('description', '')
+                        if subtext_content:
+                            desc_match = re.search(r'<text>(.*?)</text>', subtext_content, re.DOTALL)
+                            if desc_match:
+                                desc = re.sub(r'<[^>]*>', ' ', desc_match.group(1)).strip()
+                        
+                        parameters.append(ParameterInfo(
+                            name=config['name'],
+                            type=config['type'],
+                            description=desc
+                        ))
+                continue
+                
+            # Skip if no category content (was a config parameter)
+            if not category_content:
+                continue
+                
+            # Extract parameter name and type - handle multiple formats
+            param_match = None
+            
+            # Try different patterns in order of specificity
+            patterns = [
+                # Pattern for complex type definitions with refs
+                r'<ref[^>]*>([^<]+)</ref>\s*:\s*((?:<[^>]+>|\[|\]|\w|\s|,|\.|\|)+)',
+                # Pattern for simple type definitions with refs
+                r'<ref[^>]*>([^<]+)</ref>\s*<ref[^>]*>([^<]+)</ref>',
+                # Fallback pattern
+                r'<ref[^>]*>([^<]+)</ref>\s*:\s*([^<,]+)'
+            ]
+            
+            for pattern in patterns:
+                param_match = re.search(pattern, category_content, re.DOTALL)
+                if param_match:
+                    break
+            
+            if param_match:
+                param_name = param_match.group(1).strip()
+                param_type = param_match.group(2).strip()
+                
+                # Clean up the type (remove HTML tags but preserve content)
+                param_type = re.sub(r'<[^>]+>', '', param_type)
+                param_type = ' '.join(param_type.split())
+                
+                # Skip if we already have this parameter
+                if any(p.name == param_name for p in parameters):
+                    continue
+                
+                # Find the description in the subtext
+                param_desc = ""
+                if subtext_content:
+                    # Look for description in subtext
+                    desc_match = re.search(
+                        r'<text>(.*?)</text>',
+                        subtext_content,
+                        re.DOTALL
+                    )
+                    if desc_match:
+                        param_desc = re.sub(r'<[^>]*>', ' ', desc_match.group(1)).strip()
+                    
+                    # If no description in subtext, check for config description
+                    if not param_desc and '<config id=' in subtext_content:
+                        config_match = re.search(r'<config id="([^"]+)"', subtext_content)
+                        if config_match and config_match.group(1) in self._config:
+                            config = self._config[config_match.group(1)]
+                            if isinstance(config, dict) and 'description' in config:
+                                param_desc = config['description']
+                
+                parameters.append(ParameterInfo(
+                    name=param_name,
+                    type=param_type,
+                    description=param_desc
+                ))
+        
+        return parameters
