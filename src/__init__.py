@@ -31,7 +31,6 @@ class Telegram(Client):
             options={"ignore_background_updates": True},
         )
 
-
     async def start(self) -> None:
         await super().start()
         self.logger.info(f"Bot started in {datetime.now() - StartTime} seconds.")

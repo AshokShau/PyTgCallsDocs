@@ -14,6 +14,7 @@ def get_env_int(name: str, default: Optional[int] = None) -> Optional[int]:
         print(f"Invalid value for {name}: {value}")
         return default
 
+
 API_ID: Optional[int] = get_env_int("API_ID")
 API_HASH: Optional[str] = getenv("API_HASH")
 TOKEN: Optional[str] = getenv("TOKEN")
