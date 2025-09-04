@@ -1,4 +1,5 @@
 import json
+import textwrap
 import urllib.request
 import xml.etree.ElementTree as ET
 from pathlib import Path
@@ -198,8 +199,10 @@ def parse_map(map_source: Union[str, Path], config_map):
         example = {}
         ex_node = page.find("syntax-highlight")
         if ex_node is not None:
+            code_raw = "".join(ex_node.itertext())
+            code_clean = textwrap.dedent(code_raw).strip("\n")
             example["language"] = ex_node.attrib.get("language", "python")
-            example["code"] = "".join(ex_node.itertext()).strip()
+            example["code"] = code_clean
 
         details = {}
 

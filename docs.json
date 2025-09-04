@@ -6,7 +6,7 @@
     "description": "This method allows to notify the library that an incoming video stream is available.",
     "example": {
       "language": "python",
-      "code": "from ntgcalls import NTgCalls\n        ...\n\n        app = NTgCalls()\n        ...\n        endpoint = ...\n        ssrc_groups = ...\n\n        await app.add_incoming_video(\n            -1001185324811,\n            endpoint,\n            ssrc_groups,\n        )"
+      "code": "from ntgcalls import NTgCalls\n...\n\napp = NTgCalls()\n...\nendpoint = ...\nssrc_groups = ...\n\nawait app.add_incoming_video(\n    -1001185324811,\n    endpoint,\n    ssrc_groups,\n)"
     },
     "details": {
       "signature": "async NTgCalls.add_incoming_video() -> int",
@@ -60,7 +60,7 @@
     "description": "This method allows retrieving GroupCall MTProto Configurations for\n      EditGroupCallParticipant.",
     "example": {
       "language": "python",
-      "code": "from ntgcalls import NTgCalls\n        ...\n\n        app = NTgCalls()\n        ...\n\n        state = app.get_state(\n            -1001185324811,\n        )"
+      "code": "from ntgcalls import NTgCalls\n...\n\napp = NTgCalls()\n...\n\nstate = app.get_state(\n    -1001185324811,\n)"
     },
     "details": {
       "signature": "get_state() -> ntgcalls.MediaState",
@@ -100,7 +100,7 @@
     "description": "This method allows to notify the library that an incoming video stream is no longer available.",
     "example": {
       "language": "python",
-      "code": "from ntgcalls import NTgCalls\n        ...\n\n        app = NTgCalls()\n        ...\n        endpoint = ...\n\n        await app.remove_incoming_video(\n            -1001185324811,\n            endpoint,\n        )"
+      "code": "from ntgcalls import NTgCalls\n...\n\napp = NTgCalls()\n...\nendpoint = ...\n\nawait app.remove_incoming_video(\n    -1001185324811,\n    endpoint,\n)"
     },
     "details": {
       "signature": "async NTgCalls.remove_incoming_video()",
@@ -147,7 +147,7 @@
     "description": "This method allows sending an external video frame to the WebRTC connection.",
     "example": {
       "language": "python",
-      "code": "from ntgcalls import NTgCalls\n        from ntgcalls import StreamDevice\n        from ntgcalls import FrameData\n        from datetime import datetime\n        ...\n\n        app = NTgCalls()\n        ...\n        pcm16_le_data = ...\n\n        await app.send_external_frame(\n            -1001185324811,\n            StreamDevice.MICROPHONE,\n            pcm16_le_data,\n            FrameData(\n                int(datetime.now().timestamp()),\n                0,\n                0,\n                0,\n            )\n        )"
+      "code": "from ntgcalls import NTgCalls\nfrom ntgcalls import StreamDevice\nfrom ntgcalls import FrameData\nfrom datetime import datetime\n...\n\napp = NTgCalls()\n...\npcm16_le_data = ...\n\nawait app.send_external_frame(\n    -1001185324811,\n    StreamDevice.MICROPHONE,\n    pcm16_le_data,\n    FrameData(\n        int(datetime.now().timestamp()),\n        0,\n        0,\n        0,\n    )\n)"
     },
     "details": {
       "signature": "async NTgCalls.send_external_frame()",
@@ -196,7 +196,7 @@
     "description": "This method allows sending signaling data to the WebRTC connection.",
     "example": {
       "language": "python",
-      "code": "from ntgcalls import NTgCalls\n        ...\n\n        app = NTgCalls()\n        ...\n\n        await app.send_signaling_data(\n            -1001185324811,\n            \"data\",\n        )"
+      "code": "from ntgcalls import NTgCalls\n...\n\napp = NTgCalls()\n...\n\nawait app.send_signaling_data(\n    -1001185324811,\n    \"data\",\n)"
     },
     "details": {
       "signature": "async NTgCalls.send_signaling_data()",
@@ -231,7 +231,7 @@
     "description": "This method allows to notify the library that an incoming video stream is available.",
     "example": {
       "language": "c",
-      "code": "#include <stdint.h>\n        #include \"ntgcalls.h\"\n\n        int main() {\n            uint32_t uid = ntg_init();\n            ...\n            int64_t chatID = ...; // Obtain the chat ID\n            char* endpoint = ...; // Obtain the endpoint of the incoming video\n            ntg_ssrc_group_struct* ssrcGroups = ...; // Obtain the SSRC groups of the incoming video\n            int size = ...; // Obtain the size of the SSRC groups array\n            uint32_t ssrc_buffer;\n            // Initialize the async struct\n            ntg_async_struct future;\n            ntg_add_incoming_video(uid, chatID, endpoint, ssrcGroups, &ssrc_buffer, &future);\n            // Wait for the async operation to complete\n            return 0;\n        }"
+      "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uint32_t uid = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    char* endpoint = ...; // Obtain the endpoint of the incoming video\n    ntg_ssrc_group_struct* ssrcGroups = ...; // Obtain the SSRC groups of the incoming video\n    int size = ...; // Obtain the size of the SSRC groups array\n    uint32_t ssrc_buffer;\n    // Initialize the async struct\n    ntg_async_struct future;\n    ntg_add_incoming_video(uid, chatID, endpoint, ssrcGroups, &ssrc_buffer, &future);\n    // Wait for the async operation to complete\n    return 0;\n}"
     },
     "details": {
       "signature": "int ntg_add_incoming_video()",
@@ -299,7 +299,7 @@
     "description": "\n        This function returns a list of ",
     "example": {
       "language": "c",
-      "code": "#include <stdint.h>\n        #include \"ntgcalls.h\"\n\n        int main() {\n            uint32_t uid = ntg_init();\n            ...\n            int size = ...  ; // Get the size of the call list\n            ntg_call_struct buffer[size];\n            // Initialize the async struct\n            ntg_async_struct future;\n            int result = ntg_calls(uid, buffer, size, &future);\n            // Wait for the async operation to complete\n            for (int i = 0; i < result; i++) {\n                printf(\"Group Call %d:\\n\", i + 1);\n                printf(\"  Chat ID: %lld\\n\", buffer[i].chatId);\n                printf(\"  Status: %d\\n\", buffer[i].status);\n            }\n            ... // Your Code Here\n            return 0;\n        }"
+      "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uint32_t uid = ntg_init();\n    ...\n    int size = ...  ; // Get the size of the call list\n    ntg_call_struct buffer[size];\n    // Initialize the async struct\n    ntg_async_struct future;\n    int result = ntg_calls(uid, buffer, size, &future);\n    // Wait for the async operation to complete\n    for (int i = 0; i < result; i++) {\n        printf(\"Group Call %d:\\n\", i + 1);\n        printf(\"  Chat ID: %lld\\n\", buffer[i].chatId);\n        printf(\"  Status: %d\\n\", buffer[i].status);\n    }\n    ... // Your Code Here\n    return 0;\n}"
     },
     "details": {
       "signature": "int ntg_calls()",
@@ -360,7 +360,7 @@
     "description": "\n        This function returns the number of active group calls that NTgCalls is connected to.\n    ",
     "example": {
       "language": "c",
-      "code": "#include <stdint.h>\n        #include \"ntgcalls.h\"\n\n        int main() {\n            uint32_t uid = ntg_init();\n            ...\n            int64_t chatID = ...; // Obtain the chat ID\n            int count = 0;\n            // Initialize the async struct\n            ntg_async_struct future;\n            int result = ntg_calls_count(uid, &count, &future);\n            // Wait for the async operation to complete\n            printf(\"Number of active group calls: %d\\n\", count);\n            ... // Your Code Here\n            return 0;\n        }"
+      "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uint32_t uid = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    int count = 0;\n    // Initialize the async struct\n    ntg_async_struct future;\n    int result = ntg_calls_count(uid, &count, &future);\n    // Wait for the async operation to complete\n    printf(\"Number of active group calls: %d\\n\", count);\n    ... // Your Code Here\n    return 0;\n}"
     },
     "details": {
       "signature": "int ntg_calls_count()",
@@ -407,7 +407,7 @@
     "description": "Get an estimate of the CPU usage of the current process.",
     "example": {
       "language": "c",
-      "code": "#include <stdint.h>\n        #include \"ntgcalls.h\"\n\n        int main() {\n            uint32_t uid = ntg_init();\n            ...\n            double buffer;\n            // Initialize the async struct\n            ntg_async_struct future;\n            int64_t usage = ntg_cpu_usage(uid, &buffer, &future);\n            // Wait for the async operation to complete and use\n            return 0;\n        }"
+      "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uint32_t uid = ntg_init();\n    ...\n    double buffer;\n    // Initialize the async struct\n    ntg_async_struct future;\n    int64_t usage = ntg_cpu_usage(uid, &buffer, &future);\n    // Wait for the async operation to complete and use\n    return 0;\n}"
     },
     "details": {
       "signature": "int ntg_cpu_usage()",
@@ -442,7 +442,7 @@
     "description": "Enable the GLib main loop to allow the library to use it for PipeWire on OSes that uses Wayland.",
     "example": {
       "language": "cpp",
-      "code": "#include <stdint.h>\n        #include \"ntgcalls.h\"\n\n        int main() {\n            ...\n            ntg_enable_g_lib_loop(true);\n            return 0;\n        }"
+      "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    ...\n    ntg_enable_g_lib_loop(true);\n    return 0;\n}"
     },
     "details": {
       "signature": "int ntg_enable_g_lib_loop()",
@@ -470,7 +470,7 @@
     "description": "",
     "example": {
       "language": "cpp",
-      "code": "#include <stdint.h>\n        #include \"ntgcalls.h\"\n\n        int main() {\n            ...\n            ntg_enable_h264_encoder(true);\n            return 0;\n        }"
+      "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    ...\n    ntg_enable_h264_encoder(true);\n    return 0;\n}"
     },
     "details": {
       "signature": "int ntg_enable_h264_encoder()",
@@ -498,7 +498,7 @@
     "description": "This method allows getting all the available media devices, such as microphones and cameras.",
     "example": {
       "language": "c",
-      "code": "#include <stdint.h>\n        #include \"ntgcalls.h\"\n\n        int main() {\n            ...\n            ntg_media_devices_struct devices;\n            // Initialize the async struct\n            ntg_async_struct future;\n            ntg_get_media_devices(&devices, &future);\n            // Wait for the async operation to complete\n            return 0;\n        }"
+      "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    ...\n    ntg_media_devices_struct devices;\n    // Initialize the async struct\n    ntg_async_struct future;\n    ntg_get_media_devices(&devices, &future);\n    // Wait for the async operation to complete\n    return 0;\n}"
     },
     "details": {
       "signature": "int ntg_get_media_devices()",
@@ -526,7 +526,7 @@
     "description": "This method allows getting the protocol for a Private Call connection with the output params for Telegram constructor\n      PhoneCallProtocol.",
     "example": {
       "language": "c",
-      "code": "#include <stdint.h>\n        #include \"ntgcalls.h\"\n\n        int main() {\n            uint32_t uid = ntg_init();\n            ...\n            int64_t chatID = ...; // Obtain the chat ID\n            ntg_protocol_struct buffer;\n            ntg_get_protocol(uid, chatID, &buffer);\n            ...\n            return 0;\n        }"
+      "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uint32_t uid = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    ntg_protocol_struct buffer;\n    ntg_get_protocol(uid, chatID, &buffer);\n    ...\n    return 0;\n}"
     },
     "details": {
       "signature": "int ntg_get_protocol()",
@@ -573,7 +573,7 @@
     "description": "This method allows retrieving GroupCall MTProto Configurations for\n      EditGroupCallParticipant.",
     "example": {
       "language": "c",
-      "code": "#include <stdint.h>\n        #include \"ntgcalls.h\"\n\n        int main() {\n            uint32_t uid = ntg_init();\n            ...\n            int64_t chatID = ...; // Obtain the chat ID\n            ntg_media_state_struct buffer;\n            // Initialize the async struct\n            ntg_async_struct future;\n            ntg_get_state(uid, chatID, &buffer, &future);\n            // Wait for the async operation to complete and use\n            // the buffer for EditGroupCallParticipant\n            ...\n            return 0;\n        }"
+      "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uint32_t uid = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    ntg_media_state_struct buffer;\n    // Initialize the async struct\n    ntg_async_struct future;\n    ntg_get_state(uid, chatID, &buffer, &future);\n    // Wait for the async operation to complete and use\n    // the buffer for EditGroupCallParticipant\n    ...\n    return 0;\n}"
     },
     "details": {
       "signature": "int ntg_get_state()",
@@ -620,7 +620,7 @@
     "description": "This method allows to notify the library that an incoming video stream is no longer available.",
     "example": {
       "language": "c",
-      "code": "#include <stdint.h>\n        #include \"ntgcalls.h\"\n\n        int main() {\n            uint32_t uid = ntg_init();\n            ...\n            int64_t chatID = ...; // Obtain the chat ID\n            char* endpoint = ...; // Obtain the endpoint of the incoming video\n            // Initialize the async struct\n            ntg_async_struct future;\n            ntg_remove_incoming_video(uid, chatID, endpoint, &future);\n            // Wait for the async operation to complete\n            return 0;\n        }"
+      "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uint32_t uid = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    char* endpoint = ...; // Obtain the endpoint of the incoming video\n    // Initialize the async struct\n    ntg_async_struct future;\n    ntg_remove_incoming_video(uid, chatID, endpoint, &future);\n    // Wait for the async operation to complete\n    return 0;\n}"
     },
     "details": {
       "signature": "int ntg_remove_incoming_video()",
@@ -667,7 +667,7 @@
     "description": "This method allows sending an external video frame to the WebRTC connection.",
     "example": {
       "language": "c",
-      "code": "#include <stdint.h>\n        #include \"ntgcalls.h\"\n\n        int main() {\n            uint32_t uid = ntg_init();\n            ...\n            int64_t chatID = ...; // Obtain the chat ID\n            uint8_t* pcm16_le_data = ...; // Obtain the PCM16 LE data\n            int size = ...; // Obtain the size of the PCM16 LE data\n            ntg_frame_data frame_data = {\n                .timestamp = ..., // Obtain the timestamp\n                .flags = 0,\n                .rotation = 0,\n                .layer = 0,\n            };\n            // Initialize the async struct\n            ntg_async_struct future;\n            ntg_send_external_frame(uid, chatID, NTG_STREAM_DEVICE_MICROPHONE, pcm16_le_data, size, &frame_data, &future);\n            // Wait for the async operation to complete\n            return 0;\n        }"
+      "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uint32_t uid = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    uint8_t* pcm16_le_data = ...; // Obtain the PCM16 LE data\n    int size = ...; // Obtain the size of the PCM16 LE data\n    ntg_frame_data frame_data = {\n        .timestamp = ..., // Obtain the timestamp\n        .flags = 0,\n        .rotation = 0,\n        .layer = 0,\n    };\n    // Initialize the async struct\n    ntg_async_struct future;\n    ntg_send_external_frame(uid, chatID, NTG_STREAM_DEVICE_MICROPHONE, pcm16_le_data, size, &frame_data, &future);\n    // Wait for the async operation to complete\n    return 0;\n}"
     },
     "details": {
       "signature": "int ntg_send_external_frame()",
@@ -735,7 +735,7 @@
     "description": "This method allows sending signaling data to the WebRTC connection.",
     "example": {
       "language": "c",
-      "code": "#include <stdint.h>\n        #include \"ntgcalls.h\"\n\n        int main() {\n            uint32_t uid = ntg_init();\n            ...\n            int64_t chatID = ...; // Obtain the chat ID\n            uint8_t* buffer = ...; // Obtain the signaling data\n            int size = ...; // Obtain the size of the signaling data\n            // Initialize the async struct\n            ntg_async_struct future;\n            ntg_send_signaling_data(uid, chatID, buffer, size, &future);\n            // Wait for the async operation to complete\n            return 0;\n        }"
+      "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uint32_t uid = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    uint8_t* buffer = ...; // Obtain the signaling data\n    int size = ...; // Obtain the size of the signaling data\n    // Initialize the async struct\n    ntg_async_struct future;\n    ntg_send_signaling_data(uid, chatID, buffer, size, &future);\n    // Wait for the async operation to complete\n    return 0;\n}"
     },
     "details": {
       "signature": "int ntg_send_signaling_data()",
@@ -1761,7 +1761,7 @@
     "description": "This method allows connecting to a Private Call with the output params from Telegram method\n      ConfirmCall when is an outgoing call or PhoneCall when is an incoming call.",
     "example": {
       "language": "python",
-      "code": "from ntgcalls import NTgCalls\n        ...\n\n        app = NTgCalls()\n        rtc_servers = ... # Obtain the RTC servers\n        dh_config = ... # Obtain the DH configuration\n        versions = ... # Obtain the library versions\n        p2p_allowed = ... # Obtain whether P2P is allowed\n        await app.connect_p2p(\n            -1001185324811,\n            rtc_servers,\n            versions,\n            p2p_allowed\n        )"
+      "code": "from ntgcalls import NTgCalls\n...\n\napp = NTgCalls()\nrtc_servers = ... # Obtain the RTC servers\ndh_config = ... # Obtain the DH configuration\nversions = ... # Obtain the library versions\np2p_allowed = ... # Obtain whether P2P is allowed\nawait app.connect_p2p(\n    -1001185324811,\n    rtc_servers,\n    versions,\n    p2p_allowed\n)"
     },
     "details": {
       "signature": "async NTgCalls.connect_p2p()",
@@ -1836,7 +1836,7 @@
     "description": "This method allows connecting to Telegram Group Calls with the output params from Telegram method\n      JoinGroupCall.",
     "example": {
       "language": "python",
-      "code": "from ntgcalls import NTgCalls\n        ...\n\n        app = NTgCalls()\n        ...\n        tg_params = ...\n\n        await app.connect(\n            -1001185324811,\n            tg_params,\n            False,\n        )"
+      "code": "from ntgcalls import NTgCalls\n...\n\napp = NTgCalls()\n...\ntg_params = ...\n\nawait app.connect(\n    -1001185324811,\n    tg_params,\n    False,\n)"
     },
     "details": {
       "signature": "async NTgCalls.connect()",
@@ -1897,7 +1897,7 @@
     "description": "This method allows getting connection params for Telegram WebRTC connection.",
     "example": {
       "language": "python",
-      "code": "from ntgcalls import NTgCalls\n        ...\n\n        app = NTgCalls()\n\n        params = await app.create_call(\n            -1001185324811,\n            MediaDescription(\n                AudioDescription(\n                    input_mode=InputMode.File,\n                    input=\"audio.pcm\",\n                    sample_rate=96000,\n                    bits_per_sample=16,\n                    channel_count=2,\n                ),\n            )\n        )"
+      "code": "from ntgcalls import NTgCalls\n...\n\napp = NTgCalls()\n\nparams = await app.create_call(\n    -1001185324811,\n    MediaDescription(\n        AudioDescription(\n            input_mode=InputMode.File,\n            input=\"audio.pcm\",\n            sample_rate=96000,\n            bits_per_sample=16,\n            channel_count=2,\n        ),\n    )\n)"
     },
     "details": {
       "signature": "async NTgCalls.create_call() -> str",
@@ -1944,7 +1944,7 @@
     "description": "This method allows creating a Private Call connection that can be used to exchange keys and connect",
     "example": {
       "language": "python",
-      "code": "from ntgcalls import NTgCalls\n        ...\n        app = NTgCalls()\n        ...\n\n        await app.create_p2p_call(\n            -1001185324811,\n            MediaDescription(\n                AudioDescription(\n                    input_mode=InputMode.File,\n                    input=\"audio.pcm\",\n                    sample_rate=96000,\n                    bits_per_sample=16,\n                    channel_count=2,\n                ),\n            )\n        )"
+      "code": "from ntgcalls import NTgCalls\n...\napp = NTgCalls()\n...\n\nawait app.create_p2p_call(\n    -1001185324811,\n    MediaDescription(\n        AudioDescription(\n            input_mode=InputMode.File,\n            input=\"audio.pcm\",\n            sample_rate=96000,\n            bits_per_sample=16,\n            channel_count=2,\n        ),\n    )\n)"
     },
     "details": {
       "signature": "async NTgCalls.create_p2p_call()",
@@ -1991,7 +1991,7 @@
     "description": "This method allows exchanging keys for a Private Call connection with the output params from\n      PhoneCallAccepted when is an outgoing call or PhoneCall when is an incoming call.",
     "example": {
       "language": "python",
-      "code": "from ntgcalls import NTgCalls\n        ...\n\n        app = NTgCalls()\n        g_a_or_b = ... # Obtain the parameter for key exchange\n        fingerprint = ... # Obtain the fingerprint (Optional for outgoing calls)\n        params = await app.exchange_keys(\n            -1001185324811,\n            g_a_or_b,\n            fingerprint\n        )"
+      "code": "from ntgcalls import NTgCalls\n...\n\napp = NTgCalls()\ng_a_or_b = ... # Obtain the parameter for key exchange\nfingerprint = ... # Obtain the fingerprint (Optional for outgoing calls)\nparams = await app.exchange_keys(\n    -1001185324811,\n    g_a_or_b,\n    fingerprint\n)"
     },
     "details": {
       "signature": "async NTgCalls.exchange_keys() -> ntgcalls.AuthParams",
@@ -2052,7 +2052,7 @@
     "description": "This method allows initializing a Private Call connection that can be used to exchange keys and connect with the output params from\n      GetDhConfig and PhoneCallRequested when is an incoming call\n      and then use the output params for AcceptCall (When is an incoming call) or RequestCall with Protocol.",
     "example": {
       "language": "python",
-      "code": "from ntgcalls import NTgCalls\n        ...\n\n        app = NTgCalls()\n        dh_config = ... # Obtain the DH configuration\n        g_a_hash = ... # Parameter for key exchange (Only when is incoming call)\n        params = await app.init_exchange(\n            -1001185324811,\n            config,\n            g_a_hash,\n        )"
+      "code": "from ntgcalls import NTgCalls\n...\n\napp = NTgCalls()\ndh_config = ... # Obtain the DH configuration\ng_a_hash = ... # Parameter for key exchange (Only when is incoming call)\nparams = await app.init_exchange(\n    -1001185324811,\n    config,\n    g_a_hash,\n)"
     },
     "details": {
       "signature": "async NTgCalls.init_exchange()",
@@ -2113,7 +2113,7 @@
     "description": "This method allows initializing a presentation connection, which is a connection for sharing the screen.",
     "example": {
       "language": "python",
-      "code": "from ntgcalls import NTgCalls\n        ...\n\n        app = NTgCalls()\n        ...\n\n        await app.init_presentation(\n            -1001185324811,\n        )"
+      "code": "from ntgcalls import NTgCalls\n...\n\napp = NTgCalls()\n...\n\nawait app.init_presentation(\n    -1001185324811,\n)"
     },
     "details": {
       "signature": "async NTgCalls.init_presentation()",
@@ -2153,7 +2153,7 @@
     "description": "This method allows skipping the exchange of keys for a Private Call connection by using the encryption key already exchanged.",
     "example": {
       "language": "python",
-      "code": "from ntgcalls import NTgCalls\n        ...\n\n        encryption_key = ... # Obtain the encryption key\n        app = NTgCalls()\n        await app.skip_exchange(\n            -1001185324811,\n            encryption_key,\n            True,\n        )"
+      "code": "from ntgcalls import NTgCalls\n...\n\nencryption_key = ... # Obtain the encryption key\napp = NTgCalls()\nawait app.skip_exchange(\n    -1001185324811,\n    encryption_key,\n    True,\n)"
     },
     "details": {
       "signature": "async NTgCalls.skip_exchange()",
@@ -2214,7 +2214,7 @@
     "description": "This method allows stopping the presentation connection.",
     "example": {
       "language": "python",
-      "code": "from ntgcalls import NTgCalls\n        ...\n\n        app = NTgCalls()\n        ...\n\n        await app.stop_presentation(\n            -1001185324811,\n        )"
+      "code": "from ntgcalls import NTgCalls\n...\n\napp = NTgCalls()\n...\n\nawait app.stop_presentation(\n    -1001185324811,\n)"
     },
     "details": {
       "signature": "async NTgCalls.stop_presentation()",
@@ -2254,7 +2254,7 @@
     "description": "This method allow stopping a WebRTC connection.",
     "example": {
       "language": "python",
-      "code": "from ntgcalls import NTgCalls\n        ...\n\n        app = NTgCalls()\n        ...\n\n        await app.stop(\n            -1001185324811,\n        )"
+      "code": "from ntgcalls import NTgCalls\n...\n\napp = NTgCalls()\n...\n\nawait app.stop(\n    -1001185324811,\n)"
     },
     "details": {
       "signature": "async NTgCalls.stop()",
@@ -2294,7 +2294,7 @@
     "description": "This method allows connecting to Telegram Group Calls with the output params from Telegram method\n      JoinGroupCall.",
     "example": {
       "language": "c",
-      "code": "#include <stdint.h>\n        #include \"ntgcalls.h\"\n\n        int main() {\n            uint32_t uid = ntg_init();\n            ...\n            int64_t chatID = ...; // Obtain the chat ID\n            char* params = ...;  // Obtain connection parameters\n            ntg_async_struct future;\n            // Initialize the async struct\n            int result = ntg_connect(uid, chatID, params, False, &future);\n            // Wait for the async operation to complete\n            ...\n            return 0;\n        }"
+      "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uint32_t uid = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    char* params = ...;  // Obtain connection parameters\n    ntg_async_struct future;\n    // Initialize the async struct\n    int result = ntg_connect(uid, chatID, params, False, &future);\n    // Wait for the async operation to complete\n    ...\n    return 0;\n}"
     },
     "details": {
       "signature": "int ntg_connect()",
@@ -2362,7 +2362,7 @@
     "description": "This method allows connecting to a Private Call with the output params from Telegram method\n      ConfirmCall when is an outgoing call or PhoneCall when is an incoming call.",
     "example": {
       "language": "c",
-      "code": "#include <stdint.h>\n        #include \"ntgcalls.h\"\n\n        int main() {\n            uint32_t uid = ntg_init();\n            ...\n            int64_t chatID = ...; // Obtain the chat ID\n            ntg_rtc_server_struct* rtcServers = ...; // Obtain the RTC servers\n            int rtcServersCount = ...; // Obtain the count of RTC servers\n            char** libraryVersions = ...; // Obtain the library versions\n            int libraryVersionCount = ...; // Obtain the count of library versions\n            bool p2pAllowed = ...; // Obtain whether P2P is allowed\n            ntg_async_struct future;\n            // Initialize the async struct\n            int result = ntg_connect_p2p(\n                uid,\n                chatID,\n                rtcServers,\n                rtcServersCount,\n                libraryVersions,\n                libraryVersionCount,\n                p2pAllowed,\n                &future\n            );\n            // Wait for the async operation to complete\n        }"
+      "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uint32_t uid = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    ntg_rtc_server_struct* rtcServers = ...; // Obtain the RTC servers\n    int rtcServersCount = ...; // Obtain the count of RTC servers\n    char** libraryVersions = ...; // Obtain the library versions\n    int libraryVersionCount = ...; // Obtain the count of library versions\n    bool p2pAllowed = ...; // Obtain whether P2P is allowed\n    ntg_async_struct future;\n    // Initialize the async struct\n    int result = ntg_connect_p2p(\n        uid,\n        chatID,\n        rtcServers,\n        rtcServersCount,\n        libraryVersions,\n        libraryVersionCount,\n        p2pAllowed,\n        &future\n    );\n    // Wait for the async operation to complete\n}"
     },
     "details": {
       "signature": "int ntg_connect_p2p()",
@@ -2451,7 +2451,7 @@
     "description": "This method allows getting connection params for Telegram WebRTC connection.",
     "example": {
       "language": "c",
-      "code": "#include <stdint.h>\n        #include \"ntgcalls.h\"\n\n        int main() {\n            uint32_t uid = ntg_init();\n            ...\n            int64_t chatID = ...; // Obtain the chat ID\n            ntg_media_description_struct desc = {\n                // Fill in media description fields\n            };\n            char buffer[512];\n            ntg_async_struct future;\n            // Initialize the async struct\n            int result = ntg_create(uid, chatID, desc, buffer, sizeof(buffer));\n            // Wait for the async operation to complete and\n            // use 'buffer' for JoinGroupCall\n            return 0;\n        }"
+      "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uint32_t uid = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    ntg_media_description_struct desc = {\n        // Fill in media description fields\n    };\n    char buffer[512];\n    ntg_async_struct future;\n    // Initialize the async struct\n    int result = ntg_create(uid, chatID, desc, buffer, sizeof(buffer));\n    // Wait for the async operation to complete and\n    // use 'buffer' for JoinGroupCall\n    return 0;\n}"
     },
     "details": {
       "signature": "int ntg_get_params()",
@@ -2519,7 +2519,7 @@
     "description": "This method allows creating a Private Call connection that can be used to exchange keys and connect",
     "example": {
       "language": "c",
-      "code": "#include <stdint.h>\n        #include \"ntgcalls.h\"\n\n        int main() {\n            uint32_t uid = ntg_init();\n            ...\n            int64_t chatID = ...; // Obtain the chat ID\n            ntg_media_description_struct desc = {\n                // Fill in media description fields\n            };\n            ntg_async_struct future;\n            // Initialize the async struct\n            int result = ntg_create_p2p(\n                uid,\n                chatID,\n                desc,\n                &future\n            );\n            // Wait for the async operation to complete\n            return 0;\n        }"
+      "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uint32_t uid = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    ntg_media_description_struct desc = {\n        // Fill in media description fields\n    };\n    ntg_async_struct future;\n    // Initialize the async struct\n    int result = ntg_create_p2p(\n        uid,\n        chatID,\n        desc,\n        &future\n    );\n    // Wait for the async operation to complete\n    return 0;\n}"
     },
     "details": {
       "signature": "int ntg_create_p2p()",
@@ -2566,7 +2566,7 @@
     "description": "This method allows exchanging keys for a Private Call connection with the output params from\n      PhoneCallAccepted when is an outgoing call or PhoneCall when is an incoming call.",
     "example": {
       "language": "c",
-      "code": "#include <stdint.h>\n        #include \"ntgcalls.h\"\n\n        int main() {\n            uint32_t uid = ntg_init();\n            ...\n            int64_t chatID = ...; // Obtain the chat ID\n            uint8_t* g_a_or_b = ...; // Obtain the parameter for key exchange\n            int sizeGAOrB = ...; // Obtain the size of the parameter for key exchange\n            int64_t fingerprint = ...; // Obtain the fingerprint\n            ntg_auth_params_struct buffer;\n            // Initialize the async struct\n            ntg_async_struct future;\n            int result = ntg_exchange_keys(uid, chatID, g_a_or_b, sizeGAOrB, fingerprint, &buffer, &future);\n            // Wait for the async operation to complete\n        }"
+      "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uint32_t uid = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    uint8_t* g_a_or_b = ...; // Obtain the parameter for key exchange\n    int sizeGAOrB = ...; // Obtain the size of the parameter for key exchange\n    int64_t fingerprint = ...; // Obtain the fingerprint\n    ntg_auth_params_struct buffer;\n    // Initialize the async struct\n    ntg_async_struct future;\n    int result = ntg_exchange_keys(uid, chatID, g_a_or_b, sizeGAOrB, fingerprint, &buffer, &future);\n    // Wait for the async operation to complete\n}"
     },
     "details": {
       "signature": "int ntg_exchange_keys()",
@@ -2641,7 +2641,7 @@
     "description": "This method allows initializing a Private Call connection that can be used to exchange keys and connect with the output params from\n      GetDhConfig and PhoneCallRequested when is an incoming call\n      and then use the output params for AcceptCall (When is an incoming call) or RequestCall with Protocol.",
     "example": {
       "language": "c",
-      "code": "#include <stdint.h>\n        #include \"ntgcalls.h\"\n\n        int main() {\n            uint32_t uid = ntg_init();\n            ...\n            int64_t chatID = ...; // Obtain the chat ID\n            ntg_dh_config_struct dhConfig = ...; // Obtain the DH configuration\n            uint8_t* g_a_hash = ...; // Parameter for key exchange (Only when is incoming call)\n            int sizeG_A_Hash = ...; // Size of the parameter for key exchange (Only when is incoming call)\n            uint8_t* buffer[32];\n            // Initialize the async struct\n            ntg_async_struct future;\n            int result = ntg_init_exchange(\n                uid,\n                chatID,\n                &dhConfig,\n                g_a_hash,\n                sizeG_A_Hash,\n                buffer,\n                sizeof(buffer),\n                &future\n            );\n            // Wait for the async operation to complete\n        }"
+      "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uint32_t uid = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    ntg_dh_config_struct dhConfig = ...; // Obtain the DH configuration\n    uint8_t* g_a_hash = ...; // Parameter for key exchange (Only when is incoming call)\n    int sizeG_A_Hash = ...; // Size of the parameter for key exchange (Only when is incoming call)\n    uint8_t* buffer[32];\n    // Initialize the async struct\n    ntg_async_struct future;\n    int result = ntg_init_exchange(\n        uid,\n        chatID,\n        &dhConfig,\n        g_a_hash,\n        sizeG_A_Hash,\n        buffer,\n        sizeof(buffer),\n        &future\n    );\n    // Wait for the async operation to complete\n}"
     },
     "details": {
       "signature": "int ntg_init_exchange()",
@@ -2723,7 +2723,7 @@
     "description": "This method allows initializing a presentation connection, which is a connection for sharing the screen.",
     "example": {
       "language": "c",
-      "code": "#include <stdint.h>\n        #include \"ntgcalls.h\"\n\n        int main() {\n            uint32_t uid = ntg_init();\n            ...\n            int64_t chatID = ...; // Obtain the chat ID\n            // Initialize the async struct\n            ntg_async_struct future;\n            ntg_init_presentation(uid, chatID, &future);\n            // Wait for the async operation to complete\n        }"
+      "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uint32_t uid = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    // Initialize the async struct\n    ntg_async_struct future;\n    ntg_init_presentation(uid, chatID, &future);\n    // Wait for the async operation to complete\n}"
     },
     "details": {
       "signature": "int ntg_init_presentation()",
@@ -2763,7 +2763,7 @@
     "description": "This method allows skipping the exchange of keys for a Private Call connection by using the encryption key already exchanged.",
     "example": {
       "language": "c",
-      "code": "#include <stdint.h>\n        #include \"ntgcalls.h\"\n\n        int main() {\n            uint32_t uid = ntg_init();\n            ...\n            int64_t chatID = ...; // Obtain the chat ID\n            uint8_t* encryption_key = ... # Obtain the encryption key\n            int size = ...; // Obtain the size of the encryption key\n            // Initialize the async struct\n            ntg_async_struct future;\n            ntg_skip_exchange(uid, chatID, encryption_key, size, False, &future);\n            // Wait for the async operation to complete\n        }"
+      "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uint32_t uid = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    uint8_t* encryption_key = ... # Obtain the encryption key\n    int size = ...; // Obtain the size of the encryption key\n    // Initialize the async struct\n    ntg_async_struct future;\n    ntg_skip_exchange(uid, chatID, encryption_key, size, False, &future);\n    // Wait for the async operation to complete\n}"
     },
     "details": {
       "signature": "int ntg_skip_exchange()",
@@ -2831,7 +2831,7 @@
     "description": "This method allow stopping a WebRTC connection.",
     "example": {
       "language": "c",
-      "code": "#include <stdint.h>\n        #include \"ntgcalls.h\"\n\n        int main() {\n            uint32_t uid = ntg_init();\n            ...\n            int64_t chatID = ...; // Obtain the chat ID\n            char* params = ...;  // Obtain connection parameters\n            ntg_async_struct future;\n            // Initialize the async struct\n            int result = ntg_stop(uid, chatID);\n            // Wait for the async operation to complete\n            return 0;\n        }"
+      "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uint32_t uid = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    char* params = ...;  // Obtain connection parameters\n    ntg_async_struct future;\n    // Initialize the async struct\n    int result = ntg_stop(uid, chatID);\n    // Wait for the async operation to complete\n    return 0;\n}"
     },
     "details": {
       "signature": "int ntg_stop()",
@@ -2871,7 +2871,7 @@
     "description": "This method allows stopping the presentation connection.",
     "example": {
       "language": "c",
-      "code": "#include <stdint.h>\n        #include \"ntgcalls.h\"\n\n        int main() {\n            uint32_t uid = ntg_init();\n            ...\n            int64_t chatID = ...; // Obtain the chat ID\n            // Initialize the async struct\n            ntg_async_struct future;\n            ntg_stop_presentation(uid, chatID, &future);\n            // Wait for the async operation to complete\n        }"
+      "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uint32_t uid = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    // Initialize the async struct\n    ntg_async_struct future;\n    ntg_stop_presentation(uid, chatID, &future);\n    // Wait for the async operation to complete\n}"
     },
     "details": {
       "signature": "int ntg_stop_presentation()",
@@ -3226,7 +3226,7 @@
     "description": "\n        Welcome to the API Reference section, where you'll find comprehensive information about the NTgCalls API.\n        This is your gateway to in-depth details about the main Client class, its methods, types,\n        all of which play a crucial role in utilizing NTgCalls effectively.\n    ",
     "example": {
       "language": "python",
-      "code": "from ntgcalls import NTgCalls\n\n        app = NTgCalls()\n        print(app.ping())"
+      "code": "from ntgcalls import NTgCalls\n\napp = NTgCalls()\nprint(app.ping())"
     },
     "details": {
       "sections": [
@@ -3383,7 +3383,7 @@
     "description": "This method allows you to mute the WebRTC stream.",
     "example": {
       "language": "python",
-      "code": "from ntgcalls import NTgCalls\n        ...\n\n        app = NTgCalls()\n        ...\n\n        await app.mute(\n            -1001185324811,\n        )"
+      "code": "from ntgcalls import NTgCalls\n...\n\napp = NTgCalls()\n...\n\nawait app.mute(\n    -1001185324811,\n)"
     },
     "details": {
       "signature": "async NTgCalls.mute() -> bool",
@@ -3423,7 +3423,7 @@
     "description": "This method allows you to pause the WebRTC stream.",
     "example": {
       "language": "python",
-      "code": "from ntgcalls import NTgCalls\n        ...\n\n        app = NTgCalls()\n        ...\n\n        await app.pause(\n            -1001185324811,\n        )"
+      "code": "from ntgcalls import NTgCalls\n...\n\napp = NTgCalls()\n...\n\nawait app.pause(\n    -1001185324811,\n)"
     },
     "details": {
       "signature": "async NTgCalls.pause() -> bool",
@@ -3463,7 +3463,7 @@
     "description": "This method allows you to resume the WebRTC stream.",
     "example": {
       "language": "python",
-      "code": "from ntgcalls import NTgCalls\n        ...\n\n        app = NTgCalls()\n        ...\n\n        await app.resume(\n            -1001185324811,\n        )"
+      "code": "from ntgcalls import NTgCalls\n...\n\napp = NTgCalls()\n...\n\nawait app.resume(\n    -1001185324811,\n)"
     },
     "details": {
       "signature": "async NTgCalls.resume() -> bool",
@@ -3503,7 +3503,7 @@
     "description": "This method allows changing the streaming file in a Group Call.",
     "example": {
       "language": "python",
-      "code": "from ntgcalls import NTgCalls\n        from ntgcalls import StreamMode\n        from ntgcalls import MediaDescription\n        from ntgcalls import AudioDescription\n        ...\n\n        app = NTgCalls()\n\n        await app.set_stream_sources(\n            -1001185324811,\n            StreamMode.CAPTURE,\n            MediaDescription(\n                AudioDescription(\n                    input_mode=InputMode.File,\n                    input=\"foxes.pcm\",\n                    sample_rate=96000,\n                    bits_per_sample=16,\n                    channel_count=2,\n                ),\n            )\n        )"
+      "code": "from ntgcalls import NTgCalls\nfrom ntgcalls import StreamMode\nfrom ntgcalls import MediaDescription\nfrom ntgcalls import AudioDescription\n...\n\napp = NTgCalls()\n\nawait app.set_stream_sources(\n    -1001185324811,\n    StreamMode.CAPTURE,\n    MediaDescription(\n        AudioDescription(\n            input_mode=InputMode.File,\n            input=\"foxes.pcm\",\n            sample_rate=96000,\n            bits_per_sample=16,\n            channel_count=2,\n        ),\n    )\n)"
     },
     "details": {
       "signature": "async NTgCalls.set_stream_sources()",
@@ -3557,7 +3557,7 @@
     "description": "This method allows getting the played time of the stream.",
     "example": {
       "language": "python",
-      "code": "from ntgcalls import NTgCalls\n        ...\n\n        app = NTgCalls(client)\n\n        print(\n            await app.time(\n                -1001185324811,\n            )\n        )"
+      "code": "from ntgcalls import NTgCalls\n...\n\napp = NTgCalls(client)\n\nprint(\n    await app.time(\n        -1001185324811,\n    )\n)"
     },
     "details": {
       "signature": "async NTgCalls.time() -> int",
@@ -3604,7 +3604,7 @@
     "description": "This method allows you to unmute the WebRTC stream.",
     "example": {
       "language": "python",
-      "code": "from ntgcalls import NTgCalls\n        ...\n\n        app = NTgCalls()\n        ...\n\n        await app.unmute(\n            -1001185324811,\n        )"
+      "code": "from ntgcalls import NTgCalls\n...\n\napp = NTgCalls()\n...\n\nawait app.unmute(\n    -1001185324811,\n)"
     },
     "details": {
       "signature": "async NTgCalls.unmute() -> bool",
@@ -3644,7 +3644,7 @@
     "description": "This method allows you to mute the WebRTC stream.",
     "example": {
       "language": "c",
-      "code": "#include <stdint.h>\n        #include \"ntgcalls.h\"\n\n        int main() {\n            uint32_t uid = ntg_init();\n            ...\n            int64_t chatID = ...; // Obtain the chat ID\n            ntg_async_struct future;\n            // Initialize the async struct\n            int errCode = ntg_mute(uid, chatID, &future);\n            // Wait for the async operation to complete\n            if (future.errorCode == 0) {\n                printf(\"Audio muted.\\n\");\n            } else if (future.errorCode == 1) {\n                printf(\"Audio was already muted.\\n\");\n            } else {\n                printf(\"Failed to mute audio (Error code: %d).\\n\", future.errorCode);\n                return 1;\n            }\n            ... // Your Code Here\n            return 0;\n        }"
+      "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uint32_t uid = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    ntg_async_struct future;\n    // Initialize the async struct\n    int errCode = ntg_mute(uid, chatID, &future);\n    // Wait for the async operation to complete\n    if (future.errorCode == 0) {\n        printf(\"Audio muted.\\n\");\n    } else if (future.errorCode == 1) {\n        printf(\"Audio was already muted.\\n\");\n    } else {\n        printf(\"Failed to mute audio (Error code: %d).\\n\", future.errorCode);\n        return 1;\n    }\n    ... // Your Code Here\n    return 0;\n}"
     },
     "details": {
       "signature": "int ntg_mute()",
@@ -3684,7 +3684,7 @@
     "description": "This method allows you to pause the WebRTC stream.",
     "example": {
       "language": "c",
-      "code": "#include <stdint.h>\n        #include \"ntgcalls.h\"\n\n        int main() {\n            uint32_t uid = ntg_init();\n            ...\n            int64_t chatID = ...; // Obtain the chat ID\n            ntg_async_struct future;\n            // Initialize the async struct\n            int errCode = ntg_pause(uid, chatID);\n            // Wait for the async operation to complete\n            if (future.errorCode == 0) {\n                printf(\"Audio paused.\\n\");\n            } else if (future.errorCode == 1) {\n                printf(\"Audio was already paused.\\n\");\n            } else {\n                printf(\"Failed to pause audio (Error code: %d).\\n\", result);\n                return 1;\n            }\n            ... // Your Code Here\n            return 0;\n        }"
+      "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uint32_t uid = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    ntg_async_struct future;\n    // Initialize the async struct\n    int errCode = ntg_pause(uid, chatID);\n    // Wait for the async operation to complete\n    if (future.errorCode == 0) {\n        printf(\"Audio paused.\\n\");\n    } else if (future.errorCode == 1) {\n        printf(\"Audio was already paused.\\n\");\n    } else {\n        printf(\"Failed to pause audio (Error code: %d).\\n\", result);\n        return 1;\n    }\n    ... // Your Code Here\n    return 0;\n}"
     },
     "details": {
       "signature": "int ntg_pause()",
@@ -3724,7 +3724,7 @@
     "description": "This method allows you to resume the WebRTC stream.",
     "example": {
       "language": "c",
-      "code": "#include <stdint.h>\n        #include \"ntgcalls.h\"\n\n        int main() {\n            uint32_t uid = ntg_init();\n            ...\n            int64_t chatID = ...; // Obtain the chat ID\n            ntg_async_struct future;\n            // Initialize the async struct\n            int errCode = ntg_resume(uid, chatID, &future);\n            // Wait for the async operation to complete\n            if (future.errorCode == 0) {\n                printf(\"Audio resumed.\\n\");\n            } else if (future.errorCode == 1) {\n                printf(\"Audio was already resumed.\\n\");\n            } else {\n                printf(\"Failed to resume audio (Error code: %d).\\n\", result);\n                return 1;\n            }\n            ... // Your Code Here\n            return 0;\n        }"
+      "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uint32_t uid = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    ntg_async_struct future;\n    // Initialize the async struct\n    int errCode = ntg_resume(uid, chatID, &future);\n    // Wait for the async operation to complete\n    if (future.errorCode == 0) {\n        printf(\"Audio resumed.\\n\");\n    } else if (future.errorCode == 1) {\n        printf(\"Audio was already resumed.\\n\");\n    } else {\n        printf(\"Failed to resume audio (Error code: %d).\\n\", result);\n        return 1;\n    }\n    ... // Your Code Here\n    return 0;\n}"
     },
     "details": {
       "signature": "int ntg_resume()",
@@ -3764,7 +3764,7 @@
     "description": "This method allows changing the streaming file in a Group Call.",
     "example": {
       "language": "c",
-      "code": "#include <stdint.h>\n        #include \"ntgcalls.h\"\n\n        int main() {\n            uint32_t uid = ntg_init();\n            ...\n            int64_t chatID = ...; // Obtain the chat ID\n            ntg_media_description_struct desc = {\n                // Fill in updated media description fields\n            };\n            ntg_async_struct future;\n            // Initialize the async struct\n            int result = ntg_set_stream_sources(uid, chatID, NTG_STREAM_CAPTURE, desc, &future);\n            // Wait for the async operation to complete\n            return 0;\n        }"
+      "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uint32_t uid = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    ntg_media_description_struct desc = {\n        // Fill in updated media description fields\n    };\n    ntg_async_struct future;\n    // Initialize the async struct\n    int result = ntg_set_stream_sources(uid, chatID, NTG_STREAM_CAPTURE, desc, &future);\n    // Wait for the async operation to complete\n    return 0;\n}"
     },
     "details": {
       "signature": "int ntg_set_stream_sources()",
@@ -3804,7 +3804,7 @@
     "description": "This method allows getting the played time of the stream.",
     "example": {
       "language": "c",
-      "code": "#include <stdint.h>\n        #include \"ntgcalls.h\"\n\n        int main() {\n            uint32_t uid = ntg_init();\n            ...\n            int64_t chatID = ...; // Obtain the chat ID\n            int64_t time = 0;\n            ntg_async_struct future;\n            // Initialize the async struct\n            int64_t result = ntg_time(uid, chatID, NTG_STREAM_CAPTURE, &time, &future);\n            // Wait for the async operation to complete\n            return 0;\n        }"
+      "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uint32_t uid = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    int64_t time = 0;\n    ntg_async_struct future;\n    // Initialize the async struct\n    int64_t result = ntg_time(uid, chatID, NTG_STREAM_CAPTURE, &time, &future);\n    // Wait for the async operation to complete\n    return 0;\n}"
     },
     "details": {
       "signature": "int ntg_time()",
@@ -3851,7 +3851,7 @@
     "description": "This method allows you to unmute the WebRTC stream.",
     "example": {
       "language": "c",
-      "code": "#include <stdint.h>\n        #include \"ntgcalls.h\"\n\n        int main() {\n            uint32_t uid = ntg_init();\n            ...\n            int64_t chatID = ...; // Obtain the chat ID\n            ntg_async_struct future;\n            // Initialize the async struct\n            int errCode = ntg_unmute(uid, chatID, &future);\n            // Wait for the async operation to complete\n            if (future.errorCode == 0) {\n                printf(\"Audio unmuted.\\n\");\n            } else if (future.errorCode == 1) {\n                printf(\"Audio was already unmuted.\\n\");\n            } else {\n                printf(\"Failed to unmute audio (Error code: %d).\\n\", future.errorCode);\n                return 1;\n            }\n            ... // Your Code Here\n            return 0;\n        }"
+      "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uint32_t uid = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    ntg_async_struct future;\n    // Initialize the async struct\n    int errCode = ntg_unmute(uid, chatID, &future);\n    // Wait for the async operation to complete\n    if (future.errorCode == 0) {\n        printf(\"Audio unmuted.\\n\");\n    } else if (future.errorCode == 1) {\n        printf(\"Audio was already unmuted.\\n\");\n    } else {\n        printf(\"Failed to unmute audio (Error code: %d).\\n\", future.errorCode);\n        return 1;\n    }\n    ... // Your Code Here\n    return 0;\n}"
     },
     "details": {
       "signature": "int ntg_unmute()",
@@ -3891,7 +3891,7 @@
     "description": "\n        NTgCalls starting from version 1.2.0 supports asynchronous calls to function using ",
     "example": {
       "language": "cpp",
-      "code": "#include <ntgcalls.h>\n        #include <mutex>\n\n        void onCallReady(void* data) {\n            ((std::mutex*)data)->unlock();\n        }\n\n        void makeAsyncCall() {\n            ntg_async_struct asyncData;\n            std::mutex mtx;\n            asyncData.userData = &mtx;\n            asyncData.promise = onCallReady;\n            mtx.lock();\n            int error = ntg_pause(asyncData);\n            if (error != 0) {\n                // Handle error\n            }\n            mtx.lock();\n            // Async operation completed\n            if (asyncData.errorCode != 0) {\n                // Handle Async error\n            }\n        }"
+      "code": "#include <ntgcalls.h>\n#include <mutex>\n\nvoid onCallReady(void* data) {\n    ((std::mutex*)data)->unlock();\n}\n\nvoid makeAsyncCall() {\n    ntg_async_struct asyncData;\n    std::mutex mtx;\n    asyncData.userData = &mtx;\n    asyncData.promise = onCallReady;\n    mtx.lock();\n    int error = ntg_pause(asyncData);\n    if (error != 0) {\n        // Handle error\n    }\n    mtx.lock();\n    // Async operation completed\n    if (asyncData.errorCode != 0) {\n        // Handle Async error\n    }\n}"
     },
     "details": {},
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Using Async"
@@ -3903,7 +3903,7 @@
     "description": "This method changes the userbot’s output volume using MTProto APIs.",
     "example": {
       "language": "python",
-      "code": "from pytgcalls import Client\n        from pytgcalls import idle\n        ...\n\n        app = PyTgCalls(client)\n        app.start()\n\n        ...  # Call API methods\n\n        app.change_volume_call(\n            -1001185324811,\n            175,\n        )\n\n        idle()"
+      "code": "from pytgcalls import Client\nfrom pytgcalls import idle\n...\n\napp = PyTgCalls(client)\napp.start()\n\n...  # Call API methods\n\napp.change_volume_call(\n    -1001185324811,\n    175,\n)\n\nidle()"
     },
     "details": {
       "signature": "PyTgCalls.change_volume_call()",
@@ -3950,7 +3950,7 @@
     "description": "This method returns the list of a group call’s participants using MTProto APIs.",
     "example": {
       "language": "python",
-      "code": "from pytgcalls import Client\n        from pytgcalls import idle\n        ...\n\n        app = PyTgCalls(client)\n        app.start()\n\n        ...  # Call API methods\n\n        app.get_participants(\n            -1001185324811,\n        )\n\n        idle()"
+      "code": "from pytgcalls import Client\nfrom pytgcalls import idle\n...\n\napp = PyTgCalls(client)\napp.start()\n\n...  # Call API methods\n\napp.get_participants(\n    -1001185324811,\n)\n\nidle()"
     },
     "details": {
       "signature": "PyTgCalls.get_participants() -> list[GroupCall]",
@@ -3990,7 +3990,7 @@
     "description": "This method allows sending an external frame to the group call or private call.",
     "example": {
       "language": "python",
-      "code": "from pytgcalls import PyTgCalls\n        from pytgcalls import Device\n        from pytgcalls.types import Frame\n        from datetime import datetime\n        ...\n\n        app = PyTgCalls()\n        ...\n        pcm16_le_data = ...\n\n        app.send_frame(\n            -1001185324811,\n            Device.MICROPHONE,\n            pcm16_le_data,\n            Frame.Info(\n                int(datetime.now().timestamp()),\n            )\n        )"
+      "code": "from pytgcalls import PyTgCalls\nfrom pytgcalls import Device\nfrom pytgcalls.types import Frame\nfrom datetime import datetime\n...\n\napp = PyTgCalls()\n...\npcm16_le_data = ...\n\napp.send_frame(\n    -1001185324811,\n    Device.MICROPHONE,\n    pcm16_le_data,\n    Frame.Info(\n        int(datetime.now().timestamp()),\n    )\n)"
     },
     "details": {
       "signature": "PyTgCalls.send_frame()",
@@ -4577,7 +4577,7 @@
     "description": "\n        This function will run indefinitely in order to block the main script\n        execution and prevent it from exiting while having client(s) that are still running in the background.\n\n        PyTgCalls works by keeping your handlers in a pool of worker threads, which run\n        concurrently outside the main thread. Calling idle() will ensure that the client(s) remain active, by\n        preventing the main script from ending until you decide to quit.\n\n        Once a signal is received (e.g.: from CTRL+C) the function will terminate and your main script will continue.\n    ",
     "example": {
       "language": "python",
-      "code": "from pytgcalls import Client\n        from pytgcalls import idle\n        ...\n\n        app1 = PyTgCalls(client1)\n        app2 = PyTgCalls(client2)\n        app3 = PyTgCalls(client3)\n\n        ...  # Set handlers up\n\n        app1.start()\n        app2.start()\n        app3.start()\n\n        idle()"
+      "code": "from pytgcalls import Client\nfrom pytgcalls import idle\n...\n\napp1 = PyTgCalls(client1)\napp2 = PyTgCalls(client2)\napp3 = PyTgCalls(client3)\n\n...  # Set handlers up\n\napp1.start()\napp2.start()\napp3.start()\n\nidle()"
     },
     "details": {
       "signature": "pytgcalls.idle()"
@@ -4591,7 +4591,7 @@
     "description": "This method allows leaving and stopping a group call or a private call, or declining a private call.",
     "example": {
       "language": "python",
-      "code": "from pytgcalls import Client\n        from pytgcalls import idle\n        ...\n\n        app = PyTgCalls(client)\n        app.start()\n\n        ...  # Call API methods\n\n        app.leave_call(\n            -1001185324811,\n        )\n\n        idle()"
+      "code": "from pytgcalls import Client\nfrom pytgcalls import idle\n...\n\napp = PyTgCalls(client)\napp.start()\n\n...  # Call API methods\n\napp.leave_call(\n    -1001185324811,\n)\n\nidle()"
     },
     "details": {
       "signature": "PyTgCalls.leave_call()",
@@ -4631,7 +4631,7 @@
     "description": "\n        This is a convenience method that calls ",
     "example": {
       "language": "python",
-      "code": "from pytgcalls import Client\n        from pytgcalls import idle\n        ...\n        app = Client(client)\n\n        ...  # Call API decorators / MtProto decorators\n\n        app.run()"
+      "code": "from pytgcalls import Client\nfrom pytgcalls import idle\n...\napp = Client(client)\n\n...  # Call API decorators / MtProto decorators\n\napp.run()"
     },
     "details": {
       "signature": "PyTgCalls.run()",
@@ -4659,7 +4659,7 @@
     "description": "\n        This method start and then initialize NTgCalls core.\n    ",
     "example": {
       "language": "python",
-      "code": "from pytgcalls import Client\n        from pytgcalls import idle\n        ...\n        app = Client(client)\n\n        ...  # Call API decorators / MTProto decorators\n\n        app.start()"
+      "code": "from pytgcalls import Client\nfrom pytgcalls import idle\n...\napp = Client(client)\n\n...  # Call API decorators / MTProto decorators\n\napp.start()"
     },
     "details": {
       "signature": "PyTgCalls.start()",
@@ -4687,7 +4687,7 @@
     "description": "\n        At this point, we have successfully ",
     "example": {
       "language": "python",
-      "code": "from pytgcalls import PyTgCalls\n        from pytgcalls import idle\n        ...\n        api_id = 12345\n        api_hash = '0123456789abcdef0123456789abcdef'\n        ...\n        app = PyTgCalls(client)\n        app.start()\n        app.play(\n            -1001185324811,\n            'http://docs.evostream.com/sample_content/assets/sintel1m720p.mp4',\n        )\n        idle()"
+      "code": "from pytgcalls import PyTgCalls\nfrom pytgcalls import idle\n...\napi_id = 12345\napi_hash = '0123456789abcdef0123456789abcdef'\n...\napp = PyTgCalls(client)\napp.start()\napp.play(\n    -1001185324811,\n    'http://docs.evostream.com/sample_content/assets/sintel1m720p.mp4',\n)\nidle()"
     },
     "details": {},
     "doc_url": "https://pytgcalls.github.io/PyTgCalls/Calling Methods"
@@ -4795,7 +4795,7 @@
     "description": "\n        You now are in the API Reference section. Here you can find detailed information about PyTgCalls API:\n        the main Client class, all available methods, types, attributes and decorators detailed descriptions can be found starting from this page.\n\n        This page is about the Client class, which exposes high-level methods for easy access to the API.\n    ",
     "example": {
       "language": "python",
-      "code": "from pytgcalls import PyTgCalls\n\n        app = PyTgCalls(client)\n        app.start()"
+      "code": "from pytgcalls import PyTgCalls\n\napp = PyTgCalls(client)\napp.start()"
     },
     "details": {
       "sections": [
@@ -4907,7 +4907,7 @@
     "description": "\n        You now are in the API Reference section where you can find detailed information about the Custom API:\n        the Front-end API class, all available methods, types, attributes and decorators detailed descriptions can be found starting from this page.\n\n        This page is about the CustomAPI class, which exposes high-level methods for easy access to the API.\n    ",
     "example": {
       "language": "python",
-      "code": "from pytgcalls import CustomApi\n\n        api = CustomApi()\n\n        @api.on_update_custom_api()\n        async def custom_api_request(request: dict):\n            print(request)\n            return {\n                'response': 'FOXES',\n            }\n        api.start()"
+      "code": "from pytgcalls import CustomApi\n\napi = CustomApi()\n\n@api.on_update_custom_api()\nasync def custom_api_request(request: dict):\n    print(request)\n    return {\n        'response': 'FOXES',\n    }\napi.start()"
     },
     "details": {
       "sections": [
@@ -4958,7 +4958,7 @@
     "description": "\n        While still being methods bound to the ",
     "example": {
       "language": "python",
-      "code": "from pytgcalls import PyTgCalls\n        from pytgcalls.types import Update\n        from pytgcalls import filters as call_filters\n        ...\n        client = # Here Your MTProto Client\n        app = PyTgCalls(client)\n\n        @app.on_update(call_filters.stream_end())\n        async def handler(client: PyTgCalls, update: Update):\n            print(update)\n\n        app.run()"
+      "code": "from pytgcalls import PyTgCalls\nfrom pytgcalls.types import Update\nfrom pytgcalls import filters as call_filters\n...\nclient = # Here Your MTProto Client\napp = PyTgCalls(client)\n\n@app.on_update(call_filters.stream_end())\nasync def handler(client: PyTgCalls, update: Update):\n    print(update)\n\napp.run()"
     },
     "details": {
       "signature": "@CustomApi.on_update_custom_api()",
@@ -5019,7 +5019,7 @@
     "description": "\n        Calling API methods sequentially is cool, but what if, for example, the list of participants changes?\n        This page covers updates and how to handle such events in PyTgCalls. Let’s have a look at how they work.\n    ",
     "example": {
       "language": "python",
-      "code": "from pytgcalls import PyTgCalls, filters\n        from pytgcalls.types import Update\n        from pytgcalls.types import MediaStream\n        ...\n        app = PyTgCalls(client)\n\n        @app.on_update(filters.stream_end())\n        async def my_handler(client: PyTgCalls, update: Update):\n            if isinstance(update, StreamVideoEnded):\n                await pytgcalls.play(\n                    -1001185324811,\n                    'http://docs.evostream.com/sample_content/assets/sintel1m720p.mp4',\n                )\n\n        app.run()"
+      "code": "from pytgcalls import PyTgCalls, filters\nfrom pytgcalls.types import Update\nfrom pytgcalls.types import MediaStream\n...\napp = PyTgCalls(client)\n\n@app.on_update(filters.stream_end())\nasync def my_handler(client: PyTgCalls, update: Update):\n    if isinstance(update, StreamVideoEnded):\n        await pytgcalls.play(\n            -1001185324811,\n            'http://docs.evostream.com/sample_content/assets/sintel1m720p.mp4',\n        )\n\napp.run()"
     },
     "details": {},
     "doc_url": "https://pytgcalls.github.io/PyTgCalls/Handling Updates"
@@ -5043,7 +5043,7 @@
     "description": "\n        This class offers methods to access information regarding media devices available on your system.\n        This functionality proves valuable when you intend to stream content from either your screen or microphone.\n    ",
     "example": {
       "language": "python",
-      "code": "from pytgcalls import Client\n        from pytgcalls import idle\n        from pytgcalls import MediaDevices\n        ...\n\n        app = PyTgCalls(client)\n        app.start()\n\n        ...  # Call API methods\n\n        app.play(\n            -1001185324811,\n            MediaDevices.get_audio_devices()[0],\n        )\n\n        idle()"
+      "code": "from pytgcalls import Client\nfrom pytgcalls import idle\nfrom pytgcalls import MediaDevices\n...\n\napp = PyTgCalls(client)\napp.start()\n\n...  # Call API methods\n\napp.play(\n    -1001185324811,\n    MediaDevices.get_audio_devices()[0],\n)\n\nidle()"
     },
     "details": {
       "sections": [
@@ -5189,7 +5189,7 @@
     "description": "This method allows muting the userbot via MTProto APIs.",
     "example": {
       "language": "python",
-      "code": "from pytgcalls import Client\n        from pytgcalls import idle\n        ...\n\n        app = PyTgCalls(client)\n        app.start()\n\n        ...  # Call API methods\n\n        app.mute(\n            -1001185324811,\n        )\n\n        idle()"
+      "code": "from pytgcalls import Client\nfrom pytgcalls import idle\n...\n\napp = PyTgCalls(client)\napp.start()\n\n...  # Call API methods\n\napp.mute(\n    -1001185324811,\n)\n\nidle()"
     },
     "details": {
       "signature": "PyTgCalls.mute() -> bool",
@@ -5229,7 +5229,7 @@
     "description": "This method allows pausing the streaming file.",
     "example": {
       "language": "python",
-      "code": "from pytgcalls import Client\n        from pytgcalls import idle\n        ...\n\n        app = PyTgCalls(client)\n        app.start()\n\n        ...  # Call API methods\n\n        app.pause(\n            -1001185324811,\n        )\n\n        idle()"
+      "code": "from pytgcalls import Client\nfrom pytgcalls import idle\n...\n\napp = PyTgCalls(client)\napp.start()\n\n...  # Call API methods\n\napp.pause(\n    -1001185324811,\n)\n\nidle()"
     },
     "details": {
       "signature": "PyTgCalls.pause() -> bool",
@@ -5269,7 +5269,7 @@
     "description": "This method allows streaming audio or video to a group call or a private call.",
     "example": {
       "language": "python",
-      "code": "from pytgcalls import Client\n        from pytgcalls import idle\n        ...\n\n        app = PyTgCalls(client)\n        app.start()\n\n        ...  # Call API methods\n\n        app.play(\n            -1001185324811,\n            'test.mp4',\n        )\n\n        idle()"
+      "code": "from pytgcalls import Client\nfrom pytgcalls import idle\n...\n\napp = PyTgCalls(client)\napp.start()\n\n...  # Call API methods\n\napp.play(\n    -1001185324811,\n    'test.mp4',\n)\n\nidle()"
     },
     "details": {
       "signature": "PyTgCalls.play()",
@@ -5323,7 +5323,7 @@
     "description": "This method allows recording audio or video from a group call or a private call.",
     "example": {
       "language": "python",
-      "code": "from pytgcalls import Client\n        from pytgcalls import idle\n        ...\n\n        app = PyTgCalls(client)\n        app.start()\n\n        ...  # Call API methods\n\n        app.record(\n            -1001185324811,\n            'record.mp3',\n        )\n\n        idle()"
+      "code": "from pytgcalls import Client\nfrom pytgcalls import idle\n...\n\napp = PyTgCalls(client)\napp.start()\n\n...  # Call API methods\n\napp.record(\n    -1001185324811,\n    'record.mp3',\n)\n\nidle()"
     },
     "details": {
       "signature": "PyTgCalls.record()",
@@ -5377,7 +5377,7 @@
     "description": "This method allows resuming the streaming file.",
     "example": {
       "language": "python",
-      "code": "from pytgcalls import Client\n        from pytgcalls import idle\n        ...\n\n        app = PyTgCalls(client)\n        app.start()\n\n        ...  # Call API methods\n\n        app.resume(\n            -1001185324811,\n        )\n\n        idle()"
+      "code": "from pytgcalls import Client\nfrom pytgcalls import idle\n...\n\napp = PyTgCalls(client)\napp.start()\n\n...  # Call API methods\n\napp.resume(\n    -1001185324811,\n)\n\nidle()"
     },
     "details": {
       "signature": "PyTgCalls.resume() -> bool",
@@ -5417,7 +5417,7 @@
     "description": "This method allows getting the played time of the stream.",
     "example": {
       "language": "python",
-      "code": "from pytgcalls import Client\n        from pytgcalls import idle\n        ...\n\n        app = PyTgCalls(client)\n        app.start()\n\n        ...  # Call API methods\n\n        print(\n            app.time(\n                -1001185324811,\n            )\n        )\n\n        idle()"
+      "code": "from pytgcalls import Client\nfrom pytgcalls import idle\n...\n\napp = PyTgCalls(client)\napp.start()\n\n...  # Call API methods\n\nprint(\n    app.time(\n        -1001185324811,\n    )\n)\n\nidle()"
     },
     "details": {
       "signature": "PyTgCalls.time() -> int",
@@ -5464,7 +5464,7 @@
     "description": "This method allows unmuting the userbot via MTProto APIs",
     "example": {
       "language": "python",
-      "code": "from pytgcalls import Client\n        from pytgcalls import idle\n        ...\n\n        app = PyTgCalls(client)\n        app.start()\n\n        ...  # Call API methods\n\n        app.unmute(\n            -1001185324811,\n        )\n\n        idle()"
+      "code": "from pytgcalls import Client\nfrom pytgcalls import idle\n...\n\napp = PyTgCalls(client)\napp.start()\n\n...  # Call API methods\n\napp.unmute(\n    -1001185324811,\n)\n\nidle()"
     },
     "details": {
       "signature": "PyTgCalls.unmute() -> bool",
@@ -5513,7 +5513,7 @@
     "description": "\n        Handlers are used to instruct PyTgCalls to execute a specific function when a certain event occurs.\n        For a much more convenient way to handle updates, you can use the ",
     "example": {
       "language": "python",
-      "code": "from pytgcalls import PyTgCalls\n        from pytgcalls.types import Update\n        from pytgcalls import filters as call_filters\n        ...\n\n        client = # Here Your MTProto Client\n        app = PyTgCalls(client)\n\n        async def handler(client: PyTgCalls, update: Update):\n            print(update)\n        ...\n        app.add_handler(handler, call_filters.stream_end())\n        ..."
+      "code": "from pytgcalls import PyTgCalls\nfrom pytgcalls.types import Update\nfrom pytgcalls import filters as call_filters\n...\n\nclient = # Here Your MTProto Client\napp = PyTgCalls(client)\n\nasync def handler(client: PyTgCalls, update: Update):\n    print(update)\n...\napp.add_handler(handler, call_filters.stream_end())\n..."
     },
     "details": {},
     "doc_url": "https://pytgcalls.github.io/PyTgCalls/Using Handlers"
