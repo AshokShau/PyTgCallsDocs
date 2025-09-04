@@ -53,6 +53,46 @@
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Advanced Methods/Add Incoming Video"
   },
+  "/NTgCalls/Advanced Methods/Get Connection Mode.xml": {
+    "title": "Get Connection Mode",
+    "lib": "NTgCalls",
+    "kind": "method",
+    "description": "This method allows getting the connection mode for a Group Call connection, which can be RTMP, WebRTC, or MTProto.",
+    "example": {
+      "language": "python",
+      "code": "from ntgcalls import NTgCalls\n...\n\napp = NTgCalls()\n...\nmode = await app.get_connection_mode(\n    -1001185324811,\n)"
+    },
+    "details": {
+      "signature": "async NTgCalls.get_connection_mode() -> ntgcalls.ConnectionMode",
+      "sections": [
+        {
+          "title": "PARAMETERS",
+          "items": [
+            {
+              "name": "chat_id",
+              "type": "int",
+              "description": "Unique identifier of a chat.",
+              "source_config": "ARG_INT_ID",
+              "value": null
+            }
+          ]
+        },
+        {
+          "title": "RAISES",
+          "items": [
+            {
+              "name": "",
+              "type": null,
+              "description": "exception ntgcalls.ConnectionNotFound\nThe specified connection was not found.",
+              "source_config": "CONNECTION_NOT_FOUND_EXCEPTION",
+              "value": null
+            }
+          ]
+        }
+      ]
+    },
+    "doc_url": "https://pytgcalls.github.io/NTgCalls/Advanced Methods/Get Connection Mode"
+  },
   "/NTgCalls/Advanced Methods/Get State.xml": {
     "title": "Get State",
     "lib": "NTgCalls",
@@ -139,6 +179,128 @@
       ]
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Advanced Methods/Remove Incoming Video"
+  },
+  "/NTgCalls/Advanced Methods/Send Broadcast Part.xml": {
+    "title": "Send Broadcast Part",
+    "lib": "NTgCalls",
+    "kind": "method",
+    "description": "This method allows sending a broadcast stream part to the MTProto connection, obtained from\n        GetFile by using the InputGroupCallStream constructor.",
+    "example": {
+      "language": "python",
+      "code": "from ntgcalls import NTgCalls\nfrom ntgcalls import MediaSegmentStatus\n...\n\napp = NTgCalls()\n...\nframe_data = ...\n\nawait app.send_broadcast_part(\n    -1001185324811,\n    1234567,\n    1,\n    MediaSegmentStatus.SUCCESS,\n    False,\n    frame_data,\n)"
+    },
+    "details": {
+      "signature": "async NTgCalls.send_broadcast_part()",
+      "sections": [
+        {
+          "title": "PARAMETERS",
+          "items": [
+            {
+              "name": "chat_id",
+              "type": "int",
+              "description": "Unique identifier of a chat.",
+              "source_config": "ARG_INT_ID",
+              "value": null
+            },
+            {
+              "name": "segment_id",
+              "type": "int",
+              "description": " Unique identifier of the broadcast segment.",
+              "source_config": null,
+              "value": null
+            },
+            {
+              "name": "part_id",
+              "type": "int",
+              "description": " Unique identifier of the broadcast part.",
+              "source_config": null,
+              "value": null
+            },
+            {
+              "name": "status",
+              "type": "MediaSegmentStatus",
+              "description": "",
+              "source_config": null,
+              "value": null
+            },
+            {
+              "name": "quality_update",
+              "type": "bool",
+              "description": " Indicates if it is a quality update.",
+              "source_config": null,
+              "value": null
+            },
+            {
+              "name": "frame",
+              "type": "bytes",
+              "description": "",
+              "source_config": null,
+              "value": null
+            }
+          ]
+        },
+        {
+          "title": "RAISES",
+          "items": [
+            {
+              "name": "",
+              "type": null,
+              "description": "exception ntgcalls.ConnectionNotFound\nThe specified connection was not found. exception ntgcalls.RTCException\nThis error indicates that the MTProto connection is not established or has been closed.",
+              "source_config": "CONNECTION_NOT_FOUND_EXCEPTION",
+              "value": null
+            }
+          ]
+        }
+      ]
+    },
+    "doc_url": "https://pytgcalls.github.io/NTgCalls/Advanced Methods/Send Broadcast Part"
+  },
+  "/NTgCalls/Advanced Methods/Send Broadcast Timestamp.xml": {
+    "title": "Send Broadcast Timestamp",
+    "lib": "NTgCalls",
+    "kind": "method",
+    "description": "This method allows sending a broadcast timestamp to the MTProto connection, obtained from\n      GetGroupCallStreamChannels.",
+    "example": {
+      "language": "python",
+      "code": "from ntgcalls import NTgCalls\n...\n\napp = NTgCalls()\n...\nawait app.send_broadcast_timestamp(\n    -1001185324811,\n    1700000000,\n)"
+    },
+    "details": {
+      "signature": "async NTgCalls.send_broadcast_timestamp()",
+      "sections": [
+        {
+          "title": "PARAMETERS",
+          "items": [
+            {
+              "name": "chat_id",
+              "type": "int",
+              "description": "Unique identifier of a chat.",
+              "source_config": "ARG_INT_ID",
+              "value": null
+            },
+            {
+              "name": "timestamp",
+              "type": "int",
+              "description": " Last seen timestamp to easily start fetching livestream chunks using InputGroupCallStream",
+              "source_config": null,
+              "value": null
+            }
+          ]
+        },
+        {
+          "title": "RAISES",
+          "items": [
+            {
+              "name": "",
+              "type": null,
+              "description": "exception ntgcalls.ConnectionNotFound\nThe specified connection was not found. exception ntgcalls.RTCException\nThis error indicates that the MTProto connection is not established or has been closed.",
+              "source_config": "CONNECTION_NOT_FOUND_EXCEPTION",
+              "value": null
+            }
+          ]
+        }
+      ]
+    },
+    "doc_url": "https://pytgcalls.github.io/NTgCalls/Advanced Methods/Send Broadcast Timestamp"
   },
   "/NTgCalls/Advanced Methods/Send External Frame.xml": {
     "title": "Send External Frame",
@@ -231,7 +393,7 @@
     "description": "This method allows to notify the library that an incoming video stream is available.",
     "example": {
       "language": "c",
-      "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uint32_t uid = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    char* endpoint = ...; // Obtain the endpoint of the incoming video\n    ntg_ssrc_group_struct* ssrcGroups = ...; // Obtain the SSRC groups of the incoming video\n    int size = ...; // Obtain the size of the SSRC groups array\n    uint32_t ssrc_buffer;\n    // Initialize the async struct\n    ntg_async_struct future;\n    ntg_add_incoming_video(uid, chatID, endpoint, ssrcGroups, &ssrc_buffer, &future);\n    // Wait for the async operation to complete\n    return 0;\n}"
+      "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uintptr_t ptr = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    char* endpoint = ...; // Obtain the endpoint of the incoming video\n    ntg_ssrc_group_struct* ssrcGroups = ...; // Obtain the SSRC groups of the incoming video\n    int size = ...; // Obtain the size of the SSRC groups array\n    uint32_t ssrc_buffer;\n    // Initialize the async struct\n    ntg_async_struct future;\n    ntg_add_incoming_video(ptr, chatID, endpoint, ssrcGroups, &ssrc_buffer, &future);\n    // Wait for the async operation to complete\n    return 0;\n}"
     },
     "details": {
       "signature": "int ntg_add_incoming_video()",
@@ -240,10 +402,10 @@
           "title": "PARAMETERS",
           "items": [
             {
-              "name": "[UNRESOLVED",
-              "type": "ARG_C_UID]",
-              "description": " int64_t chatID\nUnique identifier of a chat.",
-              "source_config": "ARG_C_UID",
+              "name": "",
+              "type": null,
+              "description": "uintptr_t ptr\nThe pointer to the NTgCalls instance. int64_t chatID\nUnique identifier of a chat.",
+              "source_config": "ARG_C_PTR",
               "value": null
             },
             {
@@ -299,7 +461,7 @@
     "description": "This function returns a list of",
     "example": {
       "language": "c",
-      "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uint32_t uid = ntg_init();\n    ...\n    int size = ...  ; // Get the size of the call list\n    ntg_call_struct buffer[size];\n    // Initialize the async struct\n    ntg_async_struct future;\n    int result = ntg_calls(uid, buffer, size, &future);\n    // Wait for the async operation to complete\n    for (int i = 0; i < result; i++) {\n        printf(\"Group Call %d:\\n\", i + 1);\n        printf(\"  Chat ID: %lld\\n\", buffer[i].chatId);\n        printf(\"  Status: %d\\n\", buffer[i].status);\n    }\n    ... // Your Code Here\n    return 0;\n}"
+      "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uintptr_t ptr = ntg_init();\n    ...\n    int size;\n    ntg_call_struct* buffer;\n    // Initialize the async struct\n    ntg_async_struct future;\n    int result = ntg_calls(ptr, &buffer, &size, &future);\n    // Wait for the async operation to complete\n    for (int i = 0; i < result; i++) {\n        printf(\"Group Call %d:\\n\", i + 1);\n        printf(\"  Chat ID: %lld\\n\", buffer[i].chatId);\n        printf(\"  Status: %d\\n\", buffer[i].status);\n    }\n    ... // Your Code Here\n    return 0;\n}"
     },
     "details": {
       "signature": "int ntg_calls()",
@@ -308,24 +470,24 @@
           "title": "PARAMETERS",
           "items": [
             {
-              "name": "[UNRESOLVED",
-              "type": "ARG_C_UID]",
-              "description": "",
-              "source_config": "ARG_C_UID",
+              "name": "",
+              "type": null,
+              "description": "uintptr_t ptr\nThe pointer to the NTgCalls instance.",
+              "source_config": "ARG_C_PTR",
               "value": null
             },
             {
-              "name": "ntg_call_struct* buffer",
+              "name": "ntg_call_struct** buffer",
               "type": null,
               "description": "",
               "source_config": null,
               "value": null
             },
             {
-              "name": "[UNRESOLVED",
-              "type": "ARG_BUF_SIZE]",
+              "name": "int* size",
+              "type": null,
               "description": " ntg_async_struct* future\nThe ntg_async_struct instance that will be used to track the async operation.",
-              "source_config": "ARG_BUF_SIZE",
+              "source_config": null,
               "value": null
             }
           ]
@@ -338,13 +500,6 @@
               "type": null,
               "description": "#NTG_INVALID_UID -2\nThe provided UID is invalid. #NTG_UNKNOWN_EXCEPTION -1\nAn unknown exception occurred.",
               "source_config": "BASE_SYNC_C_EXCEPTION",
-              "value": null
-            },
-            {
-              "name": "[UNRESOLVED",
-              "type": "SMALL_BUFF_EXCEPTION]",
-              "description": "",
-              "source_config": "SMALL_BUFF_EXCEPTION",
               "value": null
             }
           ]
@@ -353,53 +508,6 @@
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Advanced Methods/ntg_calls"
   },
-  "/NTgCalls/Advanced Methods/ntg_calls_count.xml": {
-    "title": "ntg_calls_count",
-    "lib": "NTgCalls",
-    "kind": "method",
-    "description": "This function returns the number of active group calls that NTgCalls is connected to.",
-    "example": {
-      "language": "c",
-      "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uint32_t uid = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    int count = 0;\n    // Initialize the async struct\n    ntg_async_struct future;\n    int result = ntg_calls_count(uid, &count, &future);\n    // Wait for the async operation to complete\n    printf(\"Number of active group calls: %d\\n\", count);\n    ... // Your Code Here\n    return 0;\n}"
-    },
-    "details": {
-      "signature": "int ntg_calls_count()",
-      "sections": [
-        {
-          "title": "PARAMETERS",
-          "items": [
-            {
-              "name": "[UNRESOLVED",
-              "type": "ARG_C_UID]",
-              "description": "",
-              "source_config": "ARG_C_UID",
-              "value": null
-            },
-            {
-              "name": "int* count",
-              "type": null,
-              "description": " ntg_async_struct* future\nThe ntg_async_struct instance that will be used to track the async operation.",
-              "source_config": null,
-              "value": null
-            }
-          ]
-        },
-        {
-          "title": "ERROR CODES",
-          "items": [
-            {
-              "name": "",
-              "type": null,
-              "description": "#NTG_INVALID_UID -2\nThe provided UID is invalid. #NTG_UNKNOWN_EXCEPTION -1\nAn unknown exception occurred.",
-              "source_config": "BASE_SYNC_C_EXCEPTION",
-              "value": null
-            }
-          ]
-        }
-      ]
-    },
-    "doc_url": "https://pytgcalls.github.io/NTgCalls/Advanced Methods/ntg_calls_count"
-  },
   "/NTgCalls/Advanced Methods/ntg_cpu_usage.xml": {
     "title": "ntg_cpu_usage",
     "lib": "NTgCalls",
@@ -407,7 +515,7 @@
     "description": "Get an estimate of the CPU usage of the current process.",
     "example": {
       "language": "c",
-      "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uint32_t uid = ntg_init();\n    ...\n    double buffer;\n    // Initialize the async struct\n    ntg_async_struct future;\n    int64_t usage = ntg_cpu_usage(uid, &buffer, &future);\n    // Wait for the async operation to complete and use\n    return 0;\n}"
+      "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uintptr_t ptr = ntg_init();\n    ...\n    double buffer;\n    // Initialize the async struct\n    ntg_async_struct future;\n    int64_t usage = ntg_cpu_usage(ptr, &buffer, &future);\n    // Wait for the async operation to complete and use\n    return 0;\n}"
     },
     "details": {
       "signature": "int ntg_cpu_usage()",
@@ -416,10 +524,10 @@
           "title": "PARAMETERS",
           "items": [
             {
-              "name": "[UNRESOLVED",
-              "type": "ARG_C_UID]",
-              "description": "",
-              "source_config": "ARG_C_UID",
+              "name": "",
+              "type": null,
+              "description": "uintptr_t ptr\nThe pointer to the NTgCalls instance.",
+              "source_config": "ARG_C_PTR",
               "value": null
             },
             {
@@ -463,33 +571,52 @@
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Advanced Methods/ntg_enable_g_lib_loop"
   },
-  "/NTgCalls/Advanced Methods/ntg_enable_h264_encoder.xml": {
-    "title": "ntg_enable_h264_encoder",
+  "/NTgCalls/Advanced Methods/ntg_get_connection_mode.xml": {
+    "title": "ntg_get_connection_mode",
     "lib": "NTgCalls",
     "kind": "method",
-    "description": "",
+    "description": "This method allows getting the connection mode for a Group Call connection, which can be RTMP, WebRTC, or MTProto.",
     "example": {
-      "language": "cpp",
-      "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    ...\n    ntg_enable_h264_encoder(true);\n    return 0;\n}"
+      "language": "c",
+      "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uintptr_t ptr = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    ntg_connection_mode_enum buffer;\n    ntg_async_struct future;\n    ntg_get_connection_mode(ptr, chatID, &buffer, &future);\n    ...\n    return 0;\n}"
     },
     "details": {
-      "signature": "int ntg_enable_h264_encoder()",
+      "signature": "int ntg_get_connection_mode()",
       "sections": [
         {
           "title": "PARAMETERS",
           "items": [
             {
-              "name": "bool enable",
+              "name": "",
               "type": null,
-              "description": " Enable or disable the H264 encoder.",
+              "description": "uintptr_t ptr\nThe pointer to the NTgCalls instance. int64_t chatID\nUnique identifier of a chat.",
+              "source_config": "ARG_C_PTR",
+              "value": null
+            },
+            {
+              "name": "ntg_connection_mode_enum* connectionMode",
+              "type": null,
+              "description": " ntg_async_struct* future\nThe ntg_async_struct instance that will be used to track the async operation.",
               "source_config": null,
+              "value": null
+            }
+          ]
+        },
+        {
+          "title": "ERROR CODES",
+          "items": [
+            {
+              "name": "",
+              "type": null,
+              "description": "#NTG_INVALID_UID -2\nThe provided UID is invalid. #NTG_UNKNOWN_EXCEPTION -1\nAn unknown exception occurred.\n#NTG_CONNECTION_NOT_FOUND -101\nThe specified connection was not found.",
+              "source_config": "BASE_SYNC_C_EXCEPTION",
               "value": null
             }
           ]
         }
       ]
     },
-    "doc_url": "https://pytgcalls.github.io/NTgCalls/Advanced Methods/ntg_enable_h264_encoder"
+    "doc_url": "https://pytgcalls.github.io/NTgCalls/Advanced Methods/ntg_get_connection_mode"
   },
   "/NTgCalls/Advanced Methods/ntg_get_media_devices.xml": {
     "title": "ntg_get_media_devices",
@@ -526,7 +653,7 @@
     "description": "This method allows getting the protocol for a Private Call connection with the output params for Telegram constructor\n      PhoneCallProtocol.",
     "example": {
       "language": "c",
-      "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uint32_t uid = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    ntg_protocol_struct buffer;\n    ntg_get_protocol(uid, chatID, &buffer);\n    ...\n    return 0;\n}"
+      "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uintptr_t ptr = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    ntg_protocol_struct buffer;\n    ntg_get_protocol(ptr, chatID, &buffer);\n    ...\n    return 0;\n}"
     },
     "details": {
       "signature": "int ntg_get_protocol()",
@@ -535,10 +662,10 @@
           "title": "PARAMETERS",
           "items": [
             {
-              "name": "[UNRESOLVED",
-              "type": "ARG_C_UID]",
-              "description": " int64_t chatID\nUnique identifier of a chat.",
-              "source_config": "ARG_C_UID",
+              "name": "",
+              "type": null,
+              "description": "uintptr_t ptr\nThe pointer to the NTgCalls instance. int64_t chatID\nUnique identifier of a chat.",
+              "source_config": "ARG_C_PTR",
               "value": null
             },
             {
@@ -573,7 +700,7 @@
     "description": "This method allows retrieving GroupCall MTProto Configurations for\n      EditGroupCallParticipant.",
     "example": {
       "language": "c",
-      "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uint32_t uid = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    ntg_media_state_struct buffer;\n    // Initialize the async struct\n    ntg_async_struct future;\n    ntg_get_state(uid, chatID, &buffer, &future);\n    // Wait for the async operation to complete and use\n    // the buffer for EditGroupCallParticipant\n    ...\n    return 0;\n}"
+      "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uintptr_t ptr = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    ntg_media_state_struct buffer;\n    // Initialize the async struct\n    ntg_async_struct future;\n    ntg_get_state(ptr, chatID, &buffer, &future);\n    // Wait for the async operation to complete and use\n    // the buffer for EditGroupCallParticipant\n    ...\n    return 0;\n}"
     },
     "details": {
       "signature": "int ntg_get_state()",
@@ -582,10 +709,10 @@
           "title": "PARAMETERS",
           "items": [
             {
-              "name": "[UNRESOLVED",
-              "type": "ARG_C_UID]",
-              "description": " int64_t chatID\nUnique identifier of a chat.",
-              "source_config": "ARG_C_UID",
+              "name": "",
+              "type": null,
+              "description": "uintptr_t ptr\nThe pointer to the NTgCalls instance. int64_t chatID\nUnique identifier of a chat.",
+              "source_config": "ARG_C_PTR",
               "value": null
             },
             {
@@ -620,7 +747,7 @@
     "description": "This method allows to notify the library that an incoming video stream is no longer available.",
     "example": {
       "language": "c",
-      "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uint32_t uid = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    char* endpoint = ...; // Obtain the endpoint of the incoming video\n    // Initialize the async struct\n    ntg_async_struct future;\n    ntg_remove_incoming_video(uid, chatID, endpoint, &future);\n    // Wait for the async operation to complete\n    return 0;\n}"
+      "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uintptr_t ptr = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    char* endpoint = ...; // Obtain the endpoint of the incoming video\n    // Initialize the async struct\n    ntg_async_struct future;\n    ntg_remove_incoming_video(ptr, chatID, endpoint, &future);\n    // Wait for the async operation to complete\n    return 0;\n}"
     },
     "details": {
       "signature": "int ntg_remove_incoming_video()",
@@ -629,10 +756,10 @@
           "title": "PARAMETERS",
           "items": [
             {
-              "name": "[UNRESOLVED",
-              "type": "ARG_C_UID]",
-              "description": " int64_t chatID\nUnique identifier of a chat.",
-              "source_config": "ARG_C_UID",
+              "name": "",
+              "type": null,
+              "description": "uintptr_t ptr\nThe pointer to the NTgCalls instance. int64_t chatID\nUnique identifier of a chat.",
+              "source_config": "ARG_C_PTR",
               "value": null
             },
             {
@@ -660,6 +787,135 @@
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Advanced Methods/ntg_remove_incoming_video"
   },
+  "/NTgCalls/Advanced Methods/ntg_send_broadcast_part.xml": {
+    "title": "ntg_send_broadcast_part",
+    "lib": "NTgCalls",
+    "kind": "method",
+    "description": "This method allows sending a broadcast stream part to the MTProto connection, obtained from\n        GetFile by using the InputGroupCallStream constructor.",
+    "example": {
+      "language": "c",
+      "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uintptr_t ptr = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    int64_t segmentId = ...; // Obtain the segment ID\n    int32_t partId = ...; // Obtain the part ID\n    bool qualityUpdate = ...; // Obtain the quality update flag\n    uint8_t* frame = ...; // Obtain the frame data\n    int size = ...; // Obtain the size of the frame data\n    // Initialize the async struct\n    ntg_async_struct future;\n    ntg_send_broadcast_part(ptr, chatID, segmentId, partId, NTG_MEDIA_SEGMENT_SUCCESS, qualityUpdate, frame, size, &future);\n    // Wait for the async operation to complete\n    return 0;\n}"
+    },
+    "details": {
+      "signature": "int ntg_send_broadcast_part()",
+      "sections": [
+        {
+          "title": "PARAMETERS",
+          "items": [
+            {
+              "name": "",
+              "type": null,
+              "description": "uintptr_t ptr\nThe pointer to the NTgCalls instance. int64_t chatID\nUnique identifier of a chat.",
+              "source_config": "ARG_C_PTR",
+              "value": null
+            },
+            {
+              "name": "int64_t segment_id",
+              "type": null,
+              "description": " Unique identifier of the broadcast segment.",
+              "source_config": null,
+              "value": null
+            },
+            {
+              "name": "int32_t part_id",
+              "type": null,
+              "description": " Unique identifier of the broadcast part.",
+              "source_config": null,
+              "value": null
+            },
+            {
+              "name": "ntg_media_segment_status_enum status",
+              "type": null,
+              "description": "",
+              "source_config": null,
+              "value": null
+            },
+            {
+              "name": "bool quality_update",
+              "type": null,
+              "description": " Indicates if it is a quality update.",
+              "source_config": null,
+              "value": null
+            },
+            {
+              "name": "uint8_t* frame",
+              "type": null,
+              "description": "",
+              "source_config": null,
+              "value": null
+            },
+            {
+              "name": "int size",
+              "type": null,
+              "description": " ntg_async_struct* future\nThe ntg_async_struct instance that will be used to track the async operation.",
+              "source_config": null,
+              "value": null
+            }
+          ]
+        },
+        {
+          "title": "ERROR CODES",
+          "items": [
+            {
+              "name": "",
+              "type": null,
+              "description": "#NTG_INVALID_UID -2\nThe provided UID is invalid. #NTG_UNKNOWN_EXCEPTION -1\nAn unknown exception occurred.\n#NTG_CONNECTION_NOT_FOUND -101\nThe specified connection was not found. #NTG_ERROR_WEBRTC -304\nThis error indicates that the MTProto connection is not established or has been closed.",
+              "source_config": "BASE_SYNC_C_EXCEPTION",
+              "value": null
+            }
+          ]
+        }
+      ]
+    },
+    "doc_url": "https://pytgcalls.github.io/NTgCalls/Advanced Methods/ntg_send_broadcast_part"
+  },
+  "/NTgCalls/Advanced Methods/ntg_send_broadcast_timestamp.xml": {
+    "title": "ntg_send_broadcast_timestamp",
+    "lib": "NTgCalls",
+    "kind": "method",
+    "description": "This method allows sending a broadcast timestamp to the MTProto connection, obtained from\n      GetGroupCallStreamChannels.",
+    "example": {
+      "language": "c",
+      "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uintptr_t ptr = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    int64_t timestamp = ...; // Obtain the timestamp\n    // Initialize the async struct\n    ntg_async_struct future;\n    ntg_send_broadcast_timestamp(ptr, chatID, timestamp, &future);\n    // Wait for the async operation to complete\n    return 0;\n}"
+    },
+    "details": {
+      "signature": "int ntg_send_broadcast_timestamp()",
+      "sections": [
+        {
+          "title": "PARAMETERS",
+          "items": [
+            {
+              "name": "",
+              "type": null,
+              "description": "uintptr_t ptr\nThe pointer to the NTgCalls instance. int64_t chatID\nUnique identifier of a chat.",
+              "source_config": "ARG_C_PTR",
+              "value": null
+            },
+            {
+              "name": "int64_t timestamp",
+              "type": null,
+              "description": " Last seen timestamp to easily start fetching livestream chunks using InputGroupCallStream ntg_async_struct* future\nThe ntg_async_struct instance that will be used to track the async operation.",
+              "source_config": null,
+              "value": null
+            }
+          ]
+        },
+        {
+          "title": "ERROR CODES",
+          "items": [
+            {
+              "name": "",
+              "type": null,
+              "description": "#NTG_INVALID_UID -2\nThe provided UID is invalid. #NTG_UNKNOWN_EXCEPTION -1\nAn unknown exception occurred.\n#NTG_CONNECTION_NOT_FOUND -101\nThe specified connection was not found. #NTG_ERROR_WEBRTC -304\nThis error indicates that the MTProto connection is not established or has been closed.",
+              "source_config": "BASE_SYNC_C_EXCEPTION",
+              "value": null
+            }
+          ]
+        }
+      ]
+    },
+    "doc_url": "https://pytgcalls.github.io/NTgCalls/Advanced Methods/ntg_send_broadcast_timestamp"
+  },
   "/NTgCalls/Advanced Methods/ntg_send_external_frame.xml": {
     "title": "ntg_send_external_frame",
     "lib": "NTgCalls",
@@ -667,7 +923,7 @@
     "description": "This method allows sending an external video frame to the WebRTC connection.",
     "example": {
       "language": "c",
-      "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uint32_t uid = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    uint8_t* pcm16_le_data = ...; // Obtain the PCM16 LE data\n    int size = ...; // Obtain the size of the PCM16 LE data\n    ntg_frame_data frame_data = {\n        .timestamp = ..., // Obtain the timestamp\n        .flags = 0,\n        .rotation = 0,\n        .layer = 0,\n    };\n    // Initialize the async struct\n    ntg_async_struct future;\n    ntg_send_external_frame(uid, chatID, NTG_STREAM_DEVICE_MICROPHONE, pcm16_le_data, size, &frame_data, &future);\n    // Wait for the async operation to complete\n    return 0;\n}"
+      "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uintptr_t ptr = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    uint8_t* pcm16_le_data = ...; // Obtain the PCM16 LE data\n    int size = ...; // Obtain the size of the PCM16 LE data\n    ntg_frame_data frame_data = {\n        .timestamp = ..., // Obtain the timestamp\n        .flags = 0,\n        .rotation = 0,\n        .layer = 0,\n    };\n    // Initialize the async struct\n    ntg_async_struct future;\n    ntg_send_external_frame(ptr, chatID, NTG_STREAM_DEVICE_MICROPHONE, pcm16_le_data, size, &frame_data, &future);\n    // Wait for the async operation to complete\n    return 0;\n}"
     },
     "details": {
       "signature": "int ntg_send_external_frame()",
@@ -676,10 +932,10 @@
           "title": "PARAMETERS",
           "items": [
             {
-              "name": "[UNRESOLVED",
-              "type": "ARG_C_UID]",
-              "description": " int64_t chatID\nUnique identifier of a chat.",
-              "source_config": "ARG_C_UID",
+              "name": "",
+              "type": null,
+              "description": "uintptr_t ptr\nThe pointer to the NTgCalls instance. int64_t chatID\nUnique identifier of a chat.",
+              "source_config": "ARG_C_PTR",
               "value": null
             },
             {
@@ -735,7 +991,7 @@
     "description": "This method allows sending signaling data to the WebRTC connection.",
     "example": {
       "language": "c",
-      "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uint32_t uid = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    uint8_t* buffer = ...; // Obtain the signaling data\n    int size = ...; // Obtain the size of the signaling data\n    // Initialize the async struct\n    ntg_async_struct future;\n    ntg_send_signaling_data(uid, chatID, buffer, size, &future);\n    // Wait for the async operation to complete\n    return 0;\n}"
+      "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uintptr_t ptr = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    uint8_t* buffer = ...; // Obtain the signaling data\n    int size = ...; // Obtain the size of the signaling data\n    // Initialize the async struct\n    ntg_async_struct future;\n    ntg_send_signaling_data(ptr, chatID, buffer, size, &future);\n    // Wait for the async operation to complete\n    return 0;\n}"
     },
     "details": {
       "signature": "int ntg_send_signaling_data()",
@@ -744,10 +1000,10 @@
           "title": "PARAMETERS",
           "items": [
             {
-              "name": "[UNRESOLVED",
-              "type": "ARG_C_UID]",
-              "description": " int64_t chatID\nUnique identifier of a chat.",
-              "source_config": "ARG_C_UID",
+              "name": "",
+              "type": null,
+              "description": "uintptr_t ptr\nThe pointer to the NTgCalls instance. int64_t chatID\nUnique identifier of a chat.",
+              "source_config": "ARG_C_PTR",
               "value": null
             },
             {
@@ -809,6 +1065,40 @@
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Available Enums/ConnectionKind"
   },
+  "/NTgCalls/Available Enums/ConnectionMode.xml": {
+    "title": "ConnectionMode",
+    "lib": "NTgCalls",
+    "kind": "enum",
+    "description": "",
+    "example": {},
+    "details": {
+      "signature": "class ntgcalls.ConnectionMode",
+      "members": [
+        {
+          "name": "RTC",
+          "type": null,
+          "description": "Indicates that the connection mode is WebRTC.",
+          "source_config": null,
+          "value": "0"
+        },
+        {
+          "name": "STREAM",
+          "type": null,
+          "description": "Indicates that the connection mode is MTProto.",
+          "source_config": null,
+          "value": "1"
+        },
+        {
+          "name": "RTMP",
+          "type": null,
+          "description": "Indicates that the connection mode is RTMP.",
+          "source_config": null,
+          "value": "2"
+        }
+      ]
+    },
+    "doc_url": "https://pytgcalls.github.io/NTgCalls/Available Enums/ConnectionMode"
+  },
   "/NTgCalls/Available Enums/ConnectionState.xml": {
     "title": "ConnectionState",
     "lib": "NTgCalls",
@@ -816,7 +1106,7 @@
     "description": "",
     "example": {},
     "details": {
-      "signature": "class ConnectionState",
+      "signature": "class ntgcalls.ConnectionState",
       "members": [
         {
           "name": "CONNECTING",
@@ -856,6 +1146,81 @@
       ]
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Available Enums/ConnectionState"
+  },
+  "/NTgCalls/Available Enums/MediaSegmentQuality.xml": {
+    "title": "MediaSegmentQuality",
+    "lib": "NTgCalls",
+    "kind": "enum",
+    "description": "",
+    "example": {},
+    "details": {
+      "signature": "class ntgcalls.MediaSegmentQuality",
+      "members": [
+        {
+          "name": "NONE",
+          "type": null,
+          "description": "Indicates that the media segment has no quality.",
+          "source_config": null,
+          "value": "0"
+        },
+        {
+          "name": "THUMBNAIL",
+          "type": null,
+          "description": "Indicates that the media segment is a thumbnail.",
+          "source_config": null,
+          "value": "1"
+        },
+        {
+          "name": "MEDIUM",
+          "type": null,
+          "description": "Indicates that the media segment is of medium quality.",
+          "source_config": null,
+          "value": "2"
+        },
+        {
+          "name": "FULL",
+          "type": null,
+          "description": "Indicates that the media segment is of full quality.",
+          "source_config": null,
+          "value": "3"
+        }
+      ]
+    },
+    "doc_url": "https://pytgcalls.github.io/NTgCalls/Available Enums/MediaSegmentQuality"
+  },
+  "/NTgCalls/Available Enums/MediaSegmentStatus.xml": {
+    "title": "MediaSegmentStatus",
+    "lib": "NTgCalls",
+    "kind": "enum",
+    "description": "",
+    "example": {},
+    "details": {
+      "signature": "class ntgcalls.MediaSegmentStatus",
+      "members": [
+        {
+          "name": "NOT_READY",
+          "type": null,
+          "description": "Indicates that the media segment is not ready, like when getting any kind of errors except for FloodWaits.",
+          "source_config": null,
+          "value": "0"
+        },
+        {
+          "name": "RESYNC_NEEDED",
+          "type": null,
+          "description": "Indicates that the media segment needs to be resynced, like when getting FloodWait errors.",
+          "source_config": null,
+          "value": "1"
+        },
+        {
+          "name": "SUCCESS",
+          "type": null,
+          "description": "Indicates that the media segment is ready.",
+          "source_config": null,
+          "value": "2"
+        }
+      ]
+    },
+    "doc_url": "https://pytgcalls.github.io/NTgCalls/Available Enums/MediaSegmentStatus"
   },
   "/NTgCalls/Available Enums/MediaSource.xml": {
     "title": "MediaSource",
@@ -1068,6 +1433,40 @@
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Available Enums/ntg_connection_kind_enum"
   },
+  "/NTgCalls/Available Enums/ntg_connection_mode_enum.xml": {
+    "title": "ntg_connection_mode_enum",
+    "lib": "NTgCalls",
+    "kind": "enum",
+    "description": "",
+    "example": {},
+    "details": {
+      "signature": "typedef enum ntg_connection_mode_enum",
+      "members": [
+        {
+          "name": "NTG_CONNECTION_MODE_RTC",
+          "type": null,
+          "description": "Indicates that the connection mode is WebRTC.",
+          "source_config": null,
+          "value": "0"
+        },
+        {
+          "name": "NTG_CONNECTION_MODE_STREAM",
+          "type": null,
+          "description": "Indicates that the connection mode is MTProto.",
+          "source_config": null,
+          "value": "1"
+        },
+        {
+          "name": "NTG_CONNECTION_MODE_RTMP",
+          "type": null,
+          "description": "Indicates that the connection mode is RTMP.",
+          "source_config": null,
+          "value": "2"
+        }
+      ]
+    },
+    "doc_url": "https://pytgcalls.github.io/NTgCalls/Available Enums/ntg_connection_mode_enum"
+  },
   "/NTgCalls/Available Enums/ntg_connection_state_enum.xml": {
     "title": "ntg_connection_state_enum",
     "lib": "NTgCalls",
@@ -1190,6 +1589,81 @@
       ]
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Available Enums/ntg_log_source_enum"
+  },
+  "/NTgCalls/Available Enums/ntg_media_segment_quality_enum.xml": {
+    "title": "ntg_media_segment_quality_enum",
+    "lib": "NTgCalls",
+    "kind": "enum",
+    "description": "",
+    "example": {},
+    "details": {
+      "signature": "typedef enum ntg_media_segment_quality_enum",
+      "members": [
+        {
+          "name": "NTG_MEDIA_SEGMENT_QUALITY_NONE",
+          "type": null,
+          "description": "Indicates that the media segment has no quality.",
+          "source_config": null,
+          "value": "0"
+        },
+        {
+          "name": "NTG_MEDIA_SEGMENT_QUALITY_THUMBNAIL",
+          "type": null,
+          "description": "Indicates that the media segment is a thumbnail.",
+          "source_config": null,
+          "value": "1"
+        },
+        {
+          "name": "NTG_MEDIA_SEGMENT_QUALITY_MEDIUM",
+          "type": null,
+          "description": "Indicates that the media segment is of medium quality.",
+          "source_config": null,
+          "value": "2"
+        },
+        {
+          "name": "NTG_MEDIA_SEGMENT_QUALITY_FULL",
+          "type": null,
+          "description": "Indicates that the media segment is of full quality.",
+          "source_config": null,
+          "value": "3"
+        }
+      ]
+    },
+    "doc_url": "https://pytgcalls.github.io/NTgCalls/Available Enums/ntg_media_segment_quality_enum"
+  },
+  "/NTgCalls/Available Enums/ntg_media_segment_status_enum.xml": {
+    "title": "ntg_media_segment_status_enum",
+    "lib": "NTgCalls",
+    "kind": "enum",
+    "description": "",
+    "example": {},
+    "details": {
+      "signature": "typedef enum ntg_media_segment_status_enum",
+      "members": [
+        {
+          "name": "NTG_MEDIA_SEGMENT_NOT_READY",
+          "type": null,
+          "description": "Indicates that the media segment is not ready, like when getting any kind of errors except for FloodWaits.",
+          "source_config": null,
+          "value": "0"
+        },
+        {
+          "name": "NTG_MEDIA_SEGMENT_RESYNC_NEEDED",
+          "type": null,
+          "description": "Indicates that the media segment needs to be resynced, like when getting FloodWait errors.",
+          "source_config": null,
+          "value": "1"
+        },
+        {
+          "name": "NTG_MEDIA_SEGMENT_SUCCESS",
+          "type": null,
+          "description": "Indicates that the media segment is ready.",
+          "source_config": null,
+          "value": "2"
+        }
+      ]
+    },
+    "doc_url": "https://pytgcalls.github.io/NTgCalls/Available Enums/ntg_media_segment_status_enum"
   },
   "/NTgCalls/Available Enums/ntg_media_source_enum.xml": {
     "title": "ntg_media_source_enum",
@@ -1905,6 +2379,68 @@
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Available Structs/ntg_rtc_server_struct"
   },
+  "/NTgCalls/Available Structs/ntg_segment_part_request_struct.xml": {
+    "title": "ntg_segment_part_request_struct",
+    "lib": "NTgCalls",
+    "kind": "type",
+    "description": "",
+    "example": {},
+    "details": {
+      "signature": "typedef struct ntg_segment_part_request_struct",
+      "properties": [
+        {
+          "name": "int segmentId",
+          "type": null,
+          "description": "Unique identifier of the broadcast segment.",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "int partId",
+          "type": null,
+          "description": "Unique identifier of the broadcast part.",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "int limit",
+          "type": null,
+          "description": "Number of bytes to be returned.",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "int timestamp",
+          "type": null,
+          "description": "Last seen timestamp to easily start fetching livestream chunks using InputGroupCallStream",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "bool qualityUpdate",
+          "type": null,
+          "description": "Indicates if it is a quality update.",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "int channelId",
+          "type": null,
+          "description": "Selected video channel.",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "ntg_media_segment_quality_enum quality",
+          "type": "ntg_media_segment_quality_enum",
+          "description": "",
+          "source_config": null,
+          "value": null
+        }
+      ]
+    },
+    "doc_url": "https://pytgcalls.github.io/NTgCalls/Available Structs/ntg_segment_part_request_struct"
+  },
   "/NTgCalls/Available Structs/ntg_ssrc_group_struct.xml": {
     "title": "ntg_ssrc_group_struct",
     "lib": "NTgCalls",
@@ -2281,6 +2817,17 @@
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Available Types/RemoteSource"
   },
+  "/NTgCalls/Available Types/SegmentPartRequest.xml": {
+    "title": "SegmentPartRequest",
+    "lib": "NTgCalls",
+    "kind": "type",
+    "description": "This constructor represents a request for a specific part of a broadcast stream segment.",
+    "example": {},
+    "details": {
+      "signature": "class ntgcalls.SegmentPartRequest"
+    },
+    "doc_url": "https://pytgcalls.github.io/NTgCalls/Available Types/SegmentPartRequest"
+  },
   "/NTgCalls/Available Types/SsrcGroup.xml": {
     "title": "SsrcGroup",
     "lib": "NTgCalls",
@@ -2438,15 +2985,8 @@
             {
               "name": "",
               "type": null,
-              "description": "exception ntgcalls.ConnectionNotFound\nThe specified connection was not found. exception ntgcalls.TelegramServerError\nThis error occurs when the connection between Telegram and the WebRTC service fails.",
+              "description": "exception ntgcalls.ConnectionNotFound\nThe specified connection was not found. exception ntgcalls.TelegramServerError\nThis error occurs when the connection between Telegram and the WebRTC service fails. exception ntgcalls.TransportParseException\nThis error occurs when attempting to send invalid Transports.",
               "source_config": "CONNECTION_NOT_FOUND_EXCEPTION",
-              "value": null
-            },
-            {
-              "name": "[UNRESOLVED",
-              "type": "RTMP_EXCEPTION]",
-              "description": " exception ntgcalls.TransportParseException\nThis error occurs when attempting to send invalid Transports.",
-              "source_config": "RTMP_EXCEPTION",
               "value": null
             }
           ]
@@ -2462,7 +3002,7 @@
     "description": "This method allows getting connection params for Telegram WebRTC connection.",
     "example": {
       "language": "python",
-      "code": "from ntgcalls import NTgCalls\n...\n\napp = NTgCalls()\n\nparams = await app.create_call(\n    -1001185324811,\n    MediaDescription(\n        AudioDescription(\n            input_mode=InputMode.File,\n            input=\"audio.pcm\",\n            sample_rate=96000,\n            bits_per_sample=16,\n            channel_count=2,\n        ),\n    )\n)"
+      "code": "from ntgcalls import NTgCalls\n...\n\napp = NTgCalls()\n\nparams = await app.create_call(\n    -1001185324811,\n)"
     },
     "details": {
       "signature": "async NTgCalls.create_call() -> str",
@@ -2475,13 +3015,6 @@
               "type": "int",
               "description": "Unique identifier of a chat.",
               "source_config": "ARG_INT_ID",
-              "value": null
-            },
-            {
-              "name": "media",
-              "type": "ntgcalls.MediaDescription",
-              "description": "Media parameters of the stream.",
-              "source_config": "ARG_STREAM_PARAMS",
               "value": null
             }
           ]
@@ -2509,7 +3042,7 @@
     "description": "This method allows creating a Private Call connection that can be used to exchange keys and connect",
     "example": {
       "language": "python",
-      "code": "from ntgcalls import NTgCalls\n...\napp = NTgCalls()\n...\n\nawait app.create_p2p_call(\n    -1001185324811,\n    MediaDescription(\n        AudioDescription(\n            input_mode=InputMode.File,\n            input=\"audio.pcm\",\n            sample_rate=96000,\n            bits_per_sample=16,\n            channel_count=2,\n        ),\n    )\n)"
+      "code": "from ntgcalls import NTgCalls\n...\napp = NTgCalls()\n...\n\nawait app.create_p2p_call(\n    -1001185324811,\n)"
     },
     "details": {
       "signature": "async NTgCalls.create_p2p_call()",
@@ -2522,13 +3055,6 @@
               "type": "int",
               "description": "Unique identifier of a chat.",
               "source_config": "ARG_INT_ID",
-              "value": null
-            },
-            {
-              "name": "media",
-              "type": "ntgcalls.MediaDescription",
-              "description": "Media parameters of the stream.",
-              "source_config": "ARG_STREAM_PARAMS",
               "value": null
             }
           ]
@@ -2859,7 +3385,7 @@
     "description": "This method allows connecting to Telegram Group Calls with the output params from Telegram method\n      JoinGroupCall.",
     "example": {
       "language": "c",
-      "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uint32_t uid = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    char* params = ...;  // Obtain connection parameters\n    ntg_async_struct future;\n    // Initialize the async struct\n    int result = ntg_connect(uid, chatID, params, False, &future);\n    // Wait for the async operation to complete\n    ...\n    return 0;\n}"
+      "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uintptr_t ptr = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    char* params = ...;  // Obtain connection parameters\n    ntg_async_struct future;\n    // Initialize the async struct\n    int result = ntg_connect(ptr, chatID, params, False, &future);\n    // Wait for the async operation to complete\n    ...\n    return 0;\n}"
     },
     "details": {
       "signature": "int ntg_connect()",
@@ -2868,10 +3394,10 @@
           "title": "PARAMETERS",
           "items": [
             {
-              "name": "[UNRESOLVED",
-              "type": "ARG_C_UID]",
-              "description": " int64_t chatID\nUnique identifier of a chat.",
-              "source_config": "ARG_C_UID",
+              "name": "",
+              "type": null,
+              "description": "uintptr_t ptr\nThe pointer to the NTgCalls instance. int64_t chatID\nUnique identifier of a chat.",
+              "source_config": "ARG_C_PTR",
               "value": null
             },
             {
@@ -2896,15 +3422,8 @@
             {
               "name": "",
               "type": null,
-              "description": "#NTG_INVALID_UID -2\nThe provided UID is invalid. #NTG_UNKNOWN_EXCEPTION -1\nAn unknown exception occurred.\n#NTG_CONNECTION_NOT_FOUND -101\nThe specified connection was not found.",
+              "description": "#NTG_INVALID_UID -2\nThe provided UID is invalid. #NTG_UNKNOWN_EXCEPTION -1\nAn unknown exception occurred.\n#NTG_CONNECTION_NOT_FOUND -101\nThe specified connection was not found. #NTG_ERROR_RTMP_STREAMING_UNSUPPORTED -300\nYou need to use FFmpeg to stream to an RTMP stream. #NTG_INVALID_TRANSPORT -301\nThe specified transport is invalid.",
               "source_config": "BASE_SYNC_C_EXCEPTION",
-              "value": null
-            },
-            {
-              "name": "#NTG_RTMP_NEEDED -300",
-              "type": null,
-              "description": " #NTG_INVALID_TRANSPORT -301\nThe specified transport is invalid.",
-              "source_config": null,
               "value": null
             },
             {
@@ -2927,7 +3446,7 @@
     "description": "This method allows connecting to a Private Call with the output params from Telegram method\n      ConfirmCall when is an outgoing call or PhoneCall when is an incoming call.",
     "example": {
       "language": "c",
-      "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uint32_t uid = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    ntg_rtc_server_struct* rtcServers = ...; // Obtain the RTC servers\n    int rtcServersCount = ...; // Obtain the count of RTC servers\n    char** libraryVersions = ...; // Obtain the library versions\n    int libraryVersionCount = ...; // Obtain the count of library versions\n    bool p2pAllowed = ...; // Obtain whether P2P is allowed\n    ntg_async_struct future;\n    // Initialize the async struct\n    int result = ntg_connect_p2p(\n        uid,\n        chatID,\n        rtcServers,\n        rtcServersCount,\n        libraryVersions,\n        libraryVersionCount,\n        p2pAllowed,\n        &future\n    );\n    // Wait for the async operation to complete\n}"
+      "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uintptr_t ptr = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    ntg_rtc_server_struct* rtcServers = ...; // Obtain the RTC servers\n    int rtcServersCount = ...; // Obtain the count of RTC servers\n    char** libraryVersions = ...; // Obtain the library versions\n    int libraryVersionCount = ...; // Obtain the count of library versions\n    bool p2pAllowed = ...; // Obtain whether P2P is allowed\n    ntg_async_struct future;\n    // Initialize the async struct\n    int result = ntg_connect_p2p(\n        ptr,\n        chatID,\n        rtcServers,\n        rtcServersCount,\n        libraryVersions,\n        libraryVersionCount,\n        p2pAllowed,\n        &future\n    );\n    // Wait for the async operation to complete\n}"
     },
     "details": {
       "signature": "int ntg_connect_p2p()",
@@ -2936,10 +3455,10 @@
           "title": "PARAMETERS",
           "items": [
             {
-              "name": "[UNRESOLVED",
-              "type": "ARG_C_UID]",
-              "description": " int64_t chatID\nUnique identifier of a chat.",
-              "source_config": "ARG_C_UID",
+              "name": "",
+              "type": null,
+              "description": "uintptr_t ptr\nThe pointer to the NTgCalls instance. int64_t chatID\nUnique identifier of a chat.",
+              "source_config": "ARG_C_PTR",
               "value": null
             },
             {
@@ -3010,46 +3529,32 @@
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Basic Methods/ntg_connect_p2p"
   },
   "/NTgCalls/Basic Methods/ntg_create.xml": {
-    "title": "ntg_get_params",
+    "title": "ntg_create",
     "lib": "NTgCalls",
     "kind": "method",
     "description": "This method allows getting connection params for Telegram WebRTC connection.",
     "example": {
       "language": "c",
-      "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uint32_t uid = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    ntg_media_description_struct desc = {\n        // Fill in media description fields\n    };\n    char buffer[512];\n    ntg_async_struct future;\n    // Initialize the async struct\n    int result = ntg_create(uid, chatID, desc, buffer, sizeof(buffer));\n    // Wait for the async operation to complete and\n    // use 'buffer' for JoinGroupCall\n    return 0;\n}"
+      "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uintptr_t ptr = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    char* buffer;\n    ntg_async_struct future;\n    // Initialize the async struct\n    int result = ntg_create(ptr, chatID, &buffer);\n    // Wait for the async operation to complete and\n    // use 'buffer' for JoinGroupCall\n    return 0;\n}"
     },
     "details": {
-      "signature": "int ntg_get_params()",
+      "signature": "int ntg_create()",
       "sections": [
         {
           "title": "PARAMETERS",
           "items": [
             {
-              "name": "[UNRESOLVED",
-              "type": "ARG_C_UID]",
-              "description": " int64_t chatID\nUnique identifier of a chat.",
-              "source_config": "ARG_C_UID",
-              "value": null
-            },
-            {
-              "name": "[UNRESOLVED",
-              "type": "ARG_MEDIA_C]",
-              "description": "",
-              "source_config": "ARG_MEDIA_C",
-              "value": null
-            },
-            {
-              "name": "char* buffer",
+              "name": "",
               "type": null,
-              "description": "",
-              "source_config": null,
+              "description": "uintptr_t ptr\nThe pointer to the NTgCalls instance. int64_t chatID\nUnique identifier of a chat.",
+              "source_config": "ARG_C_PTR",
               "value": null
             },
             {
-              "name": "[UNRESOLVED",
-              "type": "ARG_BUF_SIZE]",
+              "name": "char** buffer",
+              "type": null,
               "description": " ntg_async_struct* future\nThe ntg_async_struct instance that will be used to track the async operation.",
-              "source_config": "ARG_BUF_SIZE",
+              "source_config": null,
               "value": null
             }
           ]
@@ -3060,15 +3565,8 @@
             {
               "name": "",
               "type": null,
-              "description": "#NTG_INVALID_UID -2\nThe provided UID is invalid. #NTG_UNKNOWN_EXCEPTION -1\nAn unknown exception occurred.",
+              "description": "#NTG_INVALID_UID -2\nThe provided UID is invalid. #NTG_UNKNOWN_EXCEPTION -1\nAn unknown exception occurred. #NTG_CONNECTION_ALREADY_EXISTS -100\nA connection with the specified ID already exists. #NTG_FILE_NOT_FOUND -200\nThe specified file was not found.\n#NTG_ENCODER_NOT_FOUND -201\nThe required encoder was not found.\n#NTG_FFMPEG_NOT_FOUND -202\nFFmpeg is not found in the system.\n#NTG_SHELL_ERROR -203\nAn error occurred while executing a shell command.",
               "source_config": "BASE_SYNC_C_EXCEPTION",
-              "value": null
-            },
-            {
-              "name": "[UNRESOLVED",
-              "type": "SMALL_BUFF_EXCEPTION]",
-              "description": " #NTG_CONNECTION_ALREADY_EXISTS -100\nA connection with the specified ID already exists. #NTG_FILE_NOT_FOUND -200\nThe specified file was not found.\n#NTG_ENCODER_NOT_FOUND -201\nThe required encoder was not found.\n#NTG_FFMPEG_NOT_FOUND -202\nFFmpeg is not found in the system.\n#NTG_SHELL_ERROR -203\nAn error occurred while executing a shell command.",
-              "source_config": "SMALL_BUFF_EXCEPTION",
               "value": null
             }
           ]
@@ -3084,7 +3582,7 @@
     "description": "This method allows creating a Private Call connection that can be used to exchange keys and connect",
     "example": {
       "language": "c",
-      "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uint32_t uid = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    ntg_media_description_struct desc = {\n        // Fill in media description fields\n    };\n    ntg_async_struct future;\n    // Initialize the async struct\n    int result = ntg_create_p2p(\n        uid,\n        chatID,\n        desc,\n        &future\n    );\n    // Wait for the async operation to complete\n    return 0;\n}"
+      "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uintptr_t ptr = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    ntg_async_struct future;\n    // Initialize the async struct\n    int result = ntg_create_p2p(\n        ptr,\n        chatID,\n        &future\n    );\n    // Wait for the async operation to complete\n    return 0;\n}"
     },
     "details": {
       "signature": "int ntg_create_p2p()",
@@ -3093,17 +3591,10 @@
           "title": "PARAMETERS",
           "items": [
             {
-              "name": "[UNRESOLVED",
-              "type": "ARG_C_UID]",
-              "description": " int64_t chatID\nUnique identifier of a chat.",
-              "source_config": "ARG_C_UID",
-              "value": null
-            },
-            {
-              "name": "[UNRESOLVED",
-              "type": "ARG_MEDIA_C]",
-              "description": " ntg_async_struct* future\nThe ntg_async_struct instance that will be used to track the async operation.",
-              "source_config": "ARG_MEDIA_C",
+              "name": "",
+              "type": null,
+              "description": "uintptr_t ptr\nThe pointer to the NTgCalls instance. int64_t chatID\nUnique identifier of a chat. ntg_async_struct* future\nThe ntg_async_struct instance that will be used to track the async operation.",
+              "source_config": "ARG_C_PTR",
               "value": null
             }
           ]
@@ -3131,7 +3622,7 @@
     "description": "This method allows exchanging keys for a Private Call connection with the output params from\n      PhoneCallAccepted when is an outgoing call or PhoneCall when is an incoming call.",
     "example": {
       "language": "c",
-      "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uint32_t uid = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    uint8_t* g_a_or_b = ...; // Obtain the parameter for key exchange\n    int sizeGAOrB = ...; // Obtain the size of the parameter for key exchange\n    int64_t fingerprint = ...; // Obtain the fingerprint\n    ntg_auth_params_struct buffer;\n    // Initialize the async struct\n    ntg_async_struct future;\n    int result = ntg_exchange_keys(uid, chatID, g_a_or_b, sizeGAOrB, fingerprint, &buffer, &future);\n    // Wait for the async operation to complete\n}"
+      "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uintptr_t ptr = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    uint8_t* g_a_or_b = ...; // Obtain the parameter for key exchange\n    int sizeGAOrB = ...; // Obtain the size of the parameter for key exchange\n    int64_t fingerprint = ...; // Obtain the fingerprint\n    ntg_auth_params_struct buffer;\n    // Initialize the async struct\n    ntg_async_struct future;\n    int result = ntg_exchange_keys(ptr, chatID, g_a_or_b, sizeGAOrB, fingerprint, &buffer, &future);\n    // Wait for the async operation to complete\n}"
     },
     "details": {
       "signature": "int ntg_exchange_keys()",
@@ -3140,10 +3631,10 @@
           "title": "PARAMETERS",
           "items": [
             {
-              "name": "[UNRESOLVED",
-              "type": "ARG_C_UID]",
-              "description": " int64_t chatID\nUnique identifier of a chat.",
-              "source_config": "ARG_C_UID",
+              "name": "",
+              "type": null,
+              "description": "uintptr_t ptr\nThe pointer to the NTgCalls instance. int64_t chatID\nUnique identifier of a chat.",
+              "source_config": "ARG_C_PTR",
               "value": null
             },
             {
@@ -3206,7 +3697,7 @@
     "description": "This method allows initializing a Private Call connection that can be used to exchange keys and connect with the output params from\n      GetDhConfig and PhoneCallRequested when is an incoming call\n      and then use the output params for AcceptCall (When is an incoming call) or RequestCall with Protocol.",
     "example": {
       "language": "c",
-      "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uint32_t uid = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    ntg_dh_config_struct dhConfig = ...; // Obtain the DH configuration\n    uint8_t* g_a_hash = ...; // Parameter for key exchange (Only when is incoming call)\n    int sizeG_A_Hash = ...; // Size of the parameter for key exchange (Only when is incoming call)\n    uint8_t* buffer[32];\n    // Initialize the async struct\n    ntg_async_struct future;\n    int result = ntg_init_exchange(\n        uid,\n        chatID,\n        &dhConfig,\n        g_a_hash,\n        sizeG_A_Hash,\n        buffer,\n        sizeof(buffer),\n        &future\n    );\n    // Wait for the async operation to complete\n}"
+      "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uintptr_t ptr = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    ntg_dh_config_struct dhConfig = ...; // Obtain the DH configuration\n    uint8_t* g_a_hash = ...; // Parameter for key exchange (Only when is incoming call)\n    int sizeG_A_Hash = ...; // Size of the parameter for key exchange (Only when is incoming call)\n    uint8_t* buffer[32];\n    // Initialize the async struct\n    ntg_async_struct future;\n    int result = ntg_init_exchange(\n        ptr,\n        chatID,\n        &dhConfig,\n        g_a_hash,\n        sizeG_A_Hash,\n        buffer,\n        sizeof(buffer),\n        &future\n    );\n    // Wait for the async operation to complete\n}"
     },
     "details": {
       "signature": "int ntg_init_exchange()",
@@ -3215,10 +3706,10 @@
           "title": "PARAMETERS",
           "items": [
             {
-              "name": "[UNRESOLVED",
-              "type": "ARG_C_UID]",
-              "description": " int64_t chatID\nUnique identifier of a chat.",
-              "source_config": "ARG_C_UID",
+              "name": "",
+              "type": null,
+              "description": "uintptr_t ptr\nThe pointer to the NTgCalls instance. int64_t chatID\nUnique identifier of a chat.",
+              "source_config": "ARG_C_PTR",
               "value": null
             },
             {
@@ -3288,7 +3779,7 @@
     "description": "This method allows initializing a presentation connection, which is a connection for sharing the screen.",
     "example": {
       "language": "c",
-      "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uint32_t uid = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    // Initialize the async struct\n    ntg_async_struct future;\n    ntg_init_presentation(uid, chatID, &future);\n    // Wait for the async operation to complete\n}"
+      "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uintptr_t ptr = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    // Initialize the async struct\n    ntg_async_struct future;\n    ntg_init_presentation(ptr, chatID, &future);\n    // Wait for the async operation to complete\n}"
     },
     "details": {
       "signature": "int ntg_init_presentation()",
@@ -3297,10 +3788,10 @@
           "title": "PARAMETERS",
           "items": [
             {
-              "name": "[UNRESOLVED",
-              "type": "ARG_C_UID]",
-              "description": " int64_t chatID\nUnique identifier of a chat. ntg_async_struct* future\nThe ntg_async_struct instance that will be used to track the async operation.",
-              "source_config": "ARG_C_UID",
+              "name": "",
+              "type": null,
+              "description": "uintptr_t ptr\nThe pointer to the NTgCalls instance. int64_t chatID\nUnique identifier of a chat. ntg_async_struct* future\nThe ntg_async_struct instance that will be used to track the async operation.",
+              "source_config": "ARG_C_PTR",
               "value": null
             }
           ]
@@ -3313,6 +3804,13 @@
               "type": null,
               "description": "#NTG_INVALID_UID -2\nThe provided UID is invalid. #NTG_UNKNOWN_EXCEPTION -1\nAn unknown exception occurred.\n#NTG_CONNECTION_NOT_FOUND -101\nThe specified connection was not found.",
               "source_config": "BASE_SYNC_C_EXCEPTION",
+              "value": null
+            },
+            {
+              "name": "#NTG_ERROR_RTC_CONNECTION_NEEDED -306",
+              "type": null,
+              "description": "",
+              "source_config": null,
               "value": null
             }
           ]
@@ -3328,7 +3826,7 @@
     "description": "This method allows skipping the exchange of keys for a Private Call connection by using the encryption key already exchanged.",
     "example": {
       "language": "c",
-      "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uint32_t uid = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    uint8_t* encryption_key = ... # Obtain the encryption key\n    int size = ...; // Obtain the size of the encryption key\n    // Initialize the async struct\n    ntg_async_struct future;\n    ntg_skip_exchange(uid, chatID, encryption_key, size, False, &future);\n    // Wait for the async operation to complete\n}"
+      "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uintptr_t ptr = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    uint8_t* encryption_key = ... # Obtain the encryption key\n    int size = ...; // Obtain the size of the encryption key\n    // Initialize the async struct\n    ntg_async_struct future;\n    ntg_skip_exchange(ptr, chatID, encryption_key, size, False, &future);\n    // Wait for the async operation to complete\n}"
     },
     "details": {
       "signature": "int ntg_skip_exchange()",
@@ -3337,10 +3835,10 @@
           "title": "PARAMETERS",
           "items": [
             {
-              "name": "[UNRESOLVED",
-              "type": "ARG_C_UID]",
-              "description": " int64_t chatID\nUnique identifier of a chat.",
-              "source_config": "ARG_C_UID",
+              "name": "",
+              "type": null,
+              "description": "uintptr_t ptr\nThe pointer to the NTgCalls instance. int64_t chatID\nUnique identifier of a chat.",
+              "source_config": "ARG_C_PTR",
               "value": null
             },
             {
@@ -3396,7 +3894,7 @@
     "description": "This method allow stopping a WebRTC connection.",
     "example": {
       "language": "c",
-      "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uint32_t uid = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    char* params = ...;  // Obtain connection parameters\n    ntg_async_struct future;\n    // Initialize the async struct\n    int result = ntg_stop(uid, chatID);\n    // Wait for the async operation to complete\n    return 0;\n}"
+      "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uintptr_t ptr = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    char* params = ...;  // Obtain connection parameters\n    ntg_async_struct future;\n    // Initialize the async struct\n    int result = ntg_stop(ptr, chatID);\n    // Wait for the async operation to complete\n    return 0;\n}"
     },
     "details": {
       "signature": "int ntg_stop()",
@@ -3405,10 +3903,10 @@
           "title": "PARAMETERS",
           "items": [
             {
-              "name": "[UNRESOLVED",
-              "type": "ARG_C_UID]",
-              "description": " int64_t chatID\nUnique identifier of a chat. ntg_async_struct* future\nThe ntg_async_struct instance that will be used to track the async operation.",
-              "source_config": "ARG_C_UID",
+              "name": "",
+              "type": null,
+              "description": "uintptr_t ptr\nThe pointer to the NTgCalls instance. int64_t chatID\nUnique identifier of a chat. ntg_async_struct* future\nThe ntg_async_struct instance that will be used to track the async operation.",
+              "source_config": "ARG_C_PTR",
               "value": null
             }
           ]
@@ -3436,7 +3934,7 @@
     "description": "This method allows stopping the presentation connection.",
     "example": {
       "language": "c",
-      "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uint32_t uid = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    // Initialize the async struct\n    ntg_async_struct future;\n    ntg_stop_presentation(uid, chatID, &future);\n    // Wait for the async operation to complete\n}"
+      "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uintptr_t ptr = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    // Initialize the async struct\n    ntg_async_struct future;\n    ntg_stop_presentation(ptr, chatID, &future);\n    // Wait for the async operation to complete\n}"
     },
     "details": {
       "signature": "int ntg_stop_presentation()",
@@ -3445,10 +3943,10 @@
           "title": "PARAMETERS",
           "items": [
             {
-              "name": "[UNRESOLVED",
-              "type": "ARG_C_UID]",
-              "description": " int64_t chatID\nUnique identifier of a chat. ntg_async_struct* future\nThe ntg_async_struct instance that will be used to track the async operation.",
-              "source_config": "ARG_C_UID",
+              "name": "",
+              "type": null,
+              "description": "uintptr_t ptr\nThe pointer to the NTgCalls instance. int64_t chatID\nUnique identifier of a chat. ntg_async_struct* future\nThe ntg_async_struct instance that will be used to track the async operation.",
+              "source_config": "ARG_C_PTR",
               "value": null
             }
           ]
@@ -3502,10 +4000,10 @@
           "title": "PARAMETERS",
           "items": [
             {
-              "name": "[UNRESOLVED",
-              "type": "ARG_C_UID]",
-              "description": "",
-              "source_config": "ARG_C_UID",
+              "name": "",
+              "type": null,
+              "description": "uintptr_t ptr\nThe pointer to the NTgCalls instance.",
+              "source_config": "ARG_C_PTR",
               "value": null
             },
             {
@@ -3533,10 +4031,10 @@
           "title": "PARAMETERS",
           "items": [
             {
-              "name": "[UNRESOLVED",
-              "type": "ARG_C_UID]",
-              "description": "",
-              "source_config": "ARG_C_UID",
+              "name": "",
+              "type": null,
+              "description": "uintptr_t ptr\nThe pointer to the NTgCalls instance.",
+              "source_config": "ARG_C_PTR",
               "value": null
             },
             {
@@ -3564,10 +4062,10 @@
           "title": "PARAMETERS",
           "items": [
             {
-              "name": "[UNRESOLVED",
-              "type": "ARG_C_UID]",
-              "description": "",
-              "source_config": "ARG_C_UID",
+              "name": "",
+              "type": null,
+              "description": "uintptr_t ptr\nThe pointer to the NTgCalls instance.",
+              "source_config": "ARG_C_PTR",
               "value": null
             },
             {
@@ -3595,10 +4093,10 @@
           "title": "PARAMETERS",
           "items": [
             {
-              "name": "[UNRESOLVED",
-              "type": "ARG_C_UID]",
-              "description": "",
-              "source_config": "ARG_C_UID",
+              "name": "",
+              "type": null,
+              "description": "uintptr_t ptr\nThe pointer to the NTgCalls instance.",
+              "source_config": "ARG_C_PTR",
               "value": null
             },
             {
@@ -3626,10 +4124,10 @@
           "title": "PARAMETERS",
           "items": [
             {
-              "name": "[UNRESOLVED",
-              "type": "ARG_C_UID]",
-              "description": "",
-              "source_config": "ARG_C_UID",
+              "name": "",
+              "type": null,
+              "description": "uintptr_t ptr\nThe pointer to the NTgCalls instance.",
+              "source_config": "ARG_C_PTR",
               "value": null
             },
             {
@@ -3657,10 +4155,10 @@
           "title": "PARAMETERS",
           "items": [
             {
-              "name": "[UNRESOLVED",
-              "type": "ARG_C_UID]",
-              "description": "",
-              "source_config": "ARG_C_UID",
+              "name": "",
+              "type": null,
+              "description": "uintptr_t ptr\nThe pointer to the NTgCalls instance.",
+              "source_config": "ARG_C_PTR",
               "value": null
             },
             {
@@ -3691,6 +4189,68 @@
               "name": "ntg_log_message_callback callback",
               "type": null,
               "description": "",
+              "source_config": null,
+              "value": null
+            }
+          ]
+        },
+        {
+          "title": "",
+          "items": [
+            {
+              "name": "",
+              "type": null,
+              "description": "Callback for handling when a broadcast stream part is being requested.",
+              "source_config": "CALLBACK_REQUEST_BROADCAST_PART_DESC",
+              "value": null
+            }
+          ]
+        },
+        {
+          "title": "PARAMETERS",
+          "items": [
+            {
+              "name": "",
+              "type": null,
+              "description": "uintptr_t ptr\nThe pointer to the NTgCalls instance.",
+              "source_config": "ARG_C_PTR",
+              "value": null
+            },
+            {
+              "name": "ntg_broadcast_part_callback callback",
+              "type": null,
+              "description": " void* userData\nCustom data that can be passed to the callback function.",
+              "source_config": null,
+              "value": null
+            }
+          ]
+        },
+        {
+          "title": "",
+          "items": [
+            {
+              "name": "",
+              "type": null,
+              "description": "Callback for handling when the broadcast timestamp is being requested.",
+              "source_config": "CALLBACK_REQUEST_BROADCAST_TIME_DESC",
+              "value": null
+            }
+          ]
+        },
+        {
+          "title": "PARAMETERS",
+          "items": [
+            {
+              "name": "",
+              "type": null,
+              "description": "uintptr_t ptr\nThe pointer to the NTgCalls instance.",
+              "source_config": "ARG_C_PTR",
+              "value": null
+            },
+            {
+              "name": "ntg_broadcast_timestamp_callback callback",
+              "type": null,
+              "description": " void* userData\nCustom data that can be passed to the callback function.",
               "source_config": null,
               "value": null
             }
@@ -3779,6 +4339,30 @@
               "value": null
             }
           ]
+        },
+        {
+          "title": "",
+          "items": [
+            {
+              "name": "",
+              "type": null,
+              "description": "Callback for handling when a broadcast stream part is being requested.",
+              "source_config": "CALLBACK_REQUEST_BROADCAST_PART_DESC",
+              "value": null
+            }
+          ]
+        },
+        {
+          "title": "",
+          "items": [
+            {
+              "name": "",
+              "type": null,
+              "description": "Callback for handling when the broadcast timestamp is being requested.",
+              "source_config": "CALLBACK_REQUEST_BROADCAST_TIME_DESC",
+              "value": null
+            }
+          ]
         }
       ]
     },
@@ -3851,13 +4435,6 @@
               "description": "",
               "source_config": null,
               "value": null
-            },
-            {
-              "name": "enable_h264_encoder()",
-              "type": null,
-              "description": "",
-              "source_config": null,
-              "value": null
             }
           ]
         },
@@ -3868,18 +4445,6 @@
               "name": "enable",
               "type": "bool",
               "description": " Enable or disable the GLib main loop.",
-              "source_config": null,
-              "value": null
-            }
-          ]
-        },
-        {
-          "title": "PARAMETERS",
-          "items": [
-            {
-              "name": "enable",
-              "type": "bool",
-              "description": " Enable or disable the H264 encoder.",
               "source_config": null,
               "value": null
             }
@@ -3901,29 +4466,10 @@
           "title": "PARAMETERS",
           "items": [
             {
-              "name": "char* buffer",
+              "name": "char** buffer",
               "type": null,
               "description": "",
               "source_config": null,
-              "value": null
-            },
-            {
-              "name": "[UNRESOLVED",
-              "type": "ARG_BUF_SIZE]",
-              "description": "",
-              "source_config": "ARG_BUF_SIZE",
-              "value": null
-            }
-          ]
-        },
-        {
-          "title": "ERROR CODES",
-          "items": [
-            {
-              "name": "[UNRESOLVED",
-              "type": "SMALL_BUFF_EXCEPTION]",
-              "description": "",
-              "source_config": "SMALL_BUFF_EXCEPTION",
               "value": null
             }
           ]
@@ -4068,7 +4614,7 @@
     "description": "This method allows changing the streaming file in a Group Call.",
     "example": {
       "language": "python",
-      "code": "from ntgcalls import NTgCalls\nfrom ntgcalls import StreamMode\nfrom ntgcalls import MediaDescription\nfrom ntgcalls import AudioDescription\n...\n\napp = NTgCalls()\n\nawait app.set_stream_sources(\n    -1001185324811,\n    StreamMode.CAPTURE,\n    MediaDescription(\n        AudioDescription(\n            input_mode=InputMode.File,\n            input=\"foxes.pcm\",\n            sample_rate=96000,\n            bits_per_sample=16,\n            channel_count=2,\n        ),\n    )\n)"
+      "code": "from ntgcalls import NTgCalls\nfrom ntgcalls import StreamMode\nfrom ntgcalls import MediaDescription\nfrom ntgcalls import AudioDescription\n...\n\napp = NTgCalls()\n\nawait app.set_stream_sources(\n    -1001185324811,\n    StreamMode.CAPTURE,\n    MediaDescription(\n        AudioDescription(\n            media_source=MediaSource.File,\n            input=\"foxes.pcm\",\n            sample_rate=96000,\n            bits_per_sample=16,\n            channel_count=2,\n        ),\n    )\n)"
     },
     "details": {
       "signature": "async NTgCalls.set_stream_sources()",
@@ -4105,7 +4651,7 @@
             {
               "name": "",
               "type": null,
-              "description": "exception ntgcalls.ConnectionNotFound\nThe specified connection was not found. exception ntgcalls.InvalidParams\nThis error occurs when attempting to send an invalid MediaSource.\nexception ntgcalls.FileError\nThe specified file does not exist.\nexception ntgcalls.ShellError\nError while executing the shell script.",
+              "description": "exception ntgcalls.ConnectionNotFound\nThe specified connection was not found. exception ntgcalls.InvalidParams\nThis error occurs when attempting to send an invalid MediaSource.\nexception ntgcalls.FileError\nThe specified file does not exist.\nexception ntgcalls.ShellError\nError while executing the shell script. exception ntgcalls.RTMPStreamingUnsupported\nYou need to use FFmpeg to stream to an RTMP stream.",
               "source_config": "CONNECTION_NOT_FOUND_EXCEPTION",
               "value": null
             }
@@ -4209,7 +4755,7 @@
     "description": "This method allows you to mute the WebRTC stream.",
     "example": {
       "language": "c",
-      "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uint32_t uid = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    ntg_async_struct future;\n    // Initialize the async struct\n    int errCode = ntg_mute(uid, chatID, &future);\n    // Wait for the async operation to complete\n    if (future.errorCode == 0) {\n        printf(\"Audio muted.\\n\");\n    } else if (future.errorCode == 1) {\n        printf(\"Audio was already muted.\\n\");\n    } else {\n        printf(\"Failed to mute audio (Error code: %d).\\n\", future.errorCode);\n        return 1;\n    }\n    ... // Your Code Here\n    return 0;\n}"
+      "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uintptr_t ptr = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    ntg_async_struct future;\n    // Initialize the async struct\n    int errCode = ntg_mute(ptr, chatID, &future);\n    // Wait for the async operation to complete\n    if (future.errorCode == 0) {\n        printf(\"Audio muted.\\n\");\n    } else if (future.errorCode == 1) {\n        printf(\"Audio was already muted.\\n\");\n    } else {\n        printf(\"Failed to mute audio (Error code: %d).\\n\", future.errorCode);\n        return 1;\n    }\n    ... // Your Code Here\n    return 0;\n}"
     },
     "details": {
       "signature": "int ntg_mute()",
@@ -4218,10 +4764,10 @@
           "title": "PARAMETERS",
           "items": [
             {
-              "name": "[UNRESOLVED",
-              "type": "ARG_C_UID]",
-              "description": " int64_t chatID\nUnique identifier of a chat. ntg_async_struct* future\nThe ntg_async_struct instance that will be used to track the async operation.",
-              "source_config": "ARG_C_UID",
+              "name": "",
+              "type": null,
+              "description": "uintptr_t ptr\nThe pointer to the NTgCalls instance. int64_t chatID\nUnique identifier of a chat. ntg_async_struct* future\nThe ntg_async_struct instance that will be used to track the async operation.",
+              "source_config": "ARG_C_PTR",
               "value": null
             }
           ]
@@ -4249,7 +4795,7 @@
     "description": "This method allows you to pause the WebRTC stream.",
     "example": {
       "language": "c",
-      "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uint32_t uid = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    ntg_async_struct future;\n    // Initialize the async struct\n    int errCode = ntg_pause(uid, chatID);\n    // Wait for the async operation to complete\n    if (future.errorCode == 0) {\n        printf(\"Audio paused.\\n\");\n    } else if (future.errorCode == 1) {\n        printf(\"Audio was already paused.\\n\");\n    } else {\n        printf(\"Failed to pause audio (Error code: %d).\\n\", result);\n        return 1;\n    }\n    ... // Your Code Here\n    return 0;\n}"
+      "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uintptr_t ptr = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    ntg_async_struct future;\n    // Initialize the async struct\n    int errCode = ntg_pause(ptr, chatID);\n    // Wait for the async operation to complete\n    if (future.errorCode == 0) {\n        printf(\"Audio paused.\\n\");\n    } else if (future.errorCode == 1) {\n        printf(\"Audio was already paused.\\n\");\n    } else {\n        printf(\"Failed to pause audio (Error code: %d).\\n\", result);\n        return 1;\n    }\n    ... // Your Code Here\n    return 0;\n}"
     },
     "details": {
       "signature": "int ntg_pause()",
@@ -4258,10 +4804,10 @@
           "title": "PARAMETERS",
           "items": [
             {
-              "name": "[UNRESOLVED",
-              "type": "ARG_C_UID]",
-              "description": " int64_t chatID\nUnique identifier of a chat. ntg_async_struct* future\nThe ntg_async_struct instance that will be used to track the async operation.",
-              "source_config": "ARG_C_UID",
+              "name": "",
+              "type": null,
+              "description": "uintptr_t ptr\nThe pointer to the NTgCalls instance. int64_t chatID\nUnique identifier of a chat. ntg_async_struct* future\nThe ntg_async_struct instance that will be used to track the async operation.",
+              "source_config": "ARG_C_PTR",
               "value": null
             }
           ]
@@ -4289,7 +4835,7 @@
     "description": "This method allows you to resume the WebRTC stream.",
     "example": {
       "language": "c",
-      "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uint32_t uid = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    ntg_async_struct future;\n    // Initialize the async struct\n    int errCode = ntg_resume(uid, chatID, &future);\n    // Wait for the async operation to complete\n    if (future.errorCode == 0) {\n        printf(\"Audio resumed.\\n\");\n    } else if (future.errorCode == 1) {\n        printf(\"Audio was already resumed.\\n\");\n    } else {\n        printf(\"Failed to resume audio (Error code: %d).\\n\", result);\n        return 1;\n    }\n    ... // Your Code Here\n    return 0;\n}"
+      "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uintptr_t ptr = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    ntg_async_struct future;\n    // Initialize the async struct\n    int errCode = ntg_resume(ptr, chatID, &future);\n    // Wait for the async operation to complete\n    if (future.errorCode == 0) {\n        printf(\"Audio resumed.\\n\");\n    } else if (future.errorCode == 1) {\n        printf(\"Audio was already resumed.\\n\");\n    } else {\n        printf(\"Failed to resume audio (Error code: %d).\\n\", result);\n        return 1;\n    }\n    ... // Your Code Here\n    return 0;\n}"
     },
     "details": {
       "signature": "int ntg_resume()",
@@ -4298,10 +4844,10 @@
           "title": "PARAMETERS",
           "items": [
             {
-              "name": "[UNRESOLVED",
-              "type": "ARG_C_UID]",
-              "description": " int64_t chatID\nUnique identifier of a chat. ntg_async_struct* future\nThe ntg_async_struct instance that will be used to track the async operation.",
-              "source_config": "ARG_C_UID",
+              "name": "",
+              "type": null,
+              "description": "uintptr_t ptr\nThe pointer to the NTgCalls instance. int64_t chatID\nUnique identifier of a chat. ntg_async_struct* future\nThe ntg_async_struct instance that will be used to track the async operation.",
+              "source_config": "ARG_C_PTR",
               "value": null
             }
           ]
@@ -4329,7 +4875,7 @@
     "description": "This method allows changing the streaming file in a Group Call.",
     "example": {
       "language": "c",
-      "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uint32_t uid = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    ntg_media_description_struct desc = {\n        // Fill in updated media description fields\n    };\n    ntg_async_struct future;\n    // Initialize the async struct\n    int result = ntg_set_stream_sources(uid, chatID, NTG_STREAM_CAPTURE, desc, &future);\n    // Wait for the async operation to complete\n    return 0;\n}"
+      "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uintptr_t ptr = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    ntg_media_description_struct desc = {\n        // Fill in updated media description fields\n    };\n    ntg_async_struct future;\n    // Initialize the async struct\n    int result = ntg_set_stream_sources(ptr, chatID, NTG_STREAM_CAPTURE, desc, &future);\n    // Wait for the async operation to complete\n    return 0;\n}"
     },
     "details": {
       "signature": "int ntg_set_stream_sources()",
@@ -4338,10 +4884,10 @@
           "title": "PARAMETERS",
           "items": [
             {
-              "name": "[UNRESOLVED",
-              "type": "ARG_C_UID]",
-              "description": " int64_t chatID\nUnique identifier of a chat. ntg_stream_mode_enum streamMode\nStream direction for the stream. ntg_media_description_struct desc\nMedia parameters of the stream. ntg_async_struct* future\nThe ntg_async_struct instance that will be used to track the async operation.",
-              "source_config": "ARG_C_UID",
+              "name": "",
+              "type": null,
+              "description": "uintptr_t ptr\nThe pointer to the NTgCalls instance. int64_t chatID\nUnique identifier of a chat. ntg_stream_mode_enum streamMode\nStream direction for the stream. ntg_media_description_struct desc\nMedia parameters of the stream. ntg_async_struct* future\nThe ntg_async_struct instance that will be used to track the async operation.",
+              "source_config": "ARG_C_PTR",
               "value": null
             }
           ]
@@ -4352,7 +4898,7 @@
             {
               "name": "",
               "type": null,
-              "description": "#NTG_INVALID_UID -2\nThe provided UID is invalid. #NTG_UNKNOWN_EXCEPTION -1\nAn unknown exception occurred.\n#NTG_CONNECTION_NOT_FOUND -101\nThe specified connection was not found. #NTG_FILE_NOT_FOUND -200\nThe specified file was not found.\n#NTG_ENCODER_NOT_FOUND -201\nThe required encoder was not found.\n#NTG_FFMPEG_NOT_FOUND -202\nFFmpeg is not found in the system.\n#NTG_SHELL_ERROR -203\nAn error occurred while executing a shell command.",
+              "description": "#NTG_INVALID_UID -2\nThe provided UID is invalid. #NTG_UNKNOWN_EXCEPTION -1\nAn unknown exception occurred.\n#NTG_CONNECTION_NOT_FOUND -101\nThe specified connection was not found. #NTG_FILE_NOT_FOUND -200\nThe specified file was not found.\n#NTG_ENCODER_NOT_FOUND -201\nThe required encoder was not found.\n#NTG_FFMPEG_NOT_FOUND -202\nFFmpeg is not found in the system.\n#NTG_SHELL_ERROR -203\nAn error occurred while executing a shell command. #NTG_ERROR_RTMP_STREAMING_UNSUPPORTED -300\nYou need to use FFmpeg to stream to an RTMP stream.",
               "source_config": "BASE_SYNC_C_EXCEPTION",
               "value": null
             }
@@ -4369,7 +4915,7 @@
     "description": "This method allows getting the played time of the stream.",
     "example": {
       "language": "c",
-      "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uint32_t uid = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    int64_t time = 0;\n    ntg_async_struct future;\n    // Initialize the async struct\n    int64_t result = ntg_time(uid, chatID, NTG_STREAM_CAPTURE, &time, &future);\n    // Wait for the async operation to complete\n    return 0;\n}"
+      "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uintptr_t ptr = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    int64_t time = 0;\n    ntg_async_struct future;\n    // Initialize the async struct\n    int64_t result = ntg_time(ptr, chatID, NTG_STREAM_CAPTURE, &time, &future);\n    // Wait for the async operation to complete\n    return 0;\n}"
     },
     "details": {
       "signature": "int ntg_time()",
@@ -4378,10 +4924,10 @@
           "title": "PARAMETERS",
           "items": [
             {
-              "name": "[UNRESOLVED",
-              "type": "ARG_C_UID]",
-              "description": " int64_t chatID\nUnique identifier of a chat. ntg_stream_mode_enum streamMode\nStream direction for the stream.",
-              "source_config": "ARG_C_UID",
+              "name": "",
+              "type": null,
+              "description": "uintptr_t ptr\nThe pointer to the NTgCalls instance. int64_t chatID\nUnique identifier of a chat. ntg_stream_mode_enum streamMode\nStream direction for the stream.",
+              "source_config": "ARG_C_PTR",
               "value": null
             },
             {
@@ -4416,7 +4962,7 @@
     "description": "This method allows you to unmute the WebRTC stream.",
     "example": {
       "language": "c",
-      "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uint32_t uid = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    ntg_async_struct future;\n    // Initialize the async struct\n    int errCode = ntg_unmute(uid, chatID, &future);\n    // Wait for the async operation to complete\n    if (future.errorCode == 0) {\n        printf(\"Audio unmuted.\\n\");\n    } else if (future.errorCode == 1) {\n        printf(\"Audio was already unmuted.\\n\");\n    } else {\n        printf(\"Failed to unmute audio (Error code: %d).\\n\", future.errorCode);\n        return 1;\n    }\n    ... // Your Code Here\n    return 0;\n}"
+      "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uintptr_t ptr = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    ntg_async_struct future;\n    // Initialize the async struct\n    int errCode = ntg_unmute(ptr, chatID, &future);\n    // Wait for the async operation to complete\n    if (future.errorCode == 0) {\n        printf(\"Audio unmuted.\\n\");\n    } else if (future.errorCode == 1) {\n        printf(\"Audio was already unmuted.\\n\");\n    } else {\n        printf(\"Failed to unmute audio (Error code: %d).\\n\", future.errorCode);\n        return 1;\n    }\n    ... // Your Code Here\n    return 0;\n}"
     },
     "details": {
       "signature": "int ntg_unmute()",
@@ -4425,10 +4971,10 @@
           "title": "PARAMETERS",
           "items": [
             {
-              "name": "[UNRESOLVED",
-              "type": "ARG_C_UID]",
-              "description": " int64_t chatID\nUnique identifier of a chat. ntg_async_struct* future\nThe ntg_async_struct instance that will be used to track the async operation.",
-              "source_config": "ARG_C_UID",
+              "name": "",
+              "type": null,
+              "description": "uintptr_t ptr\nThe pointer to the NTgCalls instance. int64_t chatID\nUnique identifier of a chat. ntg_async_struct* future\nThe ntg_async_struct instance that will be used to track the async operation.",
+              "source_config": "ARG_C_PTR",
               "value": null
             }
           ]
@@ -4518,7 +5064,7 @@
       "code": "from pytgcalls import Client\nfrom pytgcalls import idle\n...\n\napp = PyTgCalls(client)\napp.start()\n\n...  # Call API methods\n\napp.get_participants(\n    -1001185324811,\n)\n\nidle()"
     },
     "details": {
-      "signature": "PyTgCalls.get_participants() -> list[GroupCall]",
+      "signature": "PyTgCalls.get_participants() -> list[GroupCallParticipant]",
       "sections": [
         {
           "title": "PARAMETERS",
@@ -4833,15 +5379,56 @@
           "value": null
         },
         {
-          "name": "action",
-          "type": "Action",
-          "description": "Current action of the participant.",
+          "name": "source",
+          "type": "int",
+          "description": "Source ID of the participant's audio stream.",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "video_info",
+          "type": "Optional[pytgcalls.SourceInfo]",
+          "description": "Info about the video stream the participant is currently broadcasting.",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "presentation_info",
+          "type": "Optional[pytgcalls.SourceInfo]",
+          "description": "Info about the screen sharing stream the participant is currently broadcasting.",
           "source_config": null,
           "value": null
         }
       ]
     },
     "doc_url": "https://pytgcalls.github.io/PyTgCalls/Advanced Types/GroupCallParticipant"
+  },
+  "/PyTgCalls/Advanced Types/SourceInfo.xml": {
+    "title": "SourceInfo",
+    "lib": "PyTgCalls",
+    "kind": "type",
+    "description": "",
+    "example": {},
+    "details": {
+      "signature": "class pytgcalls.types.SourceInfo",
+      "properties": [
+        {
+          "name": "endpoint",
+          "type": "str",
+          "description": "Endpoint of the source.",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "sources",
+          "type": "list[ntgcalls.SsrcGroup]",
+          "description": "",
+          "source_config": null,
+          "value": null
+        }
+      ]
+    },
+    "doc_url": "https://pytgcalls.github.io/PyTgCalls/Advanced Types/SourceInfo"
   },
   "/PyTgCalls/Advanced Types/StreamEnded.xml": {
     "title": "StreamEnded",
@@ -4908,10 +5495,19 @@
     "title": "UpdatedGroupCallParticipant",
     "lib": "PyTgCalls",
     "kind": "type",
-    "description": "chat_id -> int\nUnique identifier of a chat. participant -> pytgcalls.GroupCallParticipant\nInfo about a group call participant.",
+    "description": "chat_id -> int\nUnique identifier of a chat.",
     "example": {},
     "details": {
-      "signature": "class pytgcalls.types.UpdatedGroupCallParticipant"
+      "signature": "class pytgcalls.types.UpdatedGroupCallParticipant",
+      "properties": [
+        {
+          "name": "action",
+          "type": "pytgcalls.GroupCallParticipant.Action",
+          "description": "Current action of the participant. participant -> pytgcalls.GroupCallParticipant\nInfo about a group call participant.",
+          "source_config": null,
+          "value": null
+        }
+      ]
     },
     "doc_url": "https://pytgcalls.github.io/PyTgCalls/Advanced Types/UpdatedGroupCallParticipant"
   },
@@ -4966,7 +5562,7 @@
       "signature": "class Call.Status",
       "members": [
         {
-          "name": "PLAYING",
+          "name": "ACTIVE",
           "type": null,
           "description": "Indicates that the call is playing.",
           "source_config": null,
@@ -5029,7 +5625,7 @@
         {
           "name": "KICKED",
           "type": null,
-          "description": "Indicates that you was kicked.",
+          "description": "Indicates that you was kicked from the chat.",
           "source_config": null,
           "value": "1"
         },
@@ -5069,11 +5665,18 @@
           "value": "32"
         },
         {
+          "name": "BUSY_CALL",
+          "type": null,
+          "description": "Indicates that the receiver is busy with another call.",
+          "source_config": null,
+          "value": "64"
+        },
+        {
           "name": "LEFT_CALL",
           "type": null,
           "description": "Indicates that you left the call.",
           "source_config": null,
-          "value": "KICKED | LEFT_GROUP | CLOSED_VOICE_CHAT | DISCARDED_CALL"
+          "value": "KICKED | LEFT_GROUP | CLOSED_VOICE_CHAT | DISCARDED_CALL | BUSY_CALL"
         }
       ]
     },
@@ -5198,11 +5801,18 @@
           "value": "2"
         },
         {
+          "name": "KICKED",
+          "type": null,
+          "description": "Represents a participant kicked from a group call, usually when it joins from a different device while already in the call.",
+          "source_config": null,
+          "value": "4"
+        },
+        {
           "name": "UPDATED",
           "type": null,
           "description": "Represents a participant updated in a group call.",
           "source_config": null,
-          "value": "4"
+          "value": "8"
         }
       ]
     },
@@ -5237,13 +5847,6 @@
           "description": "Indicates that the stream is mandatory.",
           "source_config": null,
           "value": "4"
-        },
-        {
-          "name": "NO_LATENCY",
-          "type": null,
-          "description": "Used to indicate that the stream should be sent with no latency.",
-          "source_config": null,
-          "value": "8"
         }
       ]
     },
@@ -5366,6 +5969,13 @@
               "description": "Can be direct id or a username",
               "source_config": "ARG_CHAT_ID",
               "value": null
+            },
+            {
+              "name": "close",
+              "type": "bool",
+              "description": "",
+              "source_config": null,
+              "value": null
             }
           ]
         },
@@ -5461,6 +6071,18 @@
     "example": {},
     "details": {
       "sections": [
+        {
+          "title": "",
+          "items": [
+            {
+              "name": "",
+              "type": null,
+              "description": "The repository",
+              "source_config": null,
+              "value": null
+            }
+          ]
+        },
         {
           "title": "",
           "items": [
@@ -6067,7 +6689,7 @@
             {
               "name": "",
               "type": null,
-              "description": "exception pytgcalls.exceptions.NoMTProtoClient\nThis method can only be called with a valid MTProto client set.\nexception pytgcalls.exceptions.ClientNotStarted\nEnsure you have started the process with start() before calling this method. exception pytgcalls.exceptions.NoActiveGroupCall\nYou cannot edit a group call that hasn't been initiated. exception FileNotFoundError\nThe specified file does not exist.\nexception ntgcalls.FFmpegError\nTo use Piped input stream, make sure you have FFmpeg installed.\nexception ntgcalls.ShellError\nError while executing the shell script.\nexception pytgcalls.exceptions.NoAudioSourceFound\nThe audio file you're trying to play has no audio.\nexception pytgcalls.exceptions.NoVideoSourceFound\nThe video file you're trying to play has no video.\nexception pytgcalls.exceptions.InvalidVideoProportion\nPlaying a video with incorrect proportions is not supported.\nexception pytgcalls.exceptions.YtDlpError\nThis error occurs when yt-dlp encounters an error. exception pytgcalls.exceptions.CallDeclined\nThe call was declined by the user.\nexception pytgcalls.exceptions.CallBusy\nWhen the user is already in a call.\nexception pytgcalls.exceptions.CallDiscarded\nThe call was discarded by the user while connecting.\nexception ntgcalls.TelegramServerError\nThis error occurs when the connection between Telegram and the WebRTC service fails.",
+              "description": "exception pytgcalls.exceptions.NoMTProtoClient\nThis method can only be called with a valid MTProto client set.\nexception pytgcalls.exceptions.ClientNotStarted\nEnsure you have started the process with start() before calling this method. exception pytgcalls.exceptions.NoActiveGroupCall\nYou cannot edit a group call that hasn't been initiated. exception FileNotFoundError\nThe specified file does not exist.\nexception ntgcalls.FFmpegError\nTo use Piped input stream, make sure you have FFmpeg installed.\nexception ntgcalls.ShellError\nError while executing the shell script.\nexception pytgcalls.exceptions.NoAudioSourceFound\nThe audio file you're trying to play has no audio.\nexception pytgcalls.exceptions.NoVideoSourceFound\nThe video file you're trying to play has no video.\nexception pytgcalls.exceptions.InvalidVideoProportion\nPlaying a video with incorrect proportions is not supported.\nexception pytgcalls.exceptions.YtDlpError\nThis error occurs when yt-dlp encounters an error. exception pytgcalls.exceptions.CallDeclined\nThe call was declined by the user.\nexception pytgcalls.exceptions.CallBusy\nWhen the user is already in a call.\nexception pytgcalls.exceptions.CallDiscarded\nThe call was discarded by the user while connecting.\nexception ntgcalls.TelegramServerError\nThis error occurs when the connection between Telegram and the WebRTC service fails. exception ntgcalls.RTMPStreamingUnsupported\nYou need to use FFmpeg to stream to an RTMP stream.",
               "source_config": "BASE_MTPROTO",
               "value": null
             }
