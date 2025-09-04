@@ -2,8 +2,18 @@ import json
 from dataclasses import dataclass
 from typing import List, Optional, Dict
 
+
 @dataclass
 class Member:
+    name: str
+    type: Optional[str] = None
+    description: str = ""
+    source_config: Optional[str] = None
+    value: Optional[str] = None
+
+
+@dataclass
+class Property:
     name: str
     type: Optional[str] = None
     description: str = ""
@@ -21,7 +31,8 @@ class Section:
 class Details:
     signature: Optional[str] = None
     sections: Optional[List[Section]] = None   # for methods
-    members: Optional[List[Member]] = None     # for enums/types
+    members: Optional[List[Member]] = None     # for enums
+    properties: Optional[List[Property]] = None  # for types
 
 
 @dataclass
@@ -46,6 +57,10 @@ class DocSearch:
             if v["details"].get("members"):
                 members = [Member(**m) for m in v["details"]["members"]]
 
+            properties = None
+            if v["details"].get("properties"):
+                properties = [Property(**p) for p in v["details"]["properties"]]
+
             sections = None
             if v["details"].get("sections"):
                 sections = [Section(**s) for s in v["details"]["sections"]]
@@ -54,6 +69,7 @@ class DocSearch:
                 signature=v["details"].get("signature"),
                 sections=sections,
                 members=members,
+                properties=properties,
             )
             self.entries.append(
                 DocEntry(
@@ -68,7 +84,7 @@ class DocSearch:
             )
 
     def search(self, query: str, limit: int = 5) -> List[DocEntry]:
-        """Smart search across title, description, signature, lib, parameters, and raises."""
+        """Smart search across title, description, signature, lib, parameters, members, and properties."""
         q = query.lower()
         scored: List[tuple[int, DocEntry]] = []
 
@@ -89,7 +105,7 @@ class DocSearch:
             if q in e.description.lower():
                 score += 5
 
-            # parameters + raises
+            # sections (PARAMETERS, RAISES)
             if e.details.sections:
                 for s in e.details.sections:
                     if q in s.title.lower():
@@ -102,7 +118,7 @@ class DocSearch:
                         if q in (it.get("description") or "").lower():
                             score += 2
 
-            # members (for enums/types)
+            # members (for enums)
             if e.details.members:
                 for m in e.details.members:
                     if q in (m.name or "").lower():
@@ -110,6 +126,16 @@ class DocSearch:
                     if q in (m.value or "").lower():
                         score += 3
                     if q in (m.description or "").lower():
+                        score += 2
+
+            # properties (for types)
+            if e.details.properties:
+                for p in e.details.properties:
+                    if q in (p.name or "").lower():
+                        score += 4
+                    if q in (p.type or "").lower():
+                        score += 3
+                    if q in (p.description or "").lower():
                         score += 2
 
             if score > 0:
@@ -132,50 +158,57 @@ if __name__ == "__main__":
     if not results:
         print("❌ No matches found.")
     else:
-        if not results:
-            print("❌ No matches found.")
-        else:
-            for r in results:
-                print(f"\n📌 {r.title} ({r.kind}) — {r.lib}")
-                if r.details.signature:
-                    print("   Signature:", r.details.signature)
-                if r.description:
-                    print("   Desc:", r.description)
-                if r.example:
-                    print("   Example:", r.example)
+        for r in results:
+            print(f"\n📌 {r.title} ({r.kind}) — {r.lib}")
+            if r.details.signature:
+                print("   Signature:", r.details.signature)
+            if r.description:
+                print("   Desc:", r.description)
+            if r.example:
+                print("   Example:", r.example)
 
-                # handle method sections
-                if r.details.sections:
-                    for s in r.details.sections:
-                        print(f"   ▸ {s.title}")
-                        for it in s.items:
-                            nm = it.get("name") or ""
-                            tp = it.get("type") or ""
-                            ds = (it.get("description") or "").strip()
+            # method sections
+            if r.details.sections:
+                for s in r.details.sections:
+                    print(f"   ▸ {s.title}")
+                    for it in s.items:
+                        nm = it.get("name") or ""
+                        tp = it.get("type") or ""
+                        ds = (it.get("description") or "").strip()
 
-                            if s.title.upper() == "RAISES":
-                                # split exceptions line by line
-                                for line in ds.split("\n"):
-                                    line = line.strip()
-                                    if line:
-                                        print(f"      - {line}")
-                            else:
-                                param_line = f"      {nm}" if nm else "      -"
-                                if tp:
-                                    param_line += f": {tp}"
-                                if ds:
-                                    param_line += f"  # {ds}"
-                                print(param_line)
+                        if s.title.upper() == "RAISES":
+                            for line in ds.split("\n"):
+                                line = line.strip()
+                                if line:
+                                    print(f"      - {line}")
+                        else:
+                            param_line = f"      {nm}" if nm else "      -"
+                            if tp:
+                                param_line += f": {tp}"
+                            if ds:
+                                param_line += f"  # {ds}"
+                            print(param_line)
 
-                # handle enum/type members
-                if r.details.members:
-                    print("   Members:")
-                    for m in r.details.members:
-                        member_line = f"      {m.name}"
-                        if m.value:
-                            member_line += f" = {m.value}"
-                        if m.description:
-                            member_line += f" :: {m.description}"
-                        print(member_line)
+            # enum/type members
+            if r.details.members:
+                print("   Members:")
+                for m in r.details.members:
+                    member_line = f"      {m.name}"
+                    if m.value:
+                        member_line += f" = {m.value}"
+                    if m.description:
+                        member_line += f" :: {m.description}"
+                    print(member_line)
 
-                print("   Doc URL:", r.doc_url)
+            # type properties
+            if r.details.properties:
+                print("   Properties:")
+                for p in r.details.properties:
+                    prop_line = f"      {p.name}"
+                    if p.type:
+                        prop_line += f" -> {p.type}"
+                    if p.description:
+                        prop_line += f" :: {p.description}"
+                    print(prop_line)
+
+            print("   Doc URL:", r.doc_url)

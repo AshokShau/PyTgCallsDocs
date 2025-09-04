@@ -296,7 +296,7 @@
     "title": "ntg_calls",
     "lib": "NTgCalls",
     "kind": "method",
-    "description": "\n        This function returns a list of ",
+    "description": "This function returns a list of",
     "example": {
       "language": "c",
       "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uint32_t uid = ntg_init();\n    ...\n    int size = ...  ; // Get the size of the call list\n    ntg_call_struct buffer[size];\n    // Initialize the async struct\n    ntg_async_struct future;\n    int result = ntg_calls(uid, buffer, size, &future);\n    // Wait for the async operation to complete\n    for (int i = 0; i < result; i++) {\n        printf(\"Group Call %d:\\n\", i + 1);\n        printf(\"  Chat ID: %lld\\n\", buffer[i].chatId);\n        printf(\"  Status: %d\\n\", buffer[i].status);\n    }\n    ... // Your Code Here\n    return 0;\n}"
@@ -357,7 +357,7 @@
     "title": "ntg_calls_count",
     "lib": "NTgCalls",
     "kind": "method",
-    "description": "\n        This function returns the number of active group calls that NTgCalls is connected to.\n    ",
+    "description": "This function returns the number of active group calls that NTgCalls is connected to.",
     "example": {
       "language": "c",
       "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uint32_t uid = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    int count = 0;\n    // Initialize the async struct\n    ntg_async_struct future;\n    int result = ntg_calls_count(uid, &count, &future);\n    // Wait for the async operation to complete\n    printf(\"Number of active group calls: %d\\n\", count);\n    ... // Your Code Here\n    return 0;\n}"
@@ -786,7 +786,7 @@
     "title": "ConnectionKind",
     "lib": "NTgCalls",
     "kind": "enum",
-    "description": "Kind of connection.",
+    "description": "",
     "example": {},
     "details": {
       "signature": "class ntgcalls.ConnectionKind",
@@ -794,14 +794,14 @@
         {
           "name": "NORMAL",
           "type": null,
-          "description": " Normal connection for the camera and microphone.",
+          "description": "Normal connection for the camera and microphone.",
           "source_config": null,
           "value": "0"
         },
         {
           "name": "PRESENTATION",
           "type": null,
-          "description": " Presentation connection for sharing the screen and system audio.",
+          "description": "Presentation connection for sharing the screen and system audio.",
           "source_config": null,
           "value": "1"
         }
@@ -813,7 +813,7 @@
     "title": "ConnectionState",
     "lib": "NTgCalls",
     "kind": "enum",
-    "description": "Enumeration of connection state values.",
+    "description": "",
     "example": {},
     "details": {
       "signature": "class ConnectionState",
@@ -821,35 +821,35 @@
         {
           "name": "CONNECTING",
           "type": null,
-          "description": " Indicates that the connection is in the process of being established.",
+          "description": "Indicates that the connection is in the process of being established.",
           "source_config": null,
           "value": "0"
         },
         {
           "name": "CONNECTED",
           "type": null,
-          "description": " Indicates that the connection has been established.",
+          "description": "Indicates that the connection has been established.",
           "source_config": null,
           "value": "1"
         },
         {
           "name": "FAILED",
           "type": null,
-          "description": " Indicates that the connection has failed.",
+          "description": "Indicates that the connection has failed.",
           "source_config": null,
           "value": "2"
         },
         {
           "name": "TIMEOUT",
           "type": null,
-          "description": " Indicates that the connection has timed out.",
+          "description": "Indicates that the connection has timed out.",
           "source_config": null,
           "value": "3"
         },
         {
           "name": "CLOSED",
           "type": null,
-          "description": " Indicates that the connection has been closed.",
+          "description": "Indicates that the connection has been closed.",
           "source_config": null,
           "value": "4"
         }
@@ -861,7 +861,7 @@
     "title": "MediaSource",
     "lib": "NTgCalls",
     "kind": "enum",
-    "description": "Enumeration of input modes for audio and video streams.",
+    "description": "",
     "example": {},
     "details": {
       "signature": "class ntgcalls.MediaSource",
@@ -869,42 +869,42 @@
         {
           "name": "FILE",
           "type": null,
-          "description": " Input mode using a file source.",
+          "description": "Input mode using a file source.",
           "source_config": null,
           "value": "1"
         },
         {
           "name": "SHELL",
           "type": null,
-          "description": " Input mode using a shell command.",
+          "description": "Input mode using a shell command.",
           "source_config": null,
           "value": "2"
         },
         {
           "name": "FFMPEG",
           "type": null,
-          "description": " Input mode using FFmpeg.",
+          "description": "Input mode using FFmpeg.",
           "source_config": null,
           "value": "4"
         },
         {
           "name": "DEVICE",
           "type": null,
-          "description": " Input mode using a device source.",
+          "description": "Input mode using a device source.",
           "source_config": null,
           "value": "8"
         },
         {
           "name": "DESKTOP",
           "type": null,
-          "description": " Input mode using a desktop source.",
+          "description": "Input mode using a desktop source.",
           "source_config": null,
           "value": "16"
         },
         {
           "name": "EXTERNAL",
           "type": null,
-          "description": " Input mode using an external source.",
+          "description": "Input mode using an external source.",
           "source_config": null,
           "value": "32"
         }
@@ -916,7 +916,7 @@
     "title": "StreamDevice",
     "lib": "NTgCalls",
     "kind": "enum",
-    "description": "Enumeration of stream device values.",
+    "description": "",
     "example": {},
     "details": {
       "signature": "class ntgcalls.StreamDevice",
@@ -924,28 +924,28 @@
         {
           "name": "MICROPHONE",
           "type": null,
-          "description": " Input mode using a microphone source.",
+          "description": "Input mode using a microphone source.",
           "source_config": null,
           "value": "0"
         },
         {
           "name": "SPEAKER",
           "type": null,
-          "description": " Input mode using a speaker source.",
+          "description": "Input mode using a speaker source.",
           "source_config": null,
           "value": "1"
         },
         {
           "name": "CAMERA",
           "type": null,
-          "description": " Input mode using a camera source.",
+          "description": "Input mode using a camera source.",
           "source_config": null,
           "value": "2"
         },
         {
           "name": "SCREEN",
           "type": null,
-          "description": " Input mode using a screen source.",
+          "description": "Input mode using a screen source.",
           "source_config": null,
           "value": "3"
         }
@@ -957,7 +957,7 @@
     "title": "StreamMode",
     "lib": "NTgCalls",
     "kind": "enum",
-    "description": "Stream direction for the stream.",
+    "description": "",
     "example": {},
     "details": {
       "signature": "class ntgcalls.StreamMode",
@@ -965,14 +965,14 @@
         {
           "name": "CAPTURE",
           "type": null,
-          "description": " Direction for sending the stream.",
+          "description": "Direction for sending the stream.",
           "source_config": null,
           "value": "0"
         },
         {
           "name": "PLAYBACK",
           "type": null,
-          "description": " Direction for receiving the stream.",
+          "description": "Direction for receiving the stream.",
           "source_config": null,
           "value": "1"
         }
@@ -984,7 +984,7 @@
     "title": "StreamStatus",
     "lib": "NTgCalls",
     "kind": "enum",
-    "description": "Enumeration of stream status values.",
+    "description": "",
     "example": {},
     "details": {
       "signature": "class ntgcalls.StreamStatus",
@@ -992,21 +992,21 @@
         {
           "name": "PLAYING",
           "type": null,
-          "description": " Indicates that the stream is currently playing.",
+          "description": "Indicates that the stream is currently playing.",
           "source_config": null,
           "value": "0"
         },
         {
           "name": "PAUSED",
           "type": null,
-          "description": " Indicates that the stream is currently paused.",
+          "description": "Indicates that the stream is currently paused.",
           "source_config": null,
           "value": "1"
         },
         {
           "name": "IDLING",
           "type": null,
-          "description": " Indicates that the stream is currently idling (neither playing nor paused).",
+          "description": "Indicates that the stream is currently idling (neither playing nor paused).",
           "source_config": null,
           "value": "2"
         }
@@ -1018,7 +1018,7 @@
     "title": "StreamType",
     "lib": "NTgCalls",
     "kind": "enum",
-    "description": "Enumeration of stream type values.",
+    "description": "",
     "example": {},
     "details": {
       "signature": "class ntgcalls.StreamType",
@@ -1026,14 +1026,14 @@
         {
           "name": "AUDIO",
           "type": null,
-          "description": " Indicates that the stream type is audio.",
+          "description": "Indicates that the stream type is audio.",
           "source_config": null,
           "value": "0"
         },
         {
           "name": "VIDEO",
           "type": null,
-          "description": " Indicates that the stream type is video.",
+          "description": "Indicates that the stream type is video.",
           "source_config": null,
           "value": "1"
         }
@@ -1045,7 +1045,7 @@
     "title": "ntg_connection_kind_enum",
     "lib": "NTgCalls",
     "kind": "enum",
-    "description": "Kind of connection.",
+    "description": "",
     "example": {},
     "details": {
       "signature": "typedef enum ntg_connection_kind_enum",
@@ -1053,14 +1053,14 @@
         {
           "name": "NTG_KIND_NORMAL",
           "type": null,
-          "description": " Normal connection for the camera and microphone.",
+          "description": "Normal connection for the camera and microphone.",
           "source_config": null,
           "value": "0"
         },
         {
           "name": "NTG_KIND_PRESENTATION",
           "type": null,
-          "description": " Presentation connection for sharing the screen and system audio.",
+          "description": "Presentation connection for sharing the screen and system audio.",
           "source_config": null,
           "value": "1"
         }
@@ -1072,7 +1072,7 @@
     "title": "ntg_connection_state_enum",
     "lib": "NTgCalls",
     "kind": "enum",
-    "description": "Enumeration of connection state values.",
+    "description": "",
     "example": {},
     "details": {
       "signature": "typedef enum ntg_connection_state_enum",
@@ -1080,35 +1080,35 @@
         {
           "name": "NTG_STATE_CONNECTING",
           "type": null,
-          "description": " Indicates that the connection is in the process of being established.",
+          "description": "Indicates that the connection is in the process of being established.",
           "source_config": null,
           "value": "0"
         },
         {
           "name": "NTG_STATE_CONNECTED",
           "type": null,
-          "description": " Indicates that the connection has been established.",
+          "description": "Indicates that the connection has been established.",
           "source_config": null,
           "value": "1"
         },
         {
           "name": "NTG_STATE_FAILED",
           "type": null,
-          "description": " Indicates that the connection has failed.",
+          "description": "Indicates that the connection has failed.",
           "source_config": null,
           "value": "2"
         },
         {
           "name": "NTG_STATE_TIMEOUT",
           "type": null,
-          "description": " Indicates that the connection has timed out.",
+          "description": "Indicates that the connection has timed out.",
           "source_config": null,
           "value": "3"
         },
         {
           "name": "NTG_STATE_CLOSED",
           "type": null,
-          "description": " Indicates that the connection has been closed.",
+          "description": "Indicates that the connection has been closed.",
           "source_config": null,
           "value": "4"
         }
@@ -1120,7 +1120,7 @@
     "title": "ntg_log_level_enum",
     "lib": "NTgCalls",
     "kind": "enum",
-    "description": "Log level.",
+    "description": "",
     "example": {},
     "details": {
       "signature": "typedef enum ntg_log_level_enum",
@@ -1128,35 +1128,35 @@
         {
           "name": "NTG_LOG_DEBUG",
           "type": null,
-          "description": " Debug log level.",
+          "description": "Debug log level.",
           "source_config": null,
           "value": "1"
         },
         {
           "name": "NTG_LOG_INFO",
           "type": null,
-          "description": " Info log level.",
+          "description": "Info log level.",
           "source_config": null,
           "value": "2"
         },
         {
           "name": "NTG_LOG_WARNING",
           "type": null,
-          "description": " Warning log level.",
+          "description": "Warning log level.",
           "source_config": null,
           "value": "4"
         },
         {
           "name": "NTG_LOG_ERROR",
           "type": null,
-          "description": " Error log level.",
+          "description": "Error log level.",
           "source_config": null,
           "value": "8"
         },
         {
           "name": "NTG_LOG_UNKNOWN",
           "type": null,
-          "description": " Unknown log level.",
+          "description": "Unknown log level.",
           "source_config": null,
           "value": "-1"
         }
@@ -1168,7 +1168,7 @@
     "title": "ntg_log_source_enum",
     "lib": "NTgCalls",
     "kind": "enum",
-    "description": "Log source.",
+    "description": "",
     "example": {},
     "details": {
       "signature": "typedef enum ntg_log_source_enum",
@@ -1176,14 +1176,14 @@
         {
           "name": "NTG_LOG_WEBRTC",
           "type": null,
-          "description": " WebRTC log level.",
+          "description": "WebRTC log level.",
           "source_config": null,
           "value": "1"
         },
         {
           "name": "NTG_LOG_SELF",
           "type": null,
-          "description": " NTgCalls log level.",
+          "description": "NTgCalls log level.",
           "source_config": null,
           "value": "2"
         }
@@ -1195,7 +1195,7 @@
     "title": "ntg_media_source_enum",
     "lib": "NTgCalls",
     "kind": "enum",
-    "description": "Enumeration of input modes for audio and video streams.",
+    "description": "",
     "example": {},
     "details": {
       "signature": "typedef enum ntg_media_source_enum",
@@ -1203,42 +1203,42 @@
         {
           "name": "NTG_FILE",
           "type": null,
-          "description": " Input mode using a file source.",
+          "description": "Input mode using a file source.",
           "source_config": null,
           "value": "1"
         },
         {
           "name": "NTG_SHELL",
           "type": null,
-          "description": " Input mode using a shell command.",
+          "description": "Input mode using a shell command.",
           "source_config": null,
           "value": "2"
         },
         {
           "name": "NTG_FFMPEG",
           "type": null,
-          "description": " Input mode using FFmpeg.",
+          "description": "Input mode using FFmpeg.",
           "source_config": null,
           "value": "4"
         },
         {
           "name": "NTG_DEVICE",
           "type": null,
-          "description": " Input mode using a device source.",
+          "description": "Input mode using a device source.",
           "source_config": null,
           "value": "8"
         },
         {
           "name": "NTG_DESKTOP",
           "type": null,
-          "description": " Input mode using a desktop source.",
+          "description": "Input mode using a desktop source.",
           "source_config": null,
           "value": "16"
         },
         {
           "name": "NTG_EXTERNAL",
           "type": null,
-          "description": " Input mode using an external source.",
+          "description": "Input mode using an external source.",
           "source_config": null,
           "value": "32"
         }
@@ -1250,7 +1250,7 @@
     "title": "ntg_stream_device_enum",
     "lib": "NTgCalls",
     "kind": "enum",
-    "description": "Enumeration of stream device values.",
+    "description": "",
     "example": {},
     "details": {
       "signature": "typedef enum ntg_stream_device_enum",
@@ -1258,28 +1258,28 @@
         {
           "name": "NTG_STREAM_MICROPHONE",
           "type": null,
-          "description": " Input mode using a microphone source.",
+          "description": "Input mode using a microphone source.",
           "source_config": null,
           "value": "0"
         },
         {
           "name": "NTG_STREAM_SPEAKER",
           "type": null,
-          "description": " Input mode using a speaker source.",
+          "description": "Input mode using a speaker source.",
           "source_config": null,
           "value": "1"
         },
         {
           "name": "NTG_STREAM_CAMERA",
           "type": null,
-          "description": " Input mode using a camera source.",
+          "description": "Input mode using a camera source.",
           "source_config": null,
           "value": "2"
         },
         {
           "name": "NTG_STREAM_SCREEN",
           "type": null,
-          "description": " Input mode using a screen source.",
+          "description": "Input mode using a screen source.",
           "source_config": null,
           "value": "3"
         }
@@ -1291,7 +1291,7 @@
     "title": "ntg_stream_mode_enum",
     "lib": "NTgCalls",
     "kind": "enum",
-    "description": "Stream direction for the stream.",
+    "description": "",
     "example": {},
     "details": {
       "signature": "typedef enum ntg_stream_mode_enum",
@@ -1299,14 +1299,14 @@
         {
           "name": "NTG_STREAM_CAPTURE",
           "type": null,
-          "description": " Direction for sending the stream.",
+          "description": "Direction for sending the stream.",
           "source_config": null,
           "value": "0"
         },
         {
           "name": "NTG_STREAM_PLAYBACK",
           "type": null,
-          "description": " Direction for receiving the stream.",
+          "description": "Direction for receiving the stream.",
           "source_config": null,
           "value": "1"
         }
@@ -1318,7 +1318,7 @@
     "title": "ntg_stream_status_enum",
     "lib": "NTgCalls",
     "kind": "enum",
-    "description": "Enumeration of stream status values.",
+    "description": "",
     "example": {},
     "details": {
       "signature": "typedef enum ntg_stream_status_enum",
@@ -1326,21 +1326,21 @@
         {
           "name": "NTG_PLAYING",
           "type": null,
-          "description": " Indicates that the stream is currently playing.",
+          "description": "Indicates that the stream is currently playing.",
           "source_config": null,
           "value": "0"
         },
         {
           "name": "NTG_PAUSED",
           "type": null,
-          "description": " Indicates that the stream is currently paused.",
+          "description": "Indicates that the stream is currently paused.",
           "source_config": null,
           "value": "1"
         },
         {
           "name": "NTG_IDLING",
           "type": null,
-          "description": " Indicates that the stream is currently idling (neither playing nor paused).",
+          "description": "Indicates that the stream is currently idling (neither playing nor paused).",
           "source_config": null,
           "value": "2"
         }
@@ -1352,7 +1352,7 @@
     "title": "ntg_stream_type_enum",
     "lib": "NTgCalls",
     "kind": "enum",
-    "description": "Enumeration of stream type values.",
+    "description": "",
     "example": {},
     "details": {
       "signature": "typedef enum ntg_stream_type_enum",
@@ -1360,14 +1360,14 @@
         {
           "name": "NTG_STREAM_AUDIO",
           "type": null,
-          "description": " Indicates that the stream type is audio.",
+          "description": "Indicates that the stream type is audio.",
           "source_config": null,
           "value": "0"
         },
         {
           "name": "NTG_STREAM_VIDEO",
           "type": null,
-          "description": " Indicates that the stream type is video.",
+          "description": "Indicates that the stream type is video.",
           "source_config": null,
           "value": "1"
         }
@@ -1378,8 +1378,8 @@
   "/NTgCalls/Available Structs/ntg_audio_description_struct.xml": {
     "title": "ntg_audio_description_struct",
     "lib": "NTgCalls",
-    "kind": "method",
-    "description": "",
+    "kind": "type",
+    "description": "Stream’s Audio Configuration",
     "example": {},
     "details": {
       "signature": "typedef struct ntg_audio_description_struct"
@@ -1389,52 +1389,151 @@
   "/NTgCalls/Available Structs/ntg_auth_params_struct.xml": {
     "title": "ntg_auth_params_struct",
     "lib": "NTgCalls",
-    "kind": "method",
+    "kind": "type",
     "description": "",
     "example": {},
     "details": {
-      "signature": "typedef struct ntg_auth_params_struct"
+      "signature": "typedef struct ntg_auth_params_struct",
+      "properties": [
+        {
+          "name": "uint8_t* g_a_or_b",
+          "type": null,
+          "description": "Parameter for key exchange.",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "int sizeGAB",
+          "type": null,
+          "description": "Size of the parameter for key exchange",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "int64_t key_fingerprint",
+          "type": null,
+          "description": "Fingerprint for the connection.",
+          "source_config": null,
+          "value": null
+        }
+      ]
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Available Structs/ntg_auth_params_struct"
   },
   "/NTgCalls/Available Structs/ntg_call_info_struct.xml": {
     "title": "ntg_call_info_struct",
     "lib": "NTgCalls",
-    "kind": "method",
+    "kind": "type",
     "description": "",
     "example": {},
     "details": {
-      "signature": "typedef struct ntg_call_info_struct"
+      "signature": "typedef struct ntg_call_info_struct",
+      "properties": [
+        {
+          "name": "int64_t chatID",
+          "type": null,
+          "description": "Unique identifier of a chat.",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "ntg_stream_status_enum playback",
+          "type": "ntg_stream_status_enum",
+          "description": "Playback stream status.",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "ntg_stream_status_enum capture",
+          "type": "ntg_stream_status_enum",
+          "description": "Capture stream status.",
+          "source_config": null,
+          "value": null
+        }
+      ]
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Available Structs/ntg_call_info_struct"
   },
   "/NTgCalls/Available Structs/ntg_device_info_struct.xml": {
     "title": "ntg_device_info_struct",
     "lib": "NTgCalls",
-    "kind": "method",
+    "kind": "type",
     "description": "",
     "example": {},
     "details": {
-      "signature": "typedef struct ntg_device_info_struct"
+      "signature": "typedef struct ntg_device_info_struct",
+      "properties": [
+        {
+          "name": "char* name",
+          "type": null,
+          "description": "Device name.",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "char* metadata",
+          "type": null,
+          "description": "Device metadata, such as the device ID.",
+          "source_config": null,
+          "value": null
+        }
+      ]
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Available Structs/ntg_device_info_struct"
   },
   "/NTgCalls/Available Structs/ntg_dh_config_struct.xml": {
     "title": "ntg_dh_config_struct",
     "lib": "NTgCalls",
-    "kind": "method",
+    "kind": "type",
     "description": "",
     "example": {},
     "details": {
-      "signature": "typedef struct ntg_dh_config_struct"
+      "signature": "typedef struct ntg_dh_config_struct",
+      "properties": [
+        {
+          "name": "int32_t g",
+          "type": null,
+          "description": "New value prime, see Wikipedia.",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "uint8_t* p",
+          "type": null,
+          "description": "New value primitive root, see Wikipedia.",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "int sizeP",
+          "type": null,
+          "description": "Size of the parameter for key exchange",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "uint8_t* random",
+          "type": null,
+          "description": "Random sequence of bytes of assigned length.",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "int sizeRandom",
+          "type": null,
+          "description": "Size of the random number",
+          "source_config": null,
+          "value": null
+        }
+      ]
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Available Structs/ntg_dh_config_struct"
   },
   "/NTgCalls/Available Structs/ntg_frame_data_struct.xml": {
     "title": "ntg_frame_data_struct",
     "lib": "NTgCalls",
-    "kind": "method",
-    "description": "",
+    "kind": "type",
+    "description": "Frame data for the media stream.",
     "example": {},
     "details": {
       "signature": "typedef struct ntg_frame_data_struct"
@@ -1444,30 +1543,97 @@
   "/NTgCalls/Available Structs/ntg_frame_struct.xml": {
     "title": "ntg_frame_struct",
     "lib": "NTgCalls",
-    "kind": "method",
+    "kind": "type",
     "description": "",
     "example": {},
     "details": {
-      "signature": "typedef struct ntg_frame_struct"
+      "signature": "typedef struct ntg_frame_struct",
+      "properties": [
+        {
+          "name": "int64_t ssrc",
+          "type": null,
+          "description": "SSRC of the frame.",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "uint8_t* data",
+          "type": null,
+          "description": "Frame buffer",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "int size",
+          "type": null,
+          "description": "Size of the frame buffer",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "ntg_frame_data_struct frame_data",
+          "type": "ntg_frame_data_struct",
+          "description": "",
+          "source_config": null,
+          "value": null
+        }
+      ]
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Available Structs/ntg_frame_struct"
   },
   "/NTgCalls/Available Structs/ntg_log_message_struct.xml": {
     "title": "ntg_log_message_struct",
     "lib": "NTgCalls",
-    "kind": "method",
+    "kind": "type",
     "description": "",
     "example": {},
     "details": {
-      "signature": "typedef struct ntg_log_message_struct"
+      "signature": "typedef struct ntg_log_message_struct",
+      "properties": [
+        {
+          "name": "ntg_log_level_enum level",
+          "type": "ntg_log_level_enum",
+          "description": "",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "ntg_log_source_enum source",
+          "type": "ntg_log_source_enum",
+          "description": "",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "char* file",
+          "type": null,
+          "description": "",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "uint32_t line",
+          "type": null,
+          "description": "",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "char* message",
+          "type": null,
+          "description": "",
+          "source_config": null,
+          "value": null
+        }
+      ]
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Available Structs/ntg_log_message_struct"
   },
   "/NTgCalls/Available Structs/ntg_media_description_struct.xml": {
     "title": "ntg_media_description_struct",
     "lib": "NTgCalls",
-    "kind": "method",
-    "description": "",
+    "kind": "type",
+    "description": "Media Configuration for the Stream.",
     "example": {},
     "details": {
       "signature": "typedef struct ntg_media_description_struct"
@@ -1477,41 +1643,138 @@
   "/NTgCalls/Available Structs/ntg_media_devices_struct.xml": {
     "title": "ntg_media_devices_struct",
     "lib": "NTgCalls",
-    "kind": "method",
+    "kind": "type",
     "description": "",
     "example": {},
     "details": {
-      "signature": "typedef struct ntg_media_devices_struct"
+      "signature": "typedef struct ntg_media_devices_struct",
+      "properties": [
+        {
+          "name": "ntg_device_info_struct* microphone",
+          "type": "ntg_device_info_struct",
+          "description": "List of available microphones.",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "int sizeMicrophone",
+          "type": null,
+          "description": "Size of the microphone list",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "ntg_device_info_struct* speaker",
+          "type": "ntg_device_info_struct",
+          "description": "List of available speakers.",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "int sizeSpeaker",
+          "type": null,
+          "description": "Size of the speaker list",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "ntg_device_info_struct* camera",
+          "type": "ntg_device_info_struct",
+          "description": "List of available cameras.",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "int sizeCamera",
+          "type": null,
+          "description": "Size of the camera list",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "ntg_device_info_struct* screen",
+          "type": "ntg_device_info_struct",
+          "description": "List of available screens.",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "int sizeScreen",
+          "type": null,
+          "description": "Size of the screen list",
+          "source_config": null,
+          "value": null
+        }
+      ]
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Available Structs/ntg_media_devices_struct"
   },
   "/NTgCalls/Available Structs/ntg_media_state_struct.xml": {
     "title": "ntg_media_state_struct",
     "lib": "NTgCalls",
-    "kind": "method",
+    "kind": "type",
     "description": "",
     "example": {},
     "details": {
-      "signature": "typedef struct ntg_media_state_struct"
+      "signature": "typedef struct ntg_media_state_struct",
+      "properties": [
+        {
+          "name": "bool muted",
+          "type": null,
+          "description": "Indicates whether the media stream is muted.",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "bool videoPaused",
+          "type": null,
+          "description": "Indicates whether the video stream is paused.",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "bool videoStopped",
+          "type": null,
+          "description": "Indicates whether the video stream is stopped.",
+          "source_config": null,
+          "value": null
+        }
+      ]
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Available Structs/ntg_media_state_struct"
   },
   "/NTgCalls/Available Structs/ntg_network_info_struct.xml": {
     "title": "ntg_network_info_struct",
     "lib": "NTgCalls",
-    "kind": "method",
+    "kind": "type",
     "description": "",
     "example": {},
     "details": {
-      "signature": "typedef struct ntg_network_info_struct"
+      "signature": "typedef struct ntg_network_info_struct",
+      "properties": [
+        {
+          "name": "ntg_connection_state_enum state",
+          "type": "ntg_connection_state_enum",
+          "description": "Connection state for the call.",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "ntg_connection_kind_enum kind",
+          "type": "ntg_connection_kind_enum",
+          "description": "",
+          "source_config": null,
+          "value": null
+        }
+      ]
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Available Structs/ntg_network_info_struct"
   },
   "/NTgCalls/Available Structs/ntg_protocol_struct.xml": {
     "title": "ntg_protocol_struct",
     "lib": "NTgCalls",
-    "kind": "method",
-    "description": "",
+    "kind": "type",
+    "description": "Size of the libraryVersions array.",
     "example": {},
     "details": {
       "signature": "typedef struct ntg_protocol_struct"
@@ -1521,41 +1784,166 @@
   "/NTgCalls/Available Structs/ntg_remote_source_struct.xml": {
     "title": "ntg_remote_source_struct",
     "lib": "NTgCalls",
-    "kind": "method",
+    "kind": "type",
     "description": "",
     "example": {},
     "details": {
-      "signature": "typedef struct ntg_remote_source_struct"
+      "signature": "typedef struct ntg_remote_source_struct",
+      "properties": [
+        {
+          "name": "uint32_t ssrc",
+          "type": null,
+          "description": "SSRC of the frame.",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "ntg_stream_status_enum state",
+          "type": "ntg_stream_status_enum",
+          "description": "Stream’s Status.",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "ntg_stream_device_enum device",
+          "type": "ntg_stream_device_enum",
+          "description": "Stream’s Device.",
+          "source_config": null,
+          "value": null
+        }
+      ]
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Available Structs/ntg_remote_source_struct"
   },
   "/NTgCalls/Available Structs/ntg_rtc_server_struct.xml": {
     "title": "ntg_rtc_server_struct",
     "lib": "NTgCalls",
-    "kind": "method",
+    "kind": "type",
     "description": "",
     "example": {},
     "details": {
-      "signature": "typedef struct ntg_rtc_server_struct"
+      "signature": "typedef struct ntg_rtc_server_struct",
+      "properties": [
+        {
+          "name": "uint64_t id",
+          "type": null,
+          "description": "Endpoint ID",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "char* ipv4",
+          "type": null,
+          "description": "IPv4 address of endpoint",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "char* ipv6",
+          "type": null,
+          "description": "IPv6 address of endpoint",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "char* username",
+          "type": null,
+          "description": "Username of endpoint",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "char* password",
+          "type": null,
+          "description": "Password of endpoint",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "int port",
+          "type": null,
+          "description": "Port ID",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "bool turn",
+          "type": null,
+          "description": "Whether the endpoint is a TURN server",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "bool stun",
+          "type": null,
+          "description": "Whether the endpoint is a STUN server",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "bool tcp",
+          "type": null,
+          "description": "Whether TCP should be used",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "uint8_t* peerTag",
+          "type": null,
+          "description": "Our peer tag",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "int sizePeerTag",
+          "type": null,
+          "description": "Size of the peer tag",
+          "source_config": null,
+          "value": null
+        }
+      ]
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Available Structs/ntg_rtc_server_struct"
   },
   "/NTgCalls/Available Structs/ntg_ssrc_group_struct.xml": {
     "title": "ntg_ssrc_group_struct",
     "lib": "NTgCalls",
-    "kind": "method",
+    "kind": "type",
     "description": "",
     "example": {},
     "details": {
-      "signature": "typedef struct ntg_ssrc_group_struct"
+      "signature": "typedef struct ntg_ssrc_group_struct",
+      "properties": [
+        {
+          "name": "char* semantics",
+          "type": null,
+          "description": "Enumeration of SSRC group semantics values.",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "int* ssrcs",
+          "type": null,
+          "description": "SSRC Group.",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "int sizeSsrcs",
+          "type": null,
+          "description": "Sizes of the ssrcs list",
+          "source_config": null,
+          "value": null
+        }
+      ]
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Available Structs/ntg_ssrc_group_struct"
   },
   "/NTgCalls/Available Structs/ntg_video_description_struct.xml": {
     "title": "ntg_video_description_struct",
     "lib": "NTgCalls",
-    "kind": "method",
-    "description": "",
+    "kind": "type",
+    "description": "Stream’s Video Configuration",
     "example": {},
     "details": {
       "signature": "typedef struct ntg_video_description_struct"
@@ -1566,11 +1954,10 @@
     "title": "AudioDescription",
     "lib": "NTgCalls",
     "kind": "type",
-    "description": "Stream’s Audio Configuration input_mode: ntgcalls.MediaSource\nThe input mode for audio or video. Audio sample rate (0-96000, max allowed by PCM16L). Audio channel count (1-2, max allowed by PCM16L). input: str\nThe input media source.",
+    "description": "Stream’s Audio Configuration",
     "example": {},
     "details": {
-      "signature": "class ntgcalls.AudioDescription",
-      "members": []
+      "signature": "class ntgcalls.AudioDescription"
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Available Types/AudioDescription"
   },
@@ -1578,11 +1965,26 @@
     "title": "AuthParams",
     "lib": "NTgCalls",
     "kind": "type",
-    "description": "Authentication parameters for the connection. Parameter for key exchange. Fingerprint for the connection.",
+    "description": "",
     "example": {},
     "details": {
       "signature": "class ntgcalls.AuthParams",
-      "members": []
+      "properties": [
+        {
+          "name": "g_a_or_b",
+          "type": "bytes",
+          "description": "Parameter for key exchange.",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "key_fingerprint",
+          "type": "int",
+          "description": "Fingerprint for the connection.",
+          "source_config": null,
+          "value": null
+        }
+      ]
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Available Types/AuthParams"
   },
@@ -1590,11 +1992,26 @@
     "title": "MediaInfo",
     "lib": "NTgCalls",
     "kind": "type",
-    "description": "Call Descriptor for a Group Call or Private Call. Playback stream status. Capture stream status.",
+    "description": "",
     "example": {},
     "details": {
       "signature": "class ntgcalls.CallInfo",
-      "members": []
+      "properties": [
+        {
+          "name": "playback",
+          "type": "ntgcalls.StreamStatus",
+          "description": "Playback stream status.",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "capture",
+          "type": "ntgcalls.StreamStatus",
+          "description": "Capture stream status.",
+          "source_config": null,
+          "value": null
+        }
+      ]
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Available Types/CallInfo"
   },
@@ -1602,11 +2019,26 @@
     "title": "DeviceInfo",
     "lib": "NTgCalls",
     "kind": "type",
-    "description": "Device Information. Device name. Device metadata, such as the device ID.",
+    "description": "",
     "example": {},
     "details": {
       "signature": "class ntgcalls.DeviceInfo",
-      "members": []
+      "properties": [
+        {
+          "name": "name",
+          "type": "str",
+          "description": "Device name.",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "metadata",
+          "type": "str",
+          "description": "Device metadata, such as the device ID.",
+          "source_config": null,
+          "value": null
+        }
+      ]
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Available Types/DeviceInfo"
   },
@@ -1614,11 +2046,10 @@
     "title": "DhConfig",
     "lib": "NTgCalls",
     "kind": "type",
-    "description": "Diffie-Hellman configuration for key exchange. New value prime, see Wikipedia. New value primitive root, see Wikipedia. Random sequence of bytes of assigned length.",
+    "description": "Diffie-Hellman configuration for key exchange.",
     "example": {},
     "details": {
-      "signature": "class ntgcalls.DhConfig",
-      "members": []
+      "signature": "class ntgcalls.DhConfig"
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Available Types/DhConfig"
   },
@@ -1626,11 +2057,10 @@
     "title": "Frame",
     "lib": "NTgCalls",
     "kind": "type",
-    "description": "Frame descriptor for the media stream. SSRC of the frame. Frame buffer Frame data for the media stream.",
+    "description": "Frame descriptor for the media stream.",
     "example": {},
     "details": {
-      "signature": "class ntgcalls.Frame",
-      "members": []
+      "signature": "class ntgcalls.Frame"
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Available Types/Frame"
   },
@@ -1638,11 +2068,10 @@
     "title": "FrameData",
     "lib": "NTgCalls",
     "kind": "type",
-    "description": "Frame data for the media stream. Absolute capture timestamp in milliseconds. Rotation of the video frame. Width of the video frame. Height of the video frame.",
+    "description": "Frame data for the media stream.",
     "example": {},
     "details": {
-      "signature": "class ntgcalls.FrameData",
-      "members": []
+      "signature": "class ntgcalls.FrameData"
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Available Types/FrameData"
   },
@@ -1650,11 +2079,10 @@
     "title": "MediaDescription",
     "lib": "NTgCalls",
     "kind": "type",
-    "description": "Media Configuration for the Stream. Microphone configuration for the stream. Speaker configuration for the stream. Camera configuration for the stream. Screen configuration for the stream.",
+    "description": "Media Configuration for the Stream.",
     "example": {},
     "details": {
-      "signature": "class ntgcalls.MediaDescription",
-      "members": []
+      "signature": "class ntgcalls.MediaDescription"
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Available Types/MediaDescription"
   },
@@ -1662,11 +2090,40 @@
     "title": "Media Devices",
     "lib": "NTgCalls",
     "kind": "type",
-    "description": "Media devices available for streaming. List of available microphones. List of available speakers. List of available cameras. List of available screens.",
+    "description": "",
     "example": {},
     "details": {
       "signature": "class ntgcalls.MediaDevices",
-      "members": []
+      "properties": [
+        {
+          "name": "microphone",
+          "type": "list[ntgcalls.DeviceInfo]",
+          "description": "List of available microphones.",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "speaker",
+          "type": "list[ntgcalls.DeviceInfo]",
+          "description": "List of available speakers.",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "camera",
+          "type": "list[ntgcalls.DeviceInfo]",
+          "description": "List of available cameras.",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "screen",
+          "type": "list[ntgcalls.DeviceInfo]",
+          "description": "List of available screens.",
+          "source_config": null,
+          "value": null
+        }
+      ]
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Available Types/MediaDevices"
   },
@@ -1674,11 +2131,33 @@
     "title": "MediaState",
     "lib": "NTgCalls",
     "kind": "type",
-    "description": "GroupCall MTProto Configurations. Indicates whether the media stream is muted. Indicates whether the video stream is paused. Indicates whether the video stream is stopped.",
+    "description": "",
     "example": {},
     "details": {
       "signature": "class ntgcalls.MediaState",
-      "members": []
+      "properties": [
+        {
+          "name": "muted",
+          "type": "bool",
+          "description": "Indicates whether the media stream is muted.",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "video_paused",
+          "type": "bool",
+          "description": "Indicates whether the video stream is paused.",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "video_stopped",
+          "type": "bool",
+          "description": "Indicates whether the video stream is stopped.",
+          "source_config": null,
+          "value": null
+        }
+      ]
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Available Types/MediaState"
   },
@@ -1686,11 +2165,26 @@
     "title": "NetworkInfo",
     "lib": "NTgCalls",
     "kind": "type",
-    "description": "Network status for the call. Connection state for the call. Kind of connection.",
+    "description": "",
     "example": {},
     "details": {
       "signature": "class ntgcalls.NetworkInfo",
-      "members": []
+      "properties": [
+        {
+          "name": "state",
+          "type": "ntgcalls.ConnectionState",
+          "description": "Connection state for the call.",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "kind",
+          "type": "ntgcalls.ConnectionKind",
+          "description": "",
+          "source_config": null,
+          "value": null
+        }
+      ]
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Available Types/NetworkInfo"
   },
@@ -1698,11 +2192,47 @@
     "title": "Protocol",
     "lib": "NTgCalls",
     "kind": "type",
-    "description": "Protocol for a Private Call connection. Minimum layer for remote connection. Maximum layer for remote connection. Whether to allow P2P connection to the other participant. Whether to allow connection to the other participants through the reflector servers. When using RequestCall and AcceptCall,\n        specify all library versions supported by the client.\n        The server will merge and choose the best library version supported by both peers, returning only the best\n        value in the result of the call's AcceptCall and in the PhoneCallAccepted update received by the caller.",
+    "description": "",
     "example": {},
     "details": {
       "signature": "class Protocol",
-      "members": []
+      "properties": [
+        {
+          "name": "min_layer",
+          "type": "int",
+          "description": "Minimum layer for remote connection.",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "max_layer",
+          "type": "int",
+          "description": "Maximum layer for remote connection.",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "udp_p2p",
+          "type": "bool",
+          "description": "Whether to allow P2P connection to the other participant.",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "udp_reflector",
+          "type": "bool",
+          "description": "Whether to allow connection to the other participants through the reflector servers.",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "library_versions",
+          "type": "list[str]",
+          "description": "When using RequestCall and AcceptCall,\n        specify all library versions supported by the client.\n        The server will merge and choose the best library version supported by both peers, returning only the best\n        value in the result of the call's AcceptCall and in the PhoneCallAccepted update received by the caller.",
+          "source_config": null,
+          "value": null
+        }
+      ]
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Available Types/Protocol"
   },
@@ -1710,11 +2240,10 @@
     "title": "RTCServer",
     "lib": "NTgCalls",
     "kind": "type",
-    "description": "Identifies an endpoint that can be used to connect to the other user in a phone call. Endpoint ID IPv4 address of endpoint IPv6 address of endpoint Username of endpoint Password of endpoint Port ID Whether the endpoint is a TURN server Whether the endpoint is a STUN server Whether TCP should be used Our peer tag",
+    "description": "Identifies an endpoint that can be used to connect to the other user in a phone call.",
     "example": {},
     "details": {
-      "signature": "class ntgcalls.RTCServer",
-      "members": []
+      "signature": "class ntgcalls.RTCServer"
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Available Types/RTCServer"
   },
@@ -1722,11 +2251,33 @@
     "title": "RemoteSource",
     "lib": "NTgCalls",
     "kind": "type",
-    "description": "Remote source for the call. SSRC of the frame. Stream’s Status. Stream’s Device.",
+    "description": "",
     "example": {},
     "details": {
       "signature": "class ntgcalls.RemoteSource",
-      "members": []
+      "properties": [
+        {
+          "name": "ssrc",
+          "type": "int",
+          "description": "SSRC of the frame.",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "state",
+          "type": "ntgcalls.StreamStatus",
+          "description": "Stream’s Status.",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "device",
+          "type": "ntgcalls.StreamDevice",
+          "description": "Stream’s Device.",
+          "source_config": null,
+          "value": null
+        }
+      ]
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Available Types/RemoteSource"
   },
@@ -1734,11 +2285,26 @@
     "title": "SsrcGroup",
     "lib": "NTgCalls",
     "kind": "type",
-    "description": "SSRC Group with the SSRCs of the video stream and the semantics. Enumeration of SSRC group semantics values. SSRC Group.",
+    "description": "",
     "example": {},
     "details": {
       "signature": "class ntgcalls.SsrcGroup",
-      "members": []
+      "properties": [
+        {
+          "name": "semantics",
+          "type": "str",
+          "description": "Enumeration of SSRC group semantics values.",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "ssrcs",
+          "type": "list[int]",
+          "description": "SSRC Group.",
+          "source_config": null,
+          "value": null
+        }
+      ]
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Available Types/SsrcGroup"
   },
@@ -1746,11 +2312,10 @@
     "title": "VideoDescription",
     "lib": "NTgCalls",
     "kind": "type",
-    "description": "Stream’s Video Configuration input_mode: ntgcalls.MediaSource\nThe input mode for audio or video. width: int\nVideo width in pixels.\nheight: int\nVideo height in pixels. Frames per second (FPS) for video playback. input: str\nThe input media source.",
+    "description": "Stream’s Video Configuration",
     "example": {},
     "details": {
-      "signature": "class ntgcalls.VideoDescription",
-      "members": []
+      "signature": "class ntgcalls.VideoDescription"
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Available Types/VideoDescription"
   },
@@ -2908,7 +3473,7 @@
     "title": "Introduction",
     "lib": "NTgCalls",
     "kind": "method",
-    "description": "\n        Being a modern library, ",
+    "description": "Being a modern library,",
     "example": {},
     "details": {},
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Build Guide"
@@ -3223,7 +3788,7 @@
     "title": "NTgCalls Client",
     "lib": "NTgCalls",
     "kind": "method",
-    "description": "\n        Welcome to the API Reference section, where you'll find comprehensive information about the NTgCalls API.\n        This is your gateway to in-depth details about the main Client class, its methods, types,\n        all of which play a crucial role in utilizing NTgCalls effectively.\n    ",
+    "description": "Welcome to the API Reference section, where you'll find comprehensive information about the NTgCalls API.\n        This is your gateway to in-depth details about the main Client class, its methods, types,\n        all of which play a crucial role in utilizing NTgCalls effectively.",
     "example": {
       "language": "python",
       "code": "from ntgcalls import NTgCalls\n\napp = NTgCalls()\nprint(app.ping())"
@@ -3328,7 +3893,7 @@
     "title": "Getting Started",
     "lib": "NTgCalls",
     "kind": "method",
-    "description": "\n        This section provides documentation for the NTgCalls C API, which allows you to use NTgCalls in various programming languages,\n        including C, C++, Go, Rust, Deno, and more.\n        Below, you will find detailed information about the initialization and cleanup functions.\n    ",
+    "description": "This section provides documentation for the NTgCalls C API, which allows you to use NTgCalls in various programming languages,\n        including C, C++, Go, Rust, Deno, and more.\n        Below, you will find detailed information about the initialization and cleanup functions.",
     "example": {},
     "details": {
       "sections": [
@@ -3371,7 +3936,7 @@
     "title": "Quick Start",
     "lib": "NTgCalls",
     "kind": "method",
-    "description": "\n        Welcome to this section, which is primarily intended for developers who are moderately experienced or\n        seeking to perform a porting in their language using C bindings. If you are new to Python development,\n        we strongly recommend using ",
+    "description": "Welcome to this section, which is primarily intended for developers who are moderately experienced or\n        seeking to perform a porting in their language using C bindings. If you are new to Python development,\n        we strongly recommend using",
     "example": {},
     "details": {},
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Quick Start"
@@ -3888,7 +4453,7 @@
     "title": "Using Async",
     "lib": "NTgCalls",
     "kind": "method",
-    "description": "\n        NTgCalls starting from version 1.2.0 supports asynchronous calls to function using ",
+    "description": "NTgCalls starting from version 1.2.0 supports asynchronous calls to function using",
     "example": {
       "language": "cpp",
       "code": "#include <ntgcalls.h>\n#include <mutex>\n\nvoid onCallReady(void* data) {\n    ((std::mutex*)data)->unlock();\n}\n\nvoid makeAsyncCall() {\n    ntg_async_struct asyncData;\n    std::mutex mtx;\n    asyncData.userData = &mtx;\n    asyncData.promise = onCallReady;\n    mtx.lock();\n    int error = ntg_pause(asyncData);\n    if (error != 0) {\n        // Handle error\n    }\n    mtx.lock();\n    // Async operation completed\n    if (asyncData.errorCode != 0) {\n        // Handle Async error\n    }\n}"
@@ -4047,19 +4612,42 @@
   "/PyTgCalls/Advanced Types/Call.xml": {
     "title": "Call",
     "lib": "PyTgCalls",
-    "kind": "method",
+    "kind": "type",
     "description": "",
     "example": {},
     "details": {
-      "signature": "class pytgcalls.types.Call"
+      "signature": "class pytgcalls.types.Call",
+      "properties": [
+        {
+          "name": "call_type",
+          "type": "Type",
+          "description": "The type of the call.",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "playback",
+          "type": "Status",
+          "description": "Playback stream status.",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "capture",
+          "type": "Status",
+          "description": "Capture stream status.",
+          "source_config": null,
+          "value": null
+        }
+      ]
     },
     "doc_url": "https://pytgcalls.github.io/PyTgCalls/Advanced Types/Call"
   },
   "/PyTgCalls/Advanced Types/CallConfig.xml": {
     "title": "CallConfig",
     "lib": "PyTgCalls",
-    "kind": "method",
-    "description": "",
+    "kind": "type",
+    "description": "Configuration descriptor for a private call",
     "example": {},
     "details": {
       "signature": "class pytgcalls.types.CallConfig"
@@ -4069,41 +4657,110 @@
   "/PyTgCalls/Advanced Types/ChatUpdate.xml": {
     "title": "ChatUpdate",
     "lib": "PyTgCalls",
-    "kind": "method",
-    "description": "",
+    "kind": "type",
+    "description": "chat_id -> int\nUnique identifier of a chat.",
     "example": {},
     "details": {
-      "signature": "class pytgcalls.types.ChatUpdate"
+      "signature": "class pytgcalls.types.ChatUpdate",
+      "properties": [
+        {
+          "name": "status",
+          "type": "Status",
+          "description": "Status of the chat.",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "action",
+          "type": "Any",
+          "description": "Action of the chat.",
+          "source_config": null,
+          "value": null
+        }
+      ]
     },
     "doc_url": "https://pytgcalls.github.io/PyTgCalls/Advanced Types/ChatUpdate"
   },
   "/PyTgCalls/Advanced Types/Frame Info.xml": {
     "title": "Frame Info",
     "lib": "PyTgCalls",
-    "kind": "method",
+    "kind": "type",
     "description": "",
     "example": {},
     "details": {
-      "signature": "class pytgcalls.types.Frame.Info"
+      "signature": "class pytgcalls.types.Frame.Info",
+      "properties": [
+        {
+          "name": "capture_time",
+          "type": "int",
+          "description": "Absolute capture timestamp in milliseconds.",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "width",
+          "type": "int",
+          "description": "Rotation of the video frame.",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "height",
+          "type": "int",
+          "description": "Width of the video frame.",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "rotation",
+          "type": "int",
+          "description": "Height of the video frame.",
+          "source_config": null,
+          "value": null
+        }
+      ]
     },
     "doc_url": "https://pytgcalls.github.io/PyTgCalls/Advanced Types/Frame Info"
   },
   "/PyTgCalls/Advanced Types/Frame.xml": {
     "title": "Frame",
     "lib": "PyTgCalls",
-    "kind": "method",
+    "kind": "type",
     "description": "",
     "example": {},
     "details": {
-      "signature": "class pytgcalls.types.Frame"
+      "signature": "class pytgcalls.types.Frame",
+      "properties": [
+        {
+          "name": "ssrc",
+          "type": "int",
+          "description": "SSRC of the frame.",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "frame",
+          "type": "bytes",
+          "description": "Frame buffer",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "info",
+          "type": "Frame.Info",
+          "description": "",
+          "source_config": null,
+          "value": null
+        }
+      ]
     },
     "doc_url": "https://pytgcalls.github.io/PyTgCalls/Advanced Types/Frame"
   },
   "/PyTgCalls/Advanced Types/GroupCallConfig.xml": {
     "title": "GroupCallConfig",
     "lib": "PyTgCalls",
-    "kind": "method",
-    "description": "",
+    "kind": "type",
+    "description": "Configuration descriptor for a group call",
     "example": {},
     "details": {
       "signature": "class pytgcalls.types.GroupCallConfig"
@@ -4113,41 +4770,145 @@
   "/PyTgCalls/Advanced Types/GroupCallParticipant.xml": {
     "title": "GroupCallParticipant",
     "lib": "PyTgCalls",
-    "kind": "method",
+    "kind": "type",
     "description": "",
     "example": {},
     "details": {
-      "signature": "class pytgcalls.types.GroupCallParticipant"
+      "signature": "class pytgcalls.types.GroupCallParticipant",
+      "properties": [
+        {
+          "name": "user_id",
+          "type": "int",
+          "description": "Unique identifier of a participant.",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "muted",
+          "type": "bool",
+          "description": "Whether the participant is muted.",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "muted_by_admin",
+          "type": "bool",
+          "description": "Whether an admin has muted the participant.",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "video",
+          "type": "bool",
+          "description": "Whether the participant is currently broadcasting a video stream.",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "screen_sharing",
+          "type": "bool",
+          "description": "Whether the participant is currently screen sharing.",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "video_camera",
+          "type": "bool",
+          "description": "Whether the participant is currently broadcasting a video camera.",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "raised_hand",
+          "type": "bool",
+          "description": "Whether the participant has raised the hand.",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "volume",
+          "type": "int",
+          "description": "Volume level of the participant.",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "action",
+          "type": "Action",
+          "description": "Current action of the participant.",
+          "source_config": null,
+          "value": null
+        }
+      ]
     },
     "doc_url": "https://pytgcalls.github.io/PyTgCalls/Advanced Types/GroupCallParticipant"
   },
   "/PyTgCalls/Advanced Types/StreamEnded.xml": {
     "title": "StreamEnded",
     "lib": "PyTgCalls",
-    "kind": "method",
-    "description": "",
+    "kind": "type",
+    "description": "chat_id -> int\nUnique identifier of a chat.",
     "example": {},
     "details": {
-      "signature": "class pytgcalls.types.StreamEnded"
+      "signature": "class pytgcalls.types.StreamEnded",
+      "properties": [
+        {
+          "name": "stream_type",
+          "type": "StreamEnded.Type",
+          "description": "Get the type of the stream that has ended.",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "device",
+          "type": "pytgcalls.Device",
+          "description": "Get the device that has ended the stream.",
+          "source_config": null,
+          "value": null
+        }
+      ]
     },
     "doc_url": "https://pytgcalls.github.io/PyTgCalls/Advanced Types/StreamEnded"
   },
   "/PyTgCalls/Advanced Types/StreamFrames.xml": {
     "title": "StreamFrames",
     "lib": "PyTgCalls",
-    "kind": "method",
+    "kind": "type",
     "description": "",
     "example": {},
     "details": {
-      "signature": "class pytgcalls.types.StreamFrames"
+      "signature": "class pytgcalls.types.StreamFrames",
+      "properties": [
+        {
+          "name": "device",
+          "type": "Device",
+          "description": "Kind of frames device.",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "direction",
+          "type": "Direction",
+          "description": "Direction of the frames.",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "frames",
+          "type": "list[Frame]",
+          "description": "List of frames.",
+          "source_config": null,
+          "value": null
+        }
+      ]
     },
     "doc_url": "https://pytgcalls.github.io/PyTgCalls/Advanced Types/StreamFrames"
   },
   "/PyTgCalls/Advanced Types/UpdatedGroupCallParticipant.xml": {
     "title": "UpdatedGroupCallParticipant",
     "lib": "PyTgCalls",
-    "kind": "method",
-    "description": "",
+    "kind": "type",
+    "description": "chat_id -> int\nUnique identifier of a chat. participant -> pytgcalls.GroupCallParticipant\nInfo about a group call participant.",
     "example": {},
     "details": {
       "signature": "class pytgcalls.types.UpdatedGroupCallParticipant"
@@ -4166,28 +4927,28 @@
         {
           "name": "STUDIO",
           "type": null,
-          "description": " Represents studio-quality audio with a bitrate of 96000 and 2 channels.",
+          "description": "Represents studio-quality audio with a bitrate of 96000 and 2 channels.",
           "source_config": null,
           "value": "(96000, 2)"
         },
         {
           "name": "HIGH",
           "type": null,
-          "description": " Represents high-quality audio with a bitrate of 48000 and 2 channels.",
+          "description": "Represents high-quality audio with a bitrate of 48000 and 2 channels.",
           "source_config": null,
           "value": "(48000, 2)"
         },
         {
           "name": "MEDIUM",
           "type": null,
-          "description": " Represents medium-quality audio with a bitrate of 36000 and 1 channel.",
+          "description": "Represents medium-quality audio with a bitrate of 36000 and 1 channel.",
           "source_config": null,
           "value": "(36000, 1)"
         },
         {
           "name": "LOW",
           "type": null,
-          "description": " Represents low-quality audio with a bitrate of 24000 and 1 channel. Represents studio-quality audio with a bitrate of 96000 and 2 channels. Represents high-quality audio with a bitrate of 48000 and 2 channels. Represents medium-quality audio with a bitrate of 36000 and 1 channel. Represents low-quality audio with a bitrate of 24000 and 1 channel.",
+          "description": "Represents low-quality audio with a bitrate of 24000 and 1 channel.",
           "source_config": null,
           "value": "(24000, 1)"
         }
@@ -4207,21 +4968,21 @@
         {
           "name": "PLAYING",
           "type": null,
-          "description": " Indicates that the call is playing.",
+          "description": "Indicates that the call is playing.",
           "source_config": null,
           "value": "1"
         },
         {
           "name": "PAUSED",
           "type": null,
-          "description": " Indicates that the call is paused.",
+          "description": "Indicates that the call is paused.",
           "source_config": null,
           "value": "2"
         },
         {
           "name": "IDLE",
           "type": null,
-          "description": " Indicates that the call is idle. Indicates that the call is playing. Indicates that the call is paused. Indicates that the call is idle.",
+          "description": "Indicates that the call is idle.",
           "source_config": null,
           "value": "4"
         }
@@ -4241,14 +5002,14 @@
         {
           "name": "GROUP",
           "type": null,
-          "description": " Group call type.",
+          "description": "Group call type.",
           "source_config": null,
           "value": "1"
         },
         {
           "name": "PRIVATE",
           "type": null,
-          "description": " Private call type. Group call type. Private call type.",
+          "description": "Private call type.",
           "source_config": null,
           "value": "2"
         }
@@ -4268,49 +5029,49 @@
         {
           "name": "KICKED",
           "type": null,
-          "description": " Indicates that you was kicked.",
+          "description": "Indicates that you was kicked.",
           "source_config": null,
           "value": "1"
         },
         {
           "name": "LEFT_GROUP",
           "type": null,
-          "description": " Indicates that you left the chat.",
+          "description": "Indicates that you left the chat.",
           "source_config": null,
           "value": "2"
         },
         {
           "name": "CLOSED_VOICE_CHAT",
           "type": null,
-          "description": " Indicates that the voice chat was closed.",
+          "description": "Indicates that the voice chat was closed.",
           "source_config": null,
           "value": "4"
         },
         {
           "name": "INVITED_VOICE_CHAT",
           "type": null,
-          "description": " Indicates that you was invited to the voice chat.",
+          "description": "Indicates that you was invited to the voice chat.",
           "source_config": null,
           "value": "8"
         },
         {
           "name": "DISCARDED_CALL",
           "type": null,
-          "description": " Indicates that the call was discarded.",
+          "description": "Indicates that the call was discarded.",
           "source_config": null,
           "value": "16"
         },
         {
           "name": "INCOMING_CALL",
           "type": null,
-          "description": " Indicates that an incoming call is available.",
+          "description": "Indicates that an incoming call is available.",
           "source_config": null,
           "value": "32"
         },
         {
           "name": "LEFT_CALL",
           "type": null,
-          "description": " Indicates that you left the call. Indicates that you was kicked. Indicates that you left the chat. Indicates that the voice chat was closed. Indicates that you was invited to the voice chat. Indicates that the call was discarded. Indicates that an incoming call is available. Indicates that you left the call.",
+          "description": "Indicates that you left the call.",
           "source_config": null,
           "value": "KICKED | LEFT_GROUP | CLOSED_VOICE_CHAT | DISCARDED_CALL"
         }
@@ -4322,7 +5083,7 @@
     "title": "Device",
     "lib": "PyTgCalls",
     "kind": "enum",
-    "description": "Enumeration of stream device values.",
+    "description": "",
     "example": {},
     "details": {
       "signature": "class pytgcalls.types.Device",
@@ -4330,28 +5091,28 @@
         {
           "name": "MICROPHONE",
           "type": null,
-          "description": " Input mode using a microphone source.",
+          "description": "Input mode using a microphone source.",
           "source_config": null,
           "value": "0"
         },
         {
           "name": "SPEAKER",
           "type": null,
-          "description": " Input mode using a speaker source.",
+          "description": "Input mode using a speaker source.",
           "source_config": null,
           "value": "1"
         },
         {
           "name": "CAMERA",
           "type": null,
-          "description": " Input mode using a camera source.",
+          "description": "Input mode using a camera source.",
           "source_config": null,
           "value": "2"
         },
         {
           "name": "SCREEN",
           "type": null,
-          "description": " Input mode using a screen source.",
+          "description": "Input mode using a screen source.",
           "source_config": null,
           "value": "3"
         }
@@ -4363,7 +5124,7 @@
     "title": "Direction",
     "lib": "PyTgCalls",
     "kind": "enum",
-    "description": "Stream direction for the stream.",
+    "description": "",
     "example": {},
     "details": {
       "signature": "class pytgcalls.types.Direction",
@@ -4371,14 +5132,14 @@
         {
           "name": "OUTGOING",
           "type": null,
-          "description": " Direction for sending the stream.",
+          "description": "Direction for sending the stream.",
           "source_config": null,
           "value": "1"
         },
         {
           "name": "INCOMING",
           "type": null,
-          "description": " Direction for receiving the stream.",
+          "description": "Direction for receiving the stream.",
           "source_config": null,
           "value": "2"
         }
@@ -4398,14 +5159,14 @@
         {
           "name": "AUDIO",
           "type": null,
-          "description": " Indicates that the stream type is audio.",
+          "description": "Indicates that the stream type is audio.",
           "source_config": null,
           "value": "1"
         },
         {
           "name": "VIDEO",
           "type": null,
-          "description": " Indicates that the stream type is video.",
+          "description": "Indicates that the stream type is video.",
           "source_config": null,
           "value": "2"
         }
@@ -4425,21 +5186,21 @@
         {
           "name": "JOINED",
           "type": null,
-          "description": " Represents a participant joined in a group call.",
+          "description": "Represents a participant joined in a group call.",
           "source_config": null,
           "value": "1"
         },
         {
           "name": "LEFT",
           "type": null,
-          "description": " Represents a participant left a group call.",
+          "description": "Represents a participant left a group call.",
           "source_config": null,
           "value": "2"
         },
         {
           "name": "UPDATED",
           "type": null,
-          "description": " Represents a participant updated in a group call. Represents a participant joined in a group call. Represents a participant left a group call. Represents a participant updated in a group call.",
+          "description": "Represents a participant updated in a group call.",
           "source_config": null,
           "value": "4"
         }
@@ -4459,28 +5220,28 @@
         {
           "name": "AUTO_DETECT",
           "type": null,
-          "description": " Automatically detects the presence of the stream.",
+          "description": "Automatically detects the presence of the stream.",
           "source_config": null,
           "value": "1"
         },
         {
           "name": "IGNORE",
           "type": null,
-          "description": " Ignores the stream.",
+          "description": "Ignores the stream.",
           "source_config": null,
           "value": "2"
         },
         {
           "name": "REQUIRED",
           "type": null,
-          "description": " Indicates that the stream is mandatory.",
+          "description": "Indicates that the stream is mandatory.",
           "source_config": null,
           "value": "4"
         },
         {
           "name": "NO_LATENCY",
           "type": null,
-          "description": " Used to indicate that the stream should be sent with no latency. Automatically detects the presence of the stream. Ignores the stream. Indicates that the stream is mandatory. Used to indicate that the stream should be sent with no latency.",
+          "description": "Used to indicate that the stream should be sent with no latency.",
           "source_config": null,
           "value": "8"
         }
@@ -4500,14 +5261,14 @@
         {
           "name": "AUDIO",
           "type": null,
-          "description": " Indicates that the stream type is audio.",
+          "description": "Indicates that the stream type is audio.",
           "source_config": null,
           "value": "1"
         },
         {
           "name": "VIDEO",
           "type": null,
-          "description": " Indicates that the stream type is video.",
+          "description": "Indicates that the stream type is video.",
           "source_config": null,
           "value": "2"
         }
@@ -4527,42 +5288,42 @@
         {
           "name": "UHD_4K",
           "type": null,
-          "description": " Represents ultra-high-definition 4K video with a resolution of 3840x2160 and 60 FPS.",
+          "description": "Represents ultra-high-definition 4K video with a resolution of 3840x2160 and 60 FPS.",
           "source_config": null,
           "value": "(3840, 2160, 60)"
         },
         {
           "name": "QHD_2K",
           "type": null,
-          "description": " Represents quad high-definition 2K video with a resolution of 2560x1440 and 60 FPS.",
+          "description": "Represents quad high-definition 2K video with a resolution of 2560x1440 and 60 FPS.",
           "source_config": null,
           "value": "(2560, 1440, 60)"
         },
         {
           "name": "FHD_1080p",
           "type": null,
-          "description": " Represents full high-definition 1080p video with a resolution of 1920x1080 and 60 FPS.",
+          "description": "Represents full high-definition 1080p video with a resolution of 1920x1080 and 60 FPS.",
           "source_config": null,
           "value": "(1920, 1080, 60)"
         },
         {
           "name": "HD_720p",
           "type": null,
-          "description": " Represents high-definition 720p video with a resolution of 1280x720 and 30 FPS.",
+          "description": "Represents high-definition 720p video with a resolution of 1280x720 and 30 FPS.",
           "source_config": null,
           "value": "(1280, 720, 30)"
         },
         {
           "name": "SD_480p",
           "type": null,
-          "description": " Represents standard-definition 480p video with a resolution of 854x480 and 30 FPS.",
+          "description": "Represents standard-definition 480p video with a resolution of 854x480 and 30 FPS.",
           "source_config": null,
           "value": "(854, 480, 30)"
         },
         {
           "name": "SD_360p",
           "type": null,
-          "description": " Represents standard-definition 360p video with a resolution of 640x360 and 30 FPS. Represents ultra-high-definition 4K video with a resolution of 3840x2160 and 60 FPS. Represents quad high-definition 2K video with a resolution of 2560x1440 and 60 FPS. Represents full high-definition 1080p video with a resolution of 1920x1080 and 60 FPS. Represents high-definition 720p video with a resolution of 1280x720 and 30 FPS. Represents standard-definition 480p video with a resolution of 854x480 and 30 FPS. Represents standard-definition 360p video with a resolution of 640x360 and 30 FPS.",
+          "description": "Represents standard-definition 360p video with a resolution of 640x360 and 30 FPS.",
           "source_config": null,
           "value": "(640, 360, 30)"
         }
@@ -4574,7 +5335,7 @@
     "title": "Idle",
     "lib": "PyTgCalls",
     "kind": "method",
-    "description": "\n        This function will run indefinitely in order to block the main script\n        execution and prevent it from exiting while having client(s) that are still running in the background.\n\n        PyTgCalls works by keeping your handlers in a pool of worker threads, which run\n        concurrently outside the main thread. Calling idle() will ensure that the client(s) remain active, by\n        preventing the main script from ending until you decide to quit.\n\n        Once a signal is received (e.g.: from CTRL+C) the function will terminate and your main script will continue.\n    ",
+    "description": "This function will run indefinitely in order to block the main script\n        execution and prevent it from exiting while having client(s) that are still running in the background.\n\n        PyTgCalls works by keeping your handlers in a pool of worker threads, which run\n        concurrently outside the main thread. Calling idle() will ensure that the client(s) remain active, by\n        preventing the main script from ending until you decide to quit.\n\n        Once a signal is received (e.g.: from CTRL+C) the function will terminate and your main script will continue.",
     "example": {
       "language": "python",
       "code": "from pytgcalls import Client\nfrom pytgcalls import idle\n...\n\napp1 = PyTgCalls(client1)\napp2 = PyTgCalls(client2)\napp3 = PyTgCalls(client3)\n\n...  # Set handlers up\n\napp1.start()\napp2.start()\napp3.start()\n\nidle()"
@@ -4628,7 +5389,7 @@
     "title": "Run",
     "lib": "PyTgCalls",
     "kind": "method",
-    "description": "\n        This is a convenience method that calls ",
+    "description": "This is a convenience method that calls",
     "example": {
       "language": "python",
       "code": "from pytgcalls import Client\nfrom pytgcalls import idle\n...\napp = Client(client)\n\n...  # Call API decorators / MtProto decorators\n\napp.run()"
@@ -4656,7 +5417,7 @@
     "title": "Start",
     "lib": "PyTgCalls",
     "kind": "method",
-    "description": "\n        This method start and then initialize NTgCalls core.\n    ",
+    "description": "This method start and then initialize NTgCalls core.",
     "example": {
       "language": "python",
       "code": "from pytgcalls import Client\nfrom pytgcalls import idle\n...\napp = Client(client)\n\n...  # Call API decorators / MTProto decorators\n\napp.start()"
@@ -4684,7 +5445,7 @@
     "title": "Calling Methods",
     "lib": "PyTgCalls",
     "kind": "method",
-    "description": "\n        At this point, we have successfully ",
+    "description": "At this point, we have successfully",
     "example": {
       "language": "python",
       "code": "from pytgcalls import PyTgCalls\nfrom pytgcalls import idle\n...\napi_id = 12345\napi_hash = '0123456789abcdef0123456789abcdef'\n...\napp = PyTgCalls(client)\napp.start()\napp.play(\n    -1001185324811,\n    'http://docs.evostream.com/sample_content/assets/sintel1m720p.mp4',\n)\nidle()"
@@ -4792,7 +5553,7 @@
     "title": "PyTgCalls Client",
     "lib": "PyTgCalls",
     "kind": "method",
-    "description": "\n        You now are in the API Reference section. Here you can find detailed information about PyTgCalls API:\n        the main Client class, all available methods, types, attributes and decorators detailed descriptions can be found starting from this page.\n\n        This page is about the Client class, which exposes high-level methods for easy access to the API.\n    ",
+    "description": "You now are in the API Reference section. Here you can find detailed information about PyTgCalls API:\n        the main Client class, all available methods, types, attributes and decorators detailed descriptions can be found starting from this page.\n\n        This page is about the Client class, which exposes high-level methods for easy access to the API.",
     "example": {
       "language": "python",
       "code": "from pytgcalls import PyTgCalls\n\napp = PyTgCalls(client)\napp.start()"
@@ -4904,7 +5665,7 @@
     "title": "Custom API",
     "lib": "PyTgCalls",
     "kind": "method",
-    "description": "\n        You now are in the API Reference section where you can find detailed information about the Custom API:\n        the Front-end API class, all available methods, types, attributes and decorators detailed descriptions can be found starting from this page.\n\n        This page is about the CustomAPI class, which exposes high-level methods for easy access to the API.\n    ",
+    "description": "You now are in the API Reference section where you can find detailed information about the Custom API:\n        the Front-end API class, all available methods, types, attributes and decorators detailed descriptions can be found starting from this page.\n\n        This page is about the CustomAPI class, which exposes high-level methods for easy access to the API.",
     "example": {
       "language": "python",
       "code": "from pytgcalls import CustomApi\n\napi = CustomApi()\n\n@api.on_update_custom_api()\nasync def custom_api_request(request: dict):\n    print(request)\n    return {\n        'response': 'FOXES',\n    }\napi.start()"
@@ -4955,7 +5716,7 @@
     "title": "Decorators",
     "lib": "PyTgCalls",
     "kind": "method",
-    "description": "\n        While still being methods bound to the ",
+    "description": "While still being methods bound to the",
     "example": {
       "language": "python",
       "code": "from pytgcalls import PyTgCalls\nfrom pytgcalls.types import Update\nfrom pytgcalls import filters as call_filters\n...\nclient = # Here Your MTProto Client\napp = PyTgCalls(client)\n\n@app.on_update(call_filters.stream_end())\nasync def handler(client: PyTgCalls, update: Update):\n    print(update)\n\napp.run()"
@@ -4983,7 +5744,7 @@
     "title": "Examples",
     "lib": "PyTgCalls",
     "kind": "method",
-    "description": "\n        This page contains example scripts to demonstrate how PyTgCalls looks like.\n\n        Every script is working right away (assuming you correctly set up your credentials), meaning you can simply copy-paste them\n        and run. The only things you have to modify are session names and target chats, where applicable.\n\n        The examples listed below can be treated as building blocks for your own applications and are designed to be simple enough\n        to give you a basic idea.\n    ",
+    "description": "This page contains example scripts to demonstrate how PyTgCalls looks like.\n\n        Every script is working right away (assuming you correctly set up your credentials), meaning you can simply copy-paste them\n        and run. The only things you have to modify are session names and target chats, where applicable.\n\n        The examples listed below can be treated as building blocks for your own applications and are designed to be simple enough\n        to give you a basic idea.",
     "example": {},
     "details": {},
     "doc_url": "https://pytgcalls.github.io/PyTgCalls/Examples"
@@ -4992,7 +5753,7 @@
     "title": "Filters",
     "lib": "PyTgCalls",
     "kind": "method",
-    "description": "\n        Filters are objects that can be used to filter the content of incoming updates.\n        ",
+    "description": "Filters are objects that can be used to filter the content of incoming updates.",
     "example": {},
     "details": {
       "sections": [
@@ -5016,7 +5777,7 @@
     "title": "Handling Updates",
     "lib": "PyTgCalls",
     "kind": "method",
-    "description": "\n        Calling API methods sequentially is cool, but what if, for example, the list of participants changes?\n        This page covers updates and how to handle such events in PyTgCalls. Let’s have a look at how they work.\n    ",
+    "description": "Calling API methods sequentially is cool, but what if, for example, the list of participants changes?\n        This page covers updates and how to handle such events in PyTgCalls. Let’s have a look at how they work.",
     "example": {
       "language": "python",
       "code": "from pytgcalls import PyTgCalls, filters\nfrom pytgcalls.types import Update\nfrom pytgcalls.types import MediaStream\n...\napp = PyTgCalls(client)\n\n@app.on_update(filters.stream_end())\nasync def my_handler(client: PyTgCalls, update: Update):\n    if isinstance(update, StreamVideoEnded):\n        await pytgcalls.play(\n            -1001185324811,\n            'http://docs.evostream.com/sample_content/assets/sintel1m720p.mp4',\n        )\n\napp.run()"
@@ -5028,7 +5789,7 @@
     "title": "Install Guide",
     "lib": "PyTgCalls",
     "kind": "method",
-    "description": "\n        Being a modern Python library, ",
+    "description": "Being a modern Python library,",
     "example": {
       "language": "bash",
       "code": "$ pip3 install -U py-tgcalls"
@@ -5040,7 +5801,7 @@
     "title": "Media Devices",
     "lib": "PyTgCalls",
     "kind": "method",
-    "description": "\n        This class offers methods to access information regarding media devices available on your system.\n        This functionality proves valuable when you intend to stream content from either your screen or microphone.\n    ",
+    "description": "This class offers methods to access information regarding media devices available on your system.\n        This functionality proves valuable when you intend to stream content from either your screen or microphone.",
     "example": {
       "language": "python",
       "code": "from pytgcalls import Client\nfrom pytgcalls import idle\nfrom pytgcalls import MediaDevices\n...\n\napp = PyTgCalls(client)\napp.start()\n\n...  # Call API methods\n\napp.play(\n    -1001185324811,\n    MediaDevices.get_audio_devices()[0],\n)\n\nidle()"
@@ -5501,7 +6262,7 @@
     "title": "Using Filters",
     "lib": "PyTgCalls",
     "kind": "method",
-    "description": "\n        So far we’ve seen ",
+    "description": "So far we’ve seen",
     "example": {},
     "details": {},
     "doc_url": "https://pytgcalls.github.io/PyTgCalls/Using Filters"
@@ -5510,7 +6271,7 @@
     "title": "Using Handlers",
     "lib": "PyTgCalls",
     "kind": "method",
-    "description": "\n        Handlers are used to instruct PyTgCalls to execute a specific function when a certain event occurs.\n        For a much more convenient way to handle updates, you can use the ",
+    "description": "Handlers are used to instruct PyTgCalls to execute a specific function when a certain event occurs.\n        For a much more convenient way to handle updates, you can use the",
     "example": {
       "language": "python",
       "code": "from pytgcalls import PyTgCalls\nfrom pytgcalls.types import Update\nfrom pytgcalls import filters as call_filters\n...\n\nclient = # Here Your MTProto Client\napp = PyTgCalls(client)\n\nasync def handler(client: PyTgCalls, update: Update):\n    print(update)\n...\napp.add_handler(handler, call_filters.stream_end())\n..."

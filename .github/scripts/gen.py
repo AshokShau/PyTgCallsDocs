@@ -97,16 +97,19 @@ def normalize_items(items):
     return result
 
 
-def parse_enum_or_type(page, config_map):
-    """Extract signature + description + members from enum/type page."""
-    details = {}
+def parse_type_page(page, config_map):
+    """
+    Parse a page that represents a type or enum.
+    Returns dict: {signature, members(list), properties(list), description(str)}
+    """
+    signature = None
     sig = page.find("category-title")
     if sig is not None:
-        details["signature"] = "".join(sig.itertext()).strip()
+        signature = "".join(sig.itertext()).strip()
 
     description_parts = []
-    members = []
-    in_members = False
+    members = []     # for enums
+    properties = []  # for types (PROPERTIES)
     current = None
 
     def handle_member_block(block):
@@ -121,18 +124,21 @@ def parse_enum_or_type(page, config_map):
                     current = DocItem(raw.strip(), None, "", None, None)
                 members.append(current)
 
-            elif child.tag == "subtext":  # nested description
-                desc_txt = "".join(t.strip() for t in child.itertext() if t.strip())
-                if current:
-                    current["description"] += (" " + desc_txt)
-                else:
-                    description_parts.append(desc_txt)
+            elif child.tag == "subtext":
+                desc_txt = " ".join(t.strip() for t in child.itertext() if t.strip())
+                if desc_txt:
+                    if current:
+                        cur_desc = (current.get("description") or "").strip()
+                        current["description"] = (cur_desc + " " + desc_txt).strip() if cur_desc else desc_txt
+                    else:
+                        description_parts.append(desc_txt)
 
             elif child.tag == "config":
                 cid = child.attrib["id"]
                 text = config_map.get(cid, f"[UNRESOLVED:{cid}]")
                 if current:
-                    current["description"] += (" " + text.strip())
+                    cur_desc = (current.get("description") or "").strip()
+                    current["description"] = (cur_desc + " " + text.strip()).strip() if cur_desc else text.strip()
                 else:
                     description_parts.append(text.strip())
 
@@ -140,34 +146,98 @@ def parse_enum_or_type(page, config_map):
                 txt = (child.text or "").strip()
                 if txt:
                     if current:
-                        current["description"] += (" " + txt)
+                        cur_desc = (current.get("description") or "").strip()
+                        current["description"] = (cur_desc + " " + txt).strip() if cur_desc else txt
                     else:
                         description_parts.append(txt)
 
-    # walk through top-level subtexts
-    for sub in page.findall(".//subtext"):
-        for child in sub:
-            if child.tag == "pg-title" and "ENUMERATION MEMBERS" in "".join(child.itertext()).upper():
-                in_members = True
-                continue
+    def handle_property_block(block):
+        nonlocal current
+        for child in block:
+            if child.tag == "category-title":
+                raw = "".join(child.itertext()).strip()
+                # parse "name -> type"
+                name = raw
+                type_text = None
+                if "->" in raw:
+                    left, right = raw.split("->", 1)
+                    name = left.strip()
+                    type_text = right.strip()
+                else:
+                    dr = child.find(".//docs-ref")
+                    if dr is not None:
+                        type_text = "".join(dr.itertext()).strip()
 
-            if not in_members:
+                current = DocItem(name.strip(), type_text, "", None, None)
+                properties.append(current)
+
+            elif child.tag == "subtext":
+                desc_txt = " ".join(t.strip() for t in child.itertext() if t.strip())
+                if desc_txt:
+                    if current:
+                        cur_desc = (current.get("description") or "").strip()
+                        current["description"] = (cur_desc + " " + desc_txt).strip() if cur_desc else desc_txt
+                    else:
+                        description_parts.append(desc_txt)
+
+            elif child.tag == "config":
+                cid = child.attrib["id"]
+                text = config_map.get(cid, f"[UNRESOLVED:{cid}]")
+                if current:
+                    cur_desc = (current.get("description") or "").strip()
+                    current["description"] = (cur_desc + " " + text.strip()).strip() if cur_desc else text.strip()
+                else:
+                    description_parts.append(text.strip())
+
+            elif child.tag == "text":
+                txt = (child.text or "").strip()
+                if txt:
+                    if current:
+                        cur_desc = (current.get("description") or "").strip()
+                        current["description"] = (cur_desc + " " + txt).strip() if cur_desc else txt
+                    else:
+                        description_parts.append(txt)
+
+    # walk <subtext> blocks
+    for sub in page.findall("subtext"):
+        pg = sub.find("pg-title")
+        if pg is not None:
+            label = "".join(pg.itertext()).upper()
+            if "ENUMERATION MEMBERS" in label:
+                # capture top-level <text> before members
+                for child in sub:
+                    if child.tag == "text" and child.text:
+                        description_parts.append(child.text.strip())
+
+                # parse inner member blocks
+                for inner in sub.findall("subtext"):
+                    handle_member_block(inner)
+
+            elif "PROPERTIES" in label:
+                for inner in sub.findall("subtext"):
+                    handle_property_block(inner)
+
+            else:
+                for child in sub:
+                    if child.tag == "config":
+                        cid = child.attrib["id"]
+                        description_parts.append(config_map.get(cid, f"[UNRESOLVED:{cid}]"))
+                    elif child.tag == "text" and child.text:
+                        description_parts.append(child.text.strip())
+        else:
+            for child in sub:
                 if child.tag == "config":
                     cid = child.attrib["id"]
                     description_parts.append(config_map.get(cid, f"[UNRESOLVED:{cid}]"))
-                elif child.tag == "text":
-                    if child.text:
-                        description_parts.append(child.text.strip())
-            else:
-                if child.tag == "subtext":
-                    handle_member_block(child)
+                elif child.tag == "text" and child.text:
+                    description_parts.append(child.text.strip())
 
     return {
-        "signature": details.get("signature"),
+        "signature": signature,
         "members": members,
-        "description": " ".join(p for p in description_parts if p),
+        "properties": properties,
+        "description": " ".join(p for p in description_parts if p).strip(),
     }
-
 
 
 # ---------------- MAP PARSER ----------------
@@ -180,10 +250,11 @@ def parse_map(map_source: Union[str, Path], config_map):
         page = ET.fromstring(page_xml)
         title = page.findtext("h1", "").strip()
 
-        # classify doc kind
-        if "/Available Types/" in path:
+        # classify doc kind (include Available Structs / Advanced Types as type)
+        lower_path = path.lower()
+        if "/available types/" in lower_path or "/available structs/" in lower_path or "/advanced types/" in lower_path:
             kind = "type"
-        elif "/Available Enums/" in path:
+        elif "/available enums/" in lower_path:
             kind = "enum"
         else:
             kind = "method"
@@ -193,9 +264,10 @@ def parse_map(map_source: Union[str, Path], config_map):
         if desc_node is not None:
             description = config_map.get(desc_node.attrib["id"], "")
         else:
-            description = "".join(page.findtext("text", ""))
+            # also try to get top-level <text>
+            description = "".join(page.findtext("text", "") or "")
 
-        # example
+        # example (cleaned)
         example = {}
         ex_node = page.find("syntax-highlight")
         if ex_node is not None:
@@ -212,6 +284,7 @@ def parse_map(map_source: Union[str, Path], config_map):
                 details["signature"] = "".join(sig.itertext()).strip()
 
             sections = []
+            # find <category> blocks (PARAMETERS, RAISES, etc.)
             for cat in page.findall(".//category"):
                 section_title = cat.findtext("pg-title", "").strip()
                 raw_items = []
@@ -235,9 +308,13 @@ def parse_map(map_source: Union[str, Path], config_map):
                 details["sections"] = sections
 
         elif kind in ("enum", "type"):
-            parsed = parse_enum_or_type(page, config_map)
+            parsed = parse_type_page(page, config_map)
             details["signature"] = parsed["signature"]
-            details["members"] = parsed["members"]
+            if parsed["members"]:
+                details["members"] = parsed["members"]
+            if parsed["properties"]:
+                details["properties"] = parsed["properties"]
+            # if page had no top-level description, use parsed description
             if not description:
                 description = parsed["description"]
 
@@ -257,7 +334,7 @@ def parse_map(map_source: Union[str, Path], config_map):
             "title": title,
             "lib": doc_type,
             "kind": kind,
-            "description": description,
+            "description": (description or "").strip(),
             "example": example,
             "details": details,
             "doc_url": doc_url,
