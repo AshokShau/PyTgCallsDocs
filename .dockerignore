@@ -2,3 +2,4 @@
 !*.py
 !src/
 !pyproject.toml
+!docs.json
