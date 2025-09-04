@@ -6,7 +6,7 @@ from ._format import format_doc_info
 from .search import DocSearch
 
 searcher = DocSearch("docs.json")
-_thumb_url = "https://raw.githubusercontent.com/pytgcalls/pytgcalls.github.io/c732cc3b58002ddcf96eab7e44d3180448445bc5/src/assets/pytgcalls.svg"
+_thumb_url = "https://avatars.githubusercontent.com/u/75855609?s=200&v=4"
 
 @Client.on_updateNewInlineQuery()
 async def inline_search(c: Client, message: types.UpdateNewInlineQuery):
