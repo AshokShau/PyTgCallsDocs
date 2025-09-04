@@ -153,11 +153,7 @@ if __name__ == "__main__":
     searcher = DocSearch(_docs_path)
 
     q = input("🔍 Enter search query: ").strip()
-    results = searcher.search(q, limit=2)
-
-    if not results:
-        print("❌ No matches found.")
-    else:
+    if results := searcher.search(q, limit=2):
         for r in results:
             print(f"\n📌 {r.title} ({r.kind}) — {r.lib}")
             if r.details.signature:
@@ -178,8 +174,7 @@ if __name__ == "__main__":
 
                         if s.title.upper() == "RAISES":
                             for line in ds.split("\n"):
-                                line = line.strip()
-                                if line:
+                                if line := line.strip():
                                     print(f"      - {line}")
                         else:
                             param_line = f"      {nm}" if nm else "      -"
@@ -212,3 +207,6 @@ if __name__ == "__main__":
                     print(prop_line)
 
             print("   Doc URL:", r.doc_url)
+
+    else:
+        print("❌ No matches found.")

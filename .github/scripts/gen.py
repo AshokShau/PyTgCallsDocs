@@ -81,11 +81,10 @@ def normalize_items(items):
             if ":" in first_line:
                 name, typ = first_line.split(":", 1)
                 result.append(DocItem(name.strip(), typ.strip(), desc, item.get("config_id")))
+            elif result:
+                result[-1]["description"] += f" {text}"
             else:
-                if result:
-                    result[-1]["description"] += (" " + text)
-                else:
-                    result.append(DocItem("", None, text, item.get("config_id")))
+                result.append(DocItem("", None, text, item.get("config_id")))
         elif "raw" in item:
             name, _, typ = item["raw"].partition(":")
             result.append(DocItem(name.strip(), typ.strip() if typ else None, "", None))
@@ -129,7 +128,11 @@ def parse_type_page(page, config_map):
                 if desc_txt:
                     if current:
                         cur_desc = (current.get("description") or "").strip()
-                        current["description"] = (cur_desc + " " + desc_txt).strip() if cur_desc else desc_txt
+                        current["description"] = (
+                            f"{cur_desc} {desc_txt}".strip()
+                            if cur_desc
+                            else desc_txt
+                        )
                     else:
                         description_parts.append(desc_txt)
 
@@ -138,7 +141,11 @@ def parse_type_page(page, config_map):
                 text = config_map.get(cid, f"[UNRESOLVED:{cid}]")
                 if current:
                     cur_desc = (current.get("description") or "").strip()
-                    current["description"] = (cur_desc + " " + text.strip()).strip() if cur_desc else text.strip()
+                    current["description"] = (
+                        f"{cur_desc} {text.strip()}".strip()
+                        if cur_desc
+                        else text.strip()
+                    )
                 else:
                     description_parts.append(text.strip())
 
@@ -147,7 +154,7 @@ def parse_type_page(page, config_map):
                 if txt:
                     if current:
                         cur_desc = (current.get("description") or "").strip()
-                        current["description"] = (cur_desc + " " + txt).strip() if cur_desc else txt
+                        current["description"] = f"{cur_desc} {txt}".strip() if cur_desc else txt
                     else:
                         description_parts.append(txt)
 
@@ -176,7 +183,11 @@ def parse_type_page(page, config_map):
                 if desc_txt:
                     if current:
                         cur_desc = (current.get("description") or "").strip()
-                        current["description"] = (cur_desc + " " + desc_txt).strip() if cur_desc else desc_txt
+                        current["description"] = (
+                            f"{cur_desc} {desc_txt}".strip()
+                            if cur_desc
+                            else desc_txt
+                        )
                     else:
                         description_parts.append(desc_txt)
 
@@ -185,7 +196,11 @@ def parse_type_page(page, config_map):
                 text = config_map.get(cid, f"[UNRESOLVED:{cid}]")
                 if current:
                     cur_desc = (current.get("description") or "").strip()
-                    current["description"] = (cur_desc + " " + text.strip()).strip() if cur_desc else text.strip()
+                    current["description"] = (
+                        f"{cur_desc} {text.strip()}".strip()
+                        if cur_desc
+                        else text.strip()
+                    )
                 else:
                     description_parts.append(text.strip())
 
@@ -301,8 +316,7 @@ def parse_map(map_source: Union[str, Path], config_map):
                         elif item.tag == "text":
                             if item.text:
                                 raw_items.append({"text": item.text.strip()})
-                norm_items = normalize_items(raw_items)
-                if norm_items:
+                if norm_items := normalize_items(raw_items):
                     sections.append({"title": section_title, "items": norm_items})
             if sections:
                 details["sections"] = sections

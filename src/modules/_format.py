@@ -30,8 +30,7 @@ async def format_doc_info(r, include_raises: bool = False) -> str:
 
                 if s.title.upper() == "RAISES":
                     for line in ds.split("\n"):
-                        line = line.strip()
-                        if line:
+                        if line := line.strip():
                             parts.append(f"• {html.escape(line)}")
                 else:
                     param_line = f"<code>{html.escape(nm)}</code>"
@@ -39,7 +38,7 @@ async def format_doc_info(r, include_raises: bool = False) -> str:
                         param_line += f": <i>{html.escape(tp)}</i>"
                     if ds:
                         param_line += f" — {html.escape(ds)}"
-                    parts.append("• " + param_line)
+                    parts.append(f"• {param_line}")
 
     # members (for enums)
     if r.details.members:
@@ -50,7 +49,7 @@ async def format_doc_info(r, include_raises: bool = False) -> str:
                 line += f" = <code>{html.escape(m.value)}</code>"
             if m.description:
                 line += f" — {html.escape(m.description)}"
-            parts.append("• " + line)
+            parts.append(f"• {line}")
 
     # properties (for types)
     if r.details.properties:
@@ -61,6 +60,6 @@ async def format_doc_info(r, include_raises: bool = False) -> str:
                 line += f" -> <i>{html.escape(p.type)}</i>"
             if p.description:
                 line += f" — {html.escape(p.description)}"
-            parts.append("• " + line)
+            parts.append(f"• {line}")
 
     return "\n".join(parts)

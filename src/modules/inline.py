@@ -46,18 +46,20 @@ async def inline_search(c: Client, message: types.UpdateNewInlineQuery):
 
         result = types.InputInlineQueryResultArticle(
             id=str(uuid.uuid4()),
-            title=r.title + " " +f"({r.lib})",
-            description=r.description[:100] + "...",
+            title=f"{r.title} " + f"({r.lib})",
+            description=f"{r.description[:100]}...",
             input_message_content=types.InputMessageText(text=text),
             thumbnail_url=_thumb_url,
-            reply_markup=types.ReplyMarkupInlineKeyboard([
+            reply_markup=types.ReplyMarkupInlineKeyboard(
                 [
-                    types.InlineKeyboardButton(
-                        text="📚 View Full Documentation",
-                        type=types.InlineKeyboardButtonTypeUrl(r.doc_url)
-                    )
+                    [
+                        types.InlineKeyboardButton(
+                            text="📚 View Full Documentation",
+                            type=types.InlineKeyboardButtonTypeUrl(r.doc_url),
+                        )
+                    ]
                 ]
-            ])
+            ),
         )
         results.append(result)
 
