@@ -1,22 +1,13 @@
 from pytdbot import Client, types
 from pytdbot.exception import StopHandlers
 
+from src.modules._format import keyboard
+
 
 @Client.on_message()
 async def start(c: Client, message: types.Message):
     if message.text != "/start":
         raise StopHandlers
-
-    keyboard = [
-        [
-            types.InlineKeyboardButton("📚 Documentation",
-                                       type=types.InlineKeyboardButtonTypeUrl("https://pytgcalls.github.io/"))
-        ],
-        [
-            types.InlineKeyboardButton("🔍 Search", type=types.InlineKeyboardButtonTypeSwitchInline(query="Quick start",
-                                                                                                   target_chat=types.TargetChatCurrent())),
-        ]
-    ]
 
     welcome_text = """👋 <b>Welcome to PyTgCalls Documentation Bot!</b>
 
