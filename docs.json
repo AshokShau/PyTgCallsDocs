@@ -9,7 +9,6 @@
       "code": "from ntgcalls import NTgCalls\n...\n\napp = NTgCalls()\n...\nendpoint = ...\nssrc_groups = ...\n\nawait app.add_incoming_video(\n    -1001185324811,\n    endpoint,\n    ssrc_groups,\n)"
     },
     "details": {
-      "signature": "async NTgCalls.add_incoming_video() -> int",
       "sections": [
         {
           "title": "PARAMETERS",
@@ -49,7 +48,8 @@
             }
           ]
         }
-      ]
+      ],
+      "signature": "async NTgCalls.add_incoming_video() -> int"
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Advanced Methods/Add Incoming Video"
   },
@@ -63,7 +63,6 @@
       "code": "from ntgcalls import NTgCalls\n...\n\napp = NTgCalls()\n...\nmode = await app.get_connection_mode(\n    -1001185324811,\n)"
     },
     "details": {
-      "signature": "async NTgCalls.get_connection_mode() -> ntgcalls.ConnectionMode",
       "sections": [
         {
           "title": "PARAMETERS",
@@ -89,7 +88,8 @@
             }
           ]
         }
-      ]
+      ],
+      "signature": "async NTgCalls.get_connection_mode() -> ntgcalls.ConnectionMode"
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Advanced Methods/Get Connection Mode"
   },
@@ -103,7 +103,6 @@
       "code": "from ntgcalls import NTgCalls\n...\n\napp = NTgCalls()\n...\n\nstate = app.get_state(\n    -1001185324811,\n)"
     },
     "details": {
-      "signature": "get_state() -> ntgcalls.MediaState",
       "sections": [
         {
           "title": "PARAMETERS",
@@ -129,7 +128,8 @@
             }
           ]
         }
-      ]
+      ],
+      "signature": "get_state() -> ntgcalls.MediaState"
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Advanced Methods/Get State"
   },
@@ -143,7 +143,6 @@
       "code": "from ntgcalls import NTgCalls\n...\n\napp = NTgCalls()\n...\nendpoint = ...\n\nawait app.remove_incoming_video(\n    -1001185324811,\n    endpoint,\n)"
     },
     "details": {
-      "signature": "async NTgCalls.remove_incoming_video()",
       "sections": [
         {
           "title": "PARAMETERS",
@@ -176,7 +175,8 @@
             }
           ]
         }
-      ]
+      ],
+      "signature": "async NTgCalls.remove_incoming_video()"
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Advanced Methods/Remove Incoming Video"
   },
@@ -190,7 +190,6 @@
       "code": "from ntgcalls import NTgCalls\nfrom ntgcalls import MediaSegmentStatus\n...\n\napp = NTgCalls()\n...\nframe_data = ...\n\nawait app.send_broadcast_part(\n    -1001185324811,\n    1234567,\n    1,\n    MediaSegmentStatus.SUCCESS,\n    False,\n    frame_data,\n)"
     },
     "details": {
-      "signature": "async NTgCalls.send_broadcast_part()",
       "sections": [
         {
           "title": "PARAMETERS",
@@ -251,7 +250,8 @@
             }
           ]
         }
-      ]
+      ],
+      "signature": "async NTgCalls.send_broadcast_part()"
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Advanced Methods/Send Broadcast Part"
   },
@@ -265,7 +265,6 @@
       "code": "from ntgcalls import NTgCalls\n...\n\napp = NTgCalls()\n...\nawait app.send_broadcast_timestamp(\n    -1001185324811,\n    1700000000,\n)"
     },
     "details": {
-      "signature": "async NTgCalls.send_broadcast_timestamp()",
       "sections": [
         {
           "title": "PARAMETERS",
@@ -298,7 +297,8 @@
             }
           ]
         }
-      ]
+      ],
+      "signature": "async NTgCalls.send_broadcast_timestamp()"
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Advanced Methods/Send Broadcast Timestamp"
   },
@@ -312,7 +312,6 @@
       "code": "from ntgcalls import NTgCalls\nfrom ntgcalls import StreamDevice\nfrom ntgcalls import FrameData\nfrom datetime import datetime\n...\n\napp = NTgCalls()\n...\npcm16_le_data = ...\n\nawait app.send_external_frame(\n    -1001185324811,\n    StreamDevice.MICROPHONE,\n    pcm16_le_data,\n    FrameData(\n        int(datetime.now().timestamp()),\n        0,\n        0,\n        0,\n    )\n)"
     },
     "details": {
-      "signature": "async NTgCalls.send_external_frame()",
       "sections": [
         {
           "title": "PARAMETERS",
@@ -347,7 +346,8 @@
             }
           ]
         }
-      ]
+      ],
+      "signature": "async NTgCalls.send_external_frame()"
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Advanced Methods/Send External Frame"
   },
@@ -361,7 +361,6 @@
       "code": "from ntgcalls import NTgCalls\n...\n\napp = NTgCalls()\n...\n\nawait app.send_signaling_data(\n    -1001185324811,\n    \"data\",\n)"
     },
     "details": {
-      "signature": "async NTgCalls.send_signaling_data()",
       "sections": [
         {
           "title": "PARAMETERS",
@@ -382,7 +381,8 @@
             }
           ]
         }
-      ]
+      ],
+      "signature": "async NTgCalls.send_signaling_data()"
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Advanced Methods/Send Signaling Data"
   },
@@ -396,7 +396,6 @@
       "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uintptr_t ptr = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    char* endpoint = ...; // Obtain the endpoint of the incoming video\n    ntg_ssrc_group_struct* ssrcGroups = ...; // Obtain the SSRC groups of the incoming video\n    int size = ...; // Obtain the size of the SSRC groups array\n    uint32_t ssrc_buffer;\n    // Initialize the async struct\n    ntg_async_struct future;\n    ntg_add_incoming_video(ptr, chatID, endpoint, ssrcGroups, &ssrc_buffer, &future);\n    // Wait for the async operation to complete\n    return 0;\n}"
     },
     "details": {
-      "signature": "int ntg_add_incoming_video()",
       "sections": [
         {
           "title": "PARAMETERS",
@@ -450,7 +449,8 @@
             }
           ]
         }
-      ]
+      ],
+      "signature": "int ntg_add_incoming_video()"
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Advanced Methods/ntg_add_incoming_video"
   },
@@ -464,7 +464,6 @@
       "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uintptr_t ptr = ntg_init();\n    ...\n    int size;\n    ntg_call_struct* buffer;\n    // Initialize the async struct\n    ntg_async_struct future;\n    int result = ntg_calls(ptr, &buffer, &size, &future);\n    // Wait for the async operation to complete\n    for (int i = 0; i < result; i++) {\n        printf(\"Group Call %d:\\n\", i + 1);\n        printf(\"  Chat ID: %lld\\n\", buffer[i].chatId);\n        printf(\"  Status: %d\\n\", buffer[i].status);\n    }\n    ... // Your Code Here\n    return 0;\n}"
     },
     "details": {
-      "signature": "int ntg_calls()",
       "sections": [
         {
           "title": "PARAMETERS",
@@ -504,7 +503,8 @@
             }
           ]
         }
-      ]
+      ],
+      "signature": "int ntg_calls()"
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Advanced Methods/ntg_calls"
   },
@@ -518,7 +518,6 @@
       "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uintptr_t ptr = ntg_init();\n    ...\n    double buffer;\n    // Initialize the async struct\n    ntg_async_struct future;\n    int64_t usage = ntg_cpu_usage(ptr, &buffer, &future);\n    // Wait for the async operation to complete and use\n    return 0;\n}"
     },
     "details": {
-      "signature": "int ntg_cpu_usage()",
       "sections": [
         {
           "title": "PARAMETERS",
@@ -539,7 +538,8 @@
             }
           ]
         }
-      ]
+      ],
+      "signature": "int ntg_cpu_usage()"
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Advanced Methods/ntg_cpu_usage"
   },
@@ -553,7 +553,6 @@
       "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    ...\n    ntg_enable_g_lib_loop(true);\n    return 0;\n}"
     },
     "details": {
-      "signature": "int ntg_enable_g_lib_loop()",
       "sections": [
         {
           "title": "PARAMETERS",
@@ -567,7 +566,8 @@
             }
           ]
         }
-      ]
+      ],
+      "signature": "int ntg_enable_g_lib_loop()"
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Advanced Methods/ntg_enable_g_lib_loop"
   },
@@ -581,7 +581,6 @@
       "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uintptr_t ptr = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    ntg_connection_mode_enum buffer;\n    ntg_async_struct future;\n    ntg_get_connection_mode(ptr, chatID, &buffer, &future);\n    ...\n    return 0;\n}"
     },
     "details": {
-      "signature": "int ntg_get_connection_mode()",
       "sections": [
         {
           "title": "PARAMETERS",
@@ -614,7 +613,8 @@
             }
           ]
         }
-      ]
+      ],
+      "signature": "int ntg_get_connection_mode()"
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Advanced Methods/ntg_get_connection_mode"
   },
@@ -628,7 +628,6 @@
       "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    ...\n    ntg_media_devices_struct devices;\n    // Initialize the async struct\n    ntg_async_struct future;\n    ntg_get_media_devices(&devices, &future);\n    // Wait for the async operation to complete\n    return 0;\n}"
     },
     "details": {
-      "signature": "int ntg_get_media_devices()",
       "sections": [
         {
           "title": "PARAMETERS",
@@ -642,7 +641,8 @@
             }
           ]
         }
-      ]
+      ],
+      "signature": "int ntg_get_media_devices()"
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Advanced Methods/ntg_get_media_devices"
   },
@@ -656,7 +656,6 @@
       "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uintptr_t ptr = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    ntg_protocol_struct buffer;\n    ntg_get_protocol(ptr, chatID, &buffer);\n    ...\n    return 0;\n}"
     },
     "details": {
-      "signature": "int ntg_get_protocol()",
       "sections": [
         {
           "title": "PARAMETERS",
@@ -689,7 +688,8 @@
             }
           ]
         }
-      ]
+      ],
+      "signature": "int ntg_get_protocol()"
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Advanced Methods/ntg_get_protocol"
   },
@@ -703,7 +703,6 @@
       "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uintptr_t ptr = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    ntg_media_state_struct buffer;\n    // Initialize the async struct\n    ntg_async_struct future;\n    ntg_get_state(ptr, chatID, &buffer, &future);\n    // Wait for the async operation to complete and use\n    // the buffer for EditGroupCallParticipant\n    ...\n    return 0;\n}"
     },
     "details": {
-      "signature": "int ntg_get_state()",
       "sections": [
         {
           "title": "PARAMETERS",
@@ -736,7 +735,8 @@
             }
           ]
         }
-      ]
+      ],
+      "signature": "int ntg_get_state()"
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Advanced Methods/ntg_get_state"
   },
@@ -750,7 +750,6 @@
       "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uintptr_t ptr = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    char* endpoint = ...; // Obtain the endpoint of the incoming video\n    // Initialize the async struct\n    ntg_async_struct future;\n    ntg_remove_incoming_video(ptr, chatID, endpoint, &future);\n    // Wait for the async operation to complete\n    return 0;\n}"
     },
     "details": {
-      "signature": "int ntg_remove_incoming_video()",
       "sections": [
         {
           "title": "PARAMETERS",
@@ -783,7 +782,8 @@
             }
           ]
         }
-      ]
+      ],
+      "signature": "int ntg_remove_incoming_video()"
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Advanced Methods/ntg_remove_incoming_video"
   },
@@ -797,7 +797,6 @@
       "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uintptr_t ptr = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    int64_t segmentId = ...; // Obtain the segment ID\n    int32_t partId = ...; // Obtain the part ID\n    bool qualityUpdate = ...; // Obtain the quality update flag\n    uint8_t* frame = ...; // Obtain the frame data\n    int size = ...; // Obtain the size of the frame data\n    // Initialize the async struct\n    ntg_async_struct future;\n    ntg_send_broadcast_part(ptr, chatID, segmentId, partId, NTG_MEDIA_SEGMENT_SUCCESS, qualityUpdate, frame, size, &future);\n    // Wait for the async operation to complete\n    return 0;\n}"
     },
     "details": {
-      "signature": "int ntg_send_broadcast_part()",
       "sections": [
         {
           "title": "PARAMETERS",
@@ -865,7 +864,8 @@
             }
           ]
         }
-      ]
+      ],
+      "signature": "int ntg_send_broadcast_part()"
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Advanced Methods/ntg_send_broadcast_part"
   },
@@ -879,7 +879,6 @@
       "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uintptr_t ptr = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    int64_t timestamp = ...; // Obtain the timestamp\n    // Initialize the async struct\n    ntg_async_struct future;\n    ntg_send_broadcast_timestamp(ptr, chatID, timestamp, &future);\n    // Wait for the async operation to complete\n    return 0;\n}"
     },
     "details": {
-      "signature": "int ntg_send_broadcast_timestamp()",
       "sections": [
         {
           "title": "PARAMETERS",
@@ -912,7 +911,8 @@
             }
           ]
         }
-      ]
+      ],
+      "signature": "int ntg_send_broadcast_timestamp()"
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Advanced Methods/ntg_send_broadcast_timestamp"
   },
@@ -926,7 +926,6 @@
       "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uintptr_t ptr = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    uint8_t* pcm16_le_data = ...; // Obtain the PCM16 LE data\n    int size = ...; // Obtain the size of the PCM16 LE data\n    ntg_frame_data frame_data = {\n        .timestamp = ..., // Obtain the timestamp\n        .flags = 0,\n        .rotation = 0,\n        .layer = 0,\n    };\n    // Initialize the async struct\n    ntg_async_struct future;\n    ntg_send_external_frame(ptr, chatID, NTG_STREAM_DEVICE_MICROPHONE, pcm16_le_data, size, &frame_data, &future);\n    // Wait for the async operation to complete\n    return 0;\n}"
     },
     "details": {
-      "signature": "int ntg_send_external_frame()",
       "sections": [
         {
           "title": "PARAMETERS",
@@ -980,7 +979,8 @@
             }
           ]
         }
-      ]
+      ],
+      "signature": "int ntg_send_external_frame()"
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Advanced Methods/ntg_send_external_frame"
   },
@@ -994,7 +994,6 @@
       "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uintptr_t ptr = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    uint8_t* buffer = ...; // Obtain the signaling data\n    int size = ...; // Obtain the size of the signaling data\n    // Initialize the async struct\n    ntg_async_struct future;\n    ntg_send_signaling_data(ptr, chatID, buffer, size, &future);\n    // Wait for the async operation to complete\n    return 0;\n}"
     },
     "details": {
-      "signature": "int ntg_send_signaling_data()",
       "sections": [
         {
           "title": "PARAMETERS",
@@ -1034,7 +1033,8 @@
             }
           ]
         }
-      ]
+      ],
+      "signature": "int ntg_send_signaling_data()"
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Advanced Methods/ntg_send_signaling_data"
   },
@@ -1852,7 +1852,7 @@
   "/NTgCalls/Available Structs/ntg_audio_description_struct.xml": {
     "title": "ntg_audio_description_struct",
     "lib": "NTgCalls",
-    "kind": "type",
+    "kind": "struct",
     "description": "Stream’s Audio Configuration",
     "example": {},
     "details": {
@@ -1879,7 +1879,7 @@
   "/NTgCalls/Available Structs/ntg_auth_params_struct.xml": {
     "title": "ntg_auth_params_struct",
     "lib": "NTgCalls",
-    "kind": "type",
+    "kind": "struct",
     "description": "Authentication parameters for the connection.",
     "example": {},
     "details": {
@@ -1913,7 +1913,7 @@
   "/NTgCalls/Available Structs/ntg_call_info_struct.xml": {
     "title": "ntg_call_info_struct",
     "lib": "NTgCalls",
-    "kind": "type",
+    "kind": "struct",
     "description": "Call Descriptor for a Group Call or Private Call.",
     "example": {},
     "details": {
@@ -1947,7 +1947,7 @@
   "/NTgCalls/Available Structs/ntg_device_info_struct.xml": {
     "title": "ntg_device_info_struct",
     "lib": "NTgCalls",
-    "kind": "type",
+    "kind": "struct",
     "description": "Device Information.",
     "example": {},
     "details": {
@@ -1974,7 +1974,7 @@
   "/NTgCalls/Available Structs/ntg_dh_config_struct.xml": {
     "title": "ntg_dh_config_struct",
     "lib": "NTgCalls",
-    "kind": "type",
+    "kind": "struct",
     "description": "Diffie-Hellman configuration for key exchange.",
     "example": {},
     "details": {
@@ -2022,7 +2022,7 @@
   "/NTgCalls/Available Structs/ntg_frame_data_struct.xml": {
     "title": "ntg_frame_data_struct",
     "lib": "NTgCalls",
-    "kind": "type",
+    "kind": "struct",
     "description": "Frame data for the media stream.",
     "example": {},
     "details": {
@@ -2063,7 +2063,7 @@
   "/NTgCalls/Available Structs/ntg_frame_struct.xml": {
     "title": "ntg_frame_struct",
     "lib": "NTgCalls",
-    "kind": "type",
+    "kind": "struct",
     "description": "Frame descriptor for the media stream.",
     "example": {},
     "details": {
@@ -2104,7 +2104,7 @@
   "/NTgCalls/Available Structs/ntg_log_message_struct.xml": {
     "title": "ntg_log_message_struct",
     "lib": "NTgCalls",
-    "kind": "type",
+    "kind": "struct",
     "description": "Log message structure.",
     "example": {},
     "details": {
@@ -2152,7 +2152,7 @@
   "/NTgCalls/Available Structs/ntg_media_description_struct.xml": {
     "title": "ntg_media_description_struct",
     "lib": "NTgCalls",
-    "kind": "type",
+    "kind": "struct",
     "description": "Media Configuration for the Stream.",
     "example": {},
     "details": {
@@ -2193,7 +2193,7 @@
   "/NTgCalls/Available Structs/ntg_media_devices_struct.xml": {
     "title": "ntg_media_devices_struct",
     "lib": "NTgCalls",
-    "kind": "type",
+    "kind": "struct",
     "description": "Media devices available for streaming.",
     "example": {},
     "details": {
@@ -2262,7 +2262,7 @@
   "/NTgCalls/Available Structs/ntg_media_state_struct.xml": {
     "title": "ntg_media_state_struct",
     "lib": "NTgCalls",
-    "kind": "type",
+    "kind": "struct",
     "description": "GroupCall MTProto Configurations.",
     "example": {},
     "details": {
@@ -2296,7 +2296,7 @@
   "/NTgCalls/Available Structs/ntg_network_info_struct.xml": {
     "title": "ntg_network_info_struct",
     "lib": "NTgCalls",
-    "kind": "type",
+    "kind": "struct",
     "description": "Network status for the call.",
     "example": {},
     "details": {
@@ -2323,7 +2323,7 @@
   "/NTgCalls/Available Structs/ntg_protocol_struct.xml": {
     "title": "ntg_protocol_struct",
     "lib": "NTgCalls",
-    "kind": "type",
+    "kind": "struct",
     "description": "When using RequestCall and AcceptCall,\n        specify all library versions supported by the client.\n        The server will merge and choose the best library version supported by both peers, returning only the best\n        value in the result of the call's AcceptCall and in the PhoneCallAccepted update received by the caller.",
     "example": {},
     "details": {
@@ -2334,7 +2334,7 @@
   "/NTgCalls/Available Structs/ntg_remote_source_struct.xml": {
     "title": "ntg_remote_source_struct",
     "lib": "NTgCalls",
-    "kind": "type",
+    "kind": "struct",
     "description": "Remote source for the call.",
     "example": {},
     "details": {
@@ -2368,7 +2368,7 @@
   "/NTgCalls/Available Structs/ntg_rtc_server_struct.xml": {
     "title": "ntg_rtc_server_struct",
     "lib": "NTgCalls",
-    "kind": "type",
+    "kind": "struct",
     "description": "Identifies an endpoint that can be used to connect to the other user in a phone call.",
     "example": {},
     "details": {
@@ -2458,7 +2458,7 @@
   "/NTgCalls/Available Structs/ntg_segment_part_request_struct.xml": {
     "title": "ntg_segment_part_request_struct",
     "lib": "NTgCalls",
-    "kind": "type",
+    "kind": "struct",
     "description": "This constructor represents a request for a specific part of a broadcast stream segment.",
     "example": {},
     "details": {
@@ -2520,7 +2520,7 @@
   "/NTgCalls/Available Structs/ntg_ssrc_group_struct.xml": {
     "title": "ntg_ssrc_group_struct",
     "lib": "NTgCalls",
-    "kind": "type",
+    "kind": "struct",
     "description": "SSRC Group with the SSRCs of the video stream and the semantics.",
     "example": {},
     "details": {
@@ -2554,7 +2554,7 @@
   "/NTgCalls/Available Structs/ntg_video_description_struct.xml": {
     "title": "ntg_video_description_struct",
     "lib": "NTgCalls",
-    "kind": "type",
+    "kind": "struct",
     "description": "Stream’s Video Configuration",
     "example": {},
     "details": {
@@ -3229,7 +3229,6 @@
       "code": "from ntgcalls import NTgCalls\n...\n\napp = NTgCalls()\nrtc_servers = ... # Obtain the RTC servers\ndh_config = ... # Obtain the DH configuration\nversions = ... # Obtain the library versions\np2p_allowed = ... # Obtain whether P2P is allowed\nawait app.connect_p2p(\n    -1001185324811,\n    rtc_servers,\n    versions,\n    p2p_allowed\n)"
     },
     "details": {
-      "signature": "async NTgCalls.connect_p2p()",
       "sections": [
         {
           "title": "PARAMETERS",
@@ -3290,7 +3289,8 @@
             }
           ]
         }
-      ]
+      ],
+      "signature": "async NTgCalls.connect_p2p()"
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Basic Methods/Connect P2P"
   },
@@ -3304,7 +3304,6 @@
       "code": "from ntgcalls import NTgCalls\n...\n\napp = NTgCalls()\n...\ntg_params = ...\n\nawait app.connect(\n    -1001185324811,\n    tg_params,\n    False,\n)"
     },
     "details": {
-      "signature": "async NTgCalls.connect()",
       "sections": [
         {
           "title": "PARAMETERS",
@@ -3344,7 +3343,8 @@
             }
           ]
         }
-      ]
+      ],
+      "signature": "async NTgCalls.connect()"
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Basic Methods/Connect"
   },
@@ -3358,7 +3358,6 @@
       "code": "from ntgcalls import NTgCalls\n...\n\napp = NTgCalls()\n\nparams = await app.create_call(\n    -1001185324811,\n)"
     },
     "details": {
-      "signature": "async NTgCalls.create_call() -> str",
       "sections": [
         {
           "title": "PARAMETERS",
@@ -3384,7 +3383,8 @@
             }
           ]
         }
-      ]
+      ],
+      "signature": "async NTgCalls.create_call() -> str"
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Basic Methods/Create Call"
   },
@@ -3398,7 +3398,6 @@
       "code": "from ntgcalls import NTgCalls\n...\napp = NTgCalls()\n...\n\nawait app.create_p2p_call(\n    -1001185324811,\n)"
     },
     "details": {
-      "signature": "async NTgCalls.create_p2p_call()",
       "sections": [
         {
           "title": "PARAMETERS",
@@ -3424,7 +3423,8 @@
             }
           ]
         }
-      ]
+      ],
+      "signature": "async NTgCalls.create_p2p_call()"
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Basic Methods/Create P2P Call"
   },
@@ -3438,7 +3438,6 @@
       "code": "from ntgcalls import NTgCalls\n...\n\napp = NTgCalls()\ng_a_or_b = ... # Obtain the parameter for key exchange\nfingerprint = ... # Obtain the fingerprint (Optional for outgoing calls)\nparams = await app.exchange_keys(\n    -1001185324811,\n    g_a_or_b,\n    fingerprint\n)"
     },
     "details": {
-      "signature": "async NTgCalls.exchange_keys() -> ntgcalls.AuthParams",
       "sections": [
         {
           "title": "PARAMETERS",
@@ -3485,7 +3484,8 @@
             }
           ]
         }
-      ]
+      ],
+      "signature": "async NTgCalls.exchange_keys() -> ntgcalls.AuthParams"
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Basic Methods/Exchange Keys"
   },
@@ -3499,7 +3499,6 @@
       "code": "from ntgcalls import NTgCalls\n...\n\napp = NTgCalls()\ndh_config = ... # Obtain the DH configuration\ng_a_hash = ... # Parameter for key exchange (Only when is incoming call)\nparams = await app.init_exchange(\n    -1001185324811,\n    config,\n    g_a_hash,\n)"
     },
     "details": {
-      "signature": "async NTgCalls.init_exchange()",
       "sections": [
         {
           "title": "PARAMETERS",
@@ -3546,7 +3545,8 @@
             }
           ]
         }
-      ]
+      ],
+      "signature": "async NTgCalls.init_exchange()"
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Basic Methods/Init Exchange"
   },
@@ -3560,7 +3560,6 @@
       "code": "from ntgcalls import NTgCalls\n...\n\napp = NTgCalls()\n...\n\nawait app.init_presentation(\n    -1001185324811,\n)"
     },
     "details": {
-      "signature": "async NTgCalls.init_presentation()",
       "sections": [
         {
           "title": "PARAMETERS",
@@ -3586,7 +3585,8 @@
             }
           ]
         }
-      ]
+      ],
+      "signature": "async NTgCalls.init_presentation()"
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Basic Methods/Init Presentation"
   },
@@ -3600,7 +3600,6 @@
       "code": "from ntgcalls import NTgCalls\n...\n\nencryption_key = ... # Obtain the encryption key\napp = NTgCalls()\nawait app.skip_exchange(\n    -1001185324811,\n    encryption_key,\n    True,\n)"
     },
     "details": {
-      "signature": "async NTgCalls.skip_exchange()",
       "sections": [
         {
           "title": "PARAMETERS",
@@ -3647,7 +3646,8 @@
             }
           ]
         }
-      ]
+      ],
+      "signature": "async NTgCalls.skip_exchange()"
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Basic Methods/Skip Exchange"
   },
@@ -3661,7 +3661,6 @@
       "code": "from ntgcalls import NTgCalls\n...\n\napp = NTgCalls()\n...\n\nawait app.stop_presentation(\n    -1001185324811,\n)"
     },
     "details": {
-      "signature": "async NTgCalls.stop_presentation()",
       "sections": [
         {
           "title": "PARAMETERS",
@@ -3687,7 +3686,8 @@
             }
           ]
         }
-      ]
+      ],
+      "signature": "async NTgCalls.stop_presentation()"
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Basic Methods/Stop Presentation"
   },
@@ -3701,7 +3701,6 @@
       "code": "from ntgcalls import NTgCalls\n...\n\napp = NTgCalls()\n...\n\nawait app.stop(\n    -1001185324811,\n)"
     },
     "details": {
-      "signature": "async NTgCalls.stop()",
       "sections": [
         {
           "title": "PARAMETERS",
@@ -3727,7 +3726,8 @@
             }
           ]
         }
-      ]
+      ],
+      "signature": "async NTgCalls.stop()"
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Basic Methods/Stop"
   },
@@ -3741,7 +3741,6 @@
       "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uintptr_t ptr = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    char* params = ...;  // Obtain connection parameters\n    ntg_async_struct future;\n    // Initialize the async struct\n    int result = ntg_connect(ptr, chatID, params, False, &future);\n    // Wait for the async operation to complete\n    ...\n    return 0;\n}"
     },
     "details": {
-      "signature": "int ntg_connect()",
       "sections": [
         {
           "title": "PARAMETERS",
@@ -3788,7 +3787,8 @@
             }
           ]
         }
-      ]
+      ],
+      "signature": "int ntg_connect()"
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Basic Methods/ntg_connect"
   },
@@ -3802,7 +3802,6 @@
       "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uintptr_t ptr = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    ntg_rtc_server_struct* rtcServers = ...; // Obtain the RTC servers\n    int rtcServersCount = ...; // Obtain the count of RTC servers\n    char** libraryVersions = ...; // Obtain the library versions\n    int libraryVersionCount = ...; // Obtain the count of library versions\n    bool p2pAllowed = ...; // Obtain whether P2P is allowed\n    ntg_async_struct future;\n    // Initialize the async struct\n    int result = ntg_connect_p2p(\n        ptr,\n        chatID,\n        rtcServers,\n        rtcServersCount,\n        libraryVersions,\n        libraryVersionCount,\n        p2pAllowed,\n        &future\n    );\n    // Wait for the async operation to complete\n}"
     },
     "details": {
-      "signature": "int ntg_connect_p2p()",
       "sections": [
         {
           "title": "PARAMETERS",
@@ -3877,7 +3876,8 @@
             }
           ]
         }
-      ]
+      ],
+      "signature": "int ntg_connect_p2p()"
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Basic Methods/ntg_connect_p2p"
   },
@@ -3891,7 +3891,6 @@
       "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uintptr_t ptr = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    char* buffer;\n    ntg_async_struct future;\n    // Initialize the async struct\n    int result = ntg_create(ptr, chatID, &buffer);\n    // Wait for the async operation to complete and\n    // use 'buffer' for JoinGroupCall\n    return 0;\n}"
     },
     "details": {
-      "signature": "int ntg_create()",
       "sections": [
         {
           "title": "PARAMETERS",
@@ -3924,7 +3923,8 @@
             }
           ]
         }
-      ]
+      ],
+      "signature": "int ntg_create()"
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Basic Methods/ntg_create"
   },
@@ -3938,7 +3938,6 @@
       "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uintptr_t ptr = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    ntg_async_struct future;\n    // Initialize the async struct\n    int result = ntg_create_p2p(\n        ptr,\n        chatID,\n        &future\n    );\n    // Wait for the async operation to complete\n    return 0;\n}"
     },
     "details": {
-      "signature": "int ntg_create_p2p()",
       "sections": [
         {
           "title": "PARAMETERS",
@@ -3964,7 +3963,8 @@
             }
           ]
         }
-      ]
+      ],
+      "signature": "int ntg_create_p2p()"
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Basic Methods/ntg_create_p2p"
   },
@@ -3978,7 +3978,6 @@
       "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uintptr_t ptr = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    uint8_t* g_a_or_b = ...; // Obtain the parameter for key exchange\n    int sizeGAOrB = ...; // Obtain the size of the parameter for key exchange\n    int64_t fingerprint = ...; // Obtain the fingerprint\n    ntg_auth_params_struct buffer;\n    // Initialize the async struct\n    ntg_async_struct future;\n    int result = ntg_exchange_keys(ptr, chatID, g_a_or_b, sizeGAOrB, fingerprint, &buffer, &future);\n    // Wait for the async operation to complete\n}"
     },
     "details": {
-      "signature": "int ntg_exchange_keys()",
       "sections": [
         {
           "title": "PARAMETERS",
@@ -4039,7 +4038,8 @@
             }
           ]
         }
-      ]
+      ],
+      "signature": "int ntg_exchange_keys()"
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Basic Methods/ntg_exchange_keys"
   },
@@ -4053,7 +4053,6 @@
       "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uintptr_t ptr = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    ntg_dh_config_struct dhConfig = ...; // Obtain the DH configuration\n    uint8_t* g_a_hash = ...; // Parameter for key exchange (Only when is incoming call)\n    int sizeG_A_Hash = ...; // Size of the parameter for key exchange (Only when is incoming call)\n    uint8_t* buffer[32];\n    // Initialize the async struct\n    ntg_async_struct future;\n    int result = ntg_init_exchange(\n        ptr,\n        chatID,\n        &dhConfig,\n        g_a_hash,\n        sizeG_A_Hash,\n        buffer,\n        sizeof(buffer),\n        &future\n    );\n    // Wait for the async operation to complete\n}"
     },
     "details": {
-      "signature": "int ntg_init_exchange()",
       "sections": [
         {
           "title": "PARAMETERS",
@@ -4121,7 +4120,8 @@
             }
           ]
         }
-      ]
+      ],
+      "signature": "int ntg_init_exchange()"
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Basic Methods/ntg_init_exchange"
   },
@@ -4135,7 +4135,6 @@
       "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uintptr_t ptr = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    // Initialize the async struct\n    ntg_async_struct future;\n    ntg_init_presentation(ptr, chatID, &future);\n    // Wait for the async operation to complete\n}"
     },
     "details": {
-      "signature": "int ntg_init_presentation()",
       "sections": [
         {
           "title": "PARAMETERS",
@@ -4168,7 +4167,8 @@
             }
           ]
         }
-      ]
+      ],
+      "signature": "int ntg_init_presentation()"
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Basic Methods/ntg_init_presentation"
   },
@@ -4182,7 +4182,6 @@
       "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uintptr_t ptr = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    uint8_t* encryption_key = ... # Obtain the encryption key\n    int size = ...; // Obtain the size of the encryption key\n    // Initialize the async struct\n    ntg_async_struct future;\n    ntg_skip_exchange(ptr, chatID, encryption_key, size, False, &future);\n    // Wait for the async operation to complete\n}"
     },
     "details": {
-      "signature": "int ntg_skip_exchange()",
       "sections": [
         {
           "title": "PARAMETERS",
@@ -4236,7 +4235,8 @@
             }
           ]
         }
-      ]
+      ],
+      "signature": "int ntg_skip_exchange()"
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Basic Methods/ntg_skip_exchange"
   },
@@ -4250,7 +4250,6 @@
       "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uintptr_t ptr = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    char* params = ...;  // Obtain connection parameters\n    ntg_async_struct future;\n    // Initialize the async struct\n    int result = ntg_stop(ptr, chatID);\n    // Wait for the async operation to complete\n    return 0;\n}"
     },
     "details": {
-      "signature": "int ntg_stop()",
       "sections": [
         {
           "title": "PARAMETERS",
@@ -4276,7 +4275,8 @@
             }
           ]
         }
-      ]
+      ],
+      "signature": "int ntg_stop()"
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Basic Methods/ntg_stop"
   },
@@ -4290,7 +4290,6 @@
       "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uintptr_t ptr = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    // Initialize the async struct\n    ntg_async_struct future;\n    ntg_stop_presentation(ptr, chatID, &future);\n    // Wait for the async operation to complete\n}"
     },
     "details": {
-      "signature": "int ntg_stop_presentation()",
       "sections": [
         {
           "title": "PARAMETERS",
@@ -4316,24 +4315,27 @@
             }
           ]
         }
-      ]
+      ],
+      "signature": "int ntg_stop_presentation()"
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Basic Methods/ntg_stop_presentation"
   },
   "/NTgCalls/Build Guide.xml": {
     "title": "Introduction",
     "lib": "NTgCalls",
-    "kind": "info",
-    "description": "Being a modern library,",
+    "kind": "misc",
+    "description": "Being a modern library, Below, we will guide you through the step-by-step process of installing the prerequisites\n        required to compile NTgCalls on your operating system.        In this section, you'll learn how to clone the NTgCalls repository and build the library from source. To begin building NTgCalls from source, you need to clone the GitHub repository. Follow these steps to clone the repo:   Now that you have successfully installed all the required prerequisites for NTgCalls,\n            it's time to build the library.\n            Follow these steps to compile NTgCalls on your system. For developers looking to use NTgCalls with C and C++, we provide C Bindings.\n                Follow these steps to compile NTgCalls with C Bindings in either Release or Debug mode:   NTgCalls offers Python Bindings, facilitating seamless integration with Python.\n                Follow these steps to compile NTgCalls with Python Bindings:   NTgCalls offers Java for Android Bindings, facilitating seamless integration with Java for Android.\n                Follow these steps to compile NTgCalls with Java for Android Bindings:",
     "example": {},
-    "details": {},
+    "details": {
+      "signature": null
+    },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Build Guide"
   },
   "/NTgCalls/Callback Registration.xml": {
     "title": "Callback Registration",
     "lib": "NTgCalls",
-    "kind": "info",
-    "description": "When registering callbacks, keep in mind that each registration replaces the previously set callback.",
+    "kind": "misc",
+    "description": "Callbacks registration allows you to specify custom functions to be executed when specific\n        events occur or conditions are met within your application.\n        These events might include changes in call status, media state updates, or other critical moments in\n        the NTgCalls library's operation. When registering callbacks, keep in mind that each registration replaces the previously set callback. Callback for handling when a stream playback ends. When a stream ends, this callback will be triggered. uintptr_t ptr\nThe pointer to the NTgCalls instance. The callback function to be executed when the stream ends. void* userData\nCustom data that can be passed to the callback function. Callback for handling when is needed to update GroupCall MTProto Configurations. uintptr_t ptr\nThe pointer to the NTgCalls instance. The callback function to be executed when the stream needs to update MTProto stream parameters. void* userData\nCustom data that can be passed to the callback function. Callback to listen for when the WebRTC connection has changed his state. uintptr_t ptr\nThe pointer to the NTgCalls instance. The callback function to be executed when the connection state changes. void* userData\nCustom data that can be passed to the callback function. Callback for handling when a signaling message is received. uintptr_t ptr\nThe pointer to the NTgCalls instance. The callback function to be executed when signaling data is received. void* userData\nCustom data that can be passed to the callback function. Callback for handling when a group of frames is received. uintptr_t ptr\nThe pointer to the NTgCalls instance. Callback function to be executed when frames are received. void* userData\nCustom data that can be passed to the callback function. Callback for handling when the remote source changes. uintptr_t ptr\nThe pointer to the NTgCalls instance. Callback function to be executed when a remote source is added or removed. void* userData\nCustom data that can be passed to the callback function. Register a logger for the library, this logger will be used for all instances. Callback for logging messages. Callback for handling when a broadcast stream part is being requested. uintptr_t ptr\nThe pointer to the NTgCalls instance. Callback function to be executed when a broadcast part is requested. void* userData\nCustom data that can be passed to the callback function. Callback for handling when the broadcast timestamp is being requested. uintptr_t ptr\nThe pointer to the NTgCalls instance. Callback function to be executed when the broadcast timestamp is requested. void* userData\nCustom data that can be passed to the callback function.",
     "example": {},
     "details": {
       "sections": [
@@ -4609,15 +4611,16 @@
             }
           ]
         }
-      ]
+      ],
+      "signature": null
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Callback Registration"
   },
   "/NTgCalls/Callbacks.xml": {
     "title": "Callbacks",
     "lib": "NTgCalls",
-    "kind": "info",
-    "description": "When registering callbacks, keep in mind that each registration replaces the previously set callback.",
+    "kind": "misc",
+    "description": "Callbacks allows you to define custom behavior or actions that should be triggered in response to specific\n        events or conditions within your application.\n        These events could include call-related occurrences, state changes, or other interactions with the NTgCalls library. When registering callbacks, keep in mind that each registration replaces the previously set callback. Callback for handling when a stream playback ends. When a stream ends, this callback will be triggered. Callback for handling when is needed to update GroupCall MTProto Configurations. Callback to listen for when the WebRTC connection has changed his state. Callback for handling when a signaling message is received. Callback for handling when a group of frames is received. Callback for handling when the remote source changes. Callback for handling when a broadcast stream part is being requested. Callback for handling when the broadcast timestamp is being requested.",
     "example": {},
     "details": {
       "sections": [
@@ -4717,15 +4720,16 @@
             }
           ]
         }
-      ]
+      ],
+      "signature": null
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Callbacks"
   },
   "/NTgCalls/Client.xml": {
     "title": "NTgCalls Client",
     "lib": "NTgCalls",
-    "kind": "info",
-    "description": "Welcome to the API Reference section, where you'll find comprehensive information about the NTgCalls API.\n        This is your gateway to in-depth details about the main Client class, its methods, types,\n        all of which play a crucial role in utilizing NTgCalls effectively.",
+    "kind": "misc",
+    "description": "Welcome to the API Reference section, where you'll find comprehensive information about the NTgCalls API.\n        This is your gateway to in-depth details about the main Client class, its methods, types,\n        all of which play a crucial role in utilizing NTgCalls effectively. The NTgCalls Client is your primary interface for seamless interaction with Group Calls. Get a list of all calls. Get an estimate of the CPU usage of the current process. Return \"pong\" message when calling this method This method allows getting the protocol for a Private Call connection with the output params for Telegram constructor\n      PhoneCallProtocol. This method allows getting all the available media devices, such as microphones and cameras. Enable the GLib main loop to allow the library to use it for PipeWire on OSes that uses Wayland. Enable or disable the GLib main loop.",
     "example": {
       "language": "python",
       "code": "from ntgcalls import NTgCalls\n\napp = NTgCalls()\nprint(app.ping())"
@@ -4803,15 +4807,16 @@
             }
           ]
         }
-      ]
+      ],
+      "signature": null
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Client"
   },
   "/NTgCalls/Getting Started.xml": {
     "title": "Getting Started",
     "lib": "NTgCalls",
-    "kind": "info",
-    "description": "This section provides documentation for the NTgCalls C API, which allows you to use NTgCalls in various programming languages,\n        including C, C++, Go, Rust, Deno, and more.\n        Below, you will find detailed information about the initialization and cleanup functions.",
+    "kind": "misc",
+    "description": "This section provides documentation for the NTgCalls C API, which allows you to use NTgCalls in various programming languages,\n        including C, C++, Go, Rust, Deno, and more.\n        Below, you will find detailed information about the initialization and cleanup functions. To get started with NTgCalls in your application, you need to initialize the library using the To clean up and release the resources used by NTgCalls, you should call the You can retrieve the version of the NTgCalls library currently in use using the Retrieve library version A character buffer to store the version string.",
     "example": {},
     "details": {
       "sections": [
@@ -4827,17 +4832,20 @@
             }
           ]
         }
-      ]
+      ],
+      "signature": null
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Getting Started"
   },
   "/NTgCalls/Quick Start.xml": {
     "title": "Quick Start",
     "lib": "NTgCalls",
-    "kind": "info",
-    "description": "Welcome to this section, which is primarily intended for developers who are moderately experienced or\n        seeking to perform a porting in their language using C bindings. If you are new to Python development,\n        we strongly recommend using",
+    "kind": "misc",
+    "description": "Welcome to this section, which is primarily intended for developers who are moderately experienced or\n        seeking to perform a porting in their language using C bindings. If you are new to Python development,\n        we strongly recommend using Looking for real-world implementations? Below is a selection of bots actively maintained and recommended\n        by the community, all using NTgCalls/Py-TgCalls under the hood. These can be a great source of inspiration or even\n        a solid starting point for your own project. In the following section, we present a comprehensive catalog of libraries,\n        thoughtfully crafted by the community and officially endorsed,\n        all of which leverage the robust capabilities of NTgCalls. What we've just seen are simplified ports of NTgCalls. However, now let's delve deeper!\n        In the upcoming pages, we'll explore NTgCalls in a step-by-step manner,\n        covering how it functions, how to install it, and more.\n\n        Are you feeling eager to continue?\n        You can take a shortcut to the Call Methods\n        section and return later to delve into more details.",
     "example": {},
-    "details": {},
+    "details": {
+      "signature": null
+    },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Quick Start"
   },
   "/NTgCalls/Stream Methods/Mute.xml": {
@@ -4850,7 +4858,6 @@
       "code": "from ntgcalls import NTgCalls\n...\n\napp = NTgCalls()\n...\n\nawait app.mute(\n    -1001185324811,\n)"
     },
     "details": {
-      "signature": "async NTgCalls.mute() -> bool",
       "sections": [
         {
           "title": "PARAMETERS",
@@ -4876,7 +4883,8 @@
             }
           ]
         }
-      ]
+      ],
+      "signature": "async NTgCalls.mute() -> bool"
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Stream Methods/Mute"
   },
@@ -4890,7 +4898,6 @@
       "code": "from ntgcalls import NTgCalls\n...\n\napp = NTgCalls()\n...\n\nawait app.pause(\n    -1001185324811,\n)"
     },
     "details": {
-      "signature": "async NTgCalls.pause() -> bool",
       "sections": [
         {
           "title": "PARAMETERS",
@@ -4916,7 +4923,8 @@
             }
           ]
         }
-      ]
+      ],
+      "signature": "async NTgCalls.pause() -> bool"
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Stream Methods/Pause"
   },
@@ -4930,7 +4938,6 @@
       "code": "from ntgcalls import NTgCalls\n...\n\napp = NTgCalls()\n...\n\nawait app.resume(\n    -1001185324811,\n)"
     },
     "details": {
-      "signature": "async NTgCalls.resume() -> bool",
       "sections": [
         {
           "title": "PARAMETERS",
@@ -4956,7 +4963,8 @@
             }
           ]
         }
-      ]
+      ],
+      "signature": "async NTgCalls.resume() -> bool"
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Stream Methods/Resume"
   },
@@ -4970,7 +4978,6 @@
       "code": "from ntgcalls import NTgCalls\nfrom ntgcalls import StreamMode\nfrom ntgcalls import MediaDescription\nfrom ntgcalls import AudioDescription\n...\n\napp = NTgCalls()\n\nawait app.set_stream_sources(\n    -1001185324811,\n    StreamMode.CAPTURE,\n    MediaDescription(\n        AudioDescription(\n            media_source=MediaSource.File,\n            input=\"foxes.pcm\",\n            sample_rate=96000,\n            bits_per_sample=16,\n            channel_count=2,\n        ),\n    )\n)"
     },
     "details": {
-      "signature": "async NTgCalls.set_stream_sources()",
       "sections": [
         {
           "title": "PARAMETERS",
@@ -5010,7 +5017,8 @@
             }
           ]
         }
-      ]
+      ],
+      "signature": "async NTgCalls.set_stream_sources()"
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Stream Methods/Set Stream Sources"
   },
@@ -5024,7 +5032,6 @@
       "code": "from ntgcalls import NTgCalls\n...\n\napp = NTgCalls(client)\n\nprint(\n    await app.time(\n        -1001185324811,\n    )\n)"
     },
     "details": {
-      "signature": "async NTgCalls.time() -> int",
       "sections": [
         {
           "title": "PARAMETERS",
@@ -5057,7 +5064,8 @@
             }
           ]
         }
-      ]
+      ],
+      "signature": "async NTgCalls.time() -> int"
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Stream Methods/Time"
   },
@@ -5071,7 +5079,6 @@
       "code": "from ntgcalls import NTgCalls\n...\n\napp = NTgCalls()\n...\n\nawait app.unmute(\n    -1001185324811,\n)"
     },
     "details": {
-      "signature": "async NTgCalls.unmute() -> bool",
       "sections": [
         {
           "title": "PARAMETERS",
@@ -5097,7 +5104,8 @@
             }
           ]
         }
-      ]
+      ],
+      "signature": "async NTgCalls.unmute() -> bool"
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Stream Methods/UnMute"
   },
@@ -5111,7 +5119,6 @@
       "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uintptr_t ptr = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    ntg_async_struct future;\n    // Initialize the async struct\n    int errCode = ntg_mute(ptr, chatID, &future);\n    // Wait for the async operation to complete\n    if (future.errorCode == 0) {\n        printf(\"Audio muted.\\n\");\n    } else if (future.errorCode == 1) {\n        printf(\"Audio was already muted.\\n\");\n    } else {\n        printf(\"Failed to mute audio (Error code: %d).\\n\", future.errorCode);\n        return 1;\n    }\n    ... // Your Code Here\n    return 0;\n}"
     },
     "details": {
-      "signature": "int ntg_mute()",
       "sections": [
         {
           "title": "PARAMETERS",
@@ -5137,7 +5144,8 @@
             }
           ]
         }
-      ]
+      ],
+      "signature": "int ntg_mute()"
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Stream Methods/ntg_mute"
   },
@@ -5151,7 +5159,6 @@
       "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uintptr_t ptr = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    ntg_async_struct future;\n    // Initialize the async struct\n    int errCode = ntg_pause(ptr, chatID);\n    // Wait for the async operation to complete\n    if (future.errorCode == 0) {\n        printf(\"Audio paused.\\n\");\n    } else if (future.errorCode == 1) {\n        printf(\"Audio was already paused.\\n\");\n    } else {\n        printf(\"Failed to pause audio (Error code: %d).\\n\", result);\n        return 1;\n    }\n    ... // Your Code Here\n    return 0;\n}"
     },
     "details": {
-      "signature": "int ntg_pause()",
       "sections": [
         {
           "title": "PARAMETERS",
@@ -5177,7 +5184,8 @@
             }
           ]
         }
-      ]
+      ],
+      "signature": "int ntg_pause()"
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Stream Methods/ntg_pause"
   },
@@ -5191,7 +5199,6 @@
       "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uintptr_t ptr = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    ntg_async_struct future;\n    // Initialize the async struct\n    int errCode = ntg_resume(ptr, chatID, &future);\n    // Wait for the async operation to complete\n    if (future.errorCode == 0) {\n        printf(\"Audio resumed.\\n\");\n    } else if (future.errorCode == 1) {\n        printf(\"Audio was already resumed.\\n\");\n    } else {\n        printf(\"Failed to resume audio (Error code: %d).\\n\", result);\n        return 1;\n    }\n    ... // Your Code Here\n    return 0;\n}"
     },
     "details": {
-      "signature": "int ntg_resume()",
       "sections": [
         {
           "title": "PARAMETERS",
@@ -5217,7 +5224,8 @@
             }
           ]
         }
-      ]
+      ],
+      "signature": "int ntg_resume()"
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Stream Methods/ntg_resume"
   },
@@ -5231,7 +5239,6 @@
       "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uintptr_t ptr = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    ntg_media_description_struct desc = {\n        // Fill in updated media description fields\n    };\n    ntg_async_struct future;\n    // Initialize the async struct\n    int result = ntg_set_stream_sources(ptr, chatID, NTG_STREAM_CAPTURE, desc, &future);\n    // Wait for the async operation to complete\n    return 0;\n}"
     },
     "details": {
-      "signature": "int ntg_set_stream_sources()",
       "sections": [
         {
           "title": "PARAMETERS",
@@ -5257,7 +5264,8 @@
             }
           ]
         }
-      ]
+      ],
+      "signature": "int ntg_set_stream_sources()"
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Stream Methods/ntg_set_stream_sources"
   },
@@ -5271,7 +5279,6 @@
       "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uintptr_t ptr = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    int64_t time = 0;\n    ntg_async_struct future;\n    // Initialize the async struct\n    int64_t result = ntg_time(ptr, chatID, NTG_STREAM_CAPTURE, &time, &future);\n    // Wait for the async operation to complete\n    return 0;\n}"
     },
     "details": {
-      "signature": "int ntg_time()",
       "sections": [
         {
           "title": "PARAMETERS",
@@ -5304,7 +5311,8 @@
             }
           ]
         }
-      ]
+      ],
+      "signature": "int ntg_time()"
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Stream Methods/ntg_time"
   },
@@ -5318,7 +5326,6 @@
       "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uintptr_t ptr = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    ntg_async_struct future;\n    // Initialize the async struct\n    int errCode = ntg_unmute(ptr, chatID, &future);\n    // Wait for the async operation to complete\n    if (future.errorCode == 0) {\n        printf(\"Audio unmuted.\\n\");\n    } else if (future.errorCode == 1) {\n        printf(\"Audio was already unmuted.\\n\");\n    } else {\n        printf(\"Failed to unmute audio (Error code: %d).\\n\", future.errorCode);\n        return 1;\n    }\n    ... // Your Code Here\n    return 0;\n}"
     },
     "details": {
-      "signature": "int ntg_unmute()",
       "sections": [
         {
           "title": "PARAMETERS",
@@ -5344,20 +5351,23 @@
             }
           ]
         }
-      ]
+      ],
+      "signature": "int ntg_unmute()"
     },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Stream Methods/ntg_unmute"
   },
   "/NTgCalls/Using Async.xml": {
     "title": "Using Async",
     "lib": "NTgCalls",
-    "kind": "info",
-    "description": "NTgCalls starting from version 1.2.0 supports asynchronous calls to function using",
+    "kind": "misc",
+    "description": "NTgCalls starting from version 1.2.0 supports asynchronous calls to function using To make an async call in a sync way, you can use a mutex to wait for the operation to complete: You can pass custom data to the async call by using the",
     "example": {
       "language": "cpp",
       "code": "#include <ntgcalls.h>\n#include <mutex>\n\nvoid onCallReady(void* data) {\n    ((std::mutex*)data)->unlock();\n}\n\nvoid makeAsyncCall() {\n    ntg_async_struct asyncData;\n    std::mutex mtx;\n    asyncData.userData = &mtx;\n    asyncData.promise = onCallReady;\n    mtx.lock();\n    int error = ntg_pause(asyncData);\n    if (error != 0) {\n        // Handle error\n    }\n    mtx.lock();\n    // Async operation completed\n    if (asyncData.errorCode != 0) {\n        // Handle Async error\n    }\n}"
     },
-    "details": {},
+    "details": {
+      "signature": null
+    },
     "doc_url": "https://pytgcalls.github.io/NTgCalls/Using Async"
   },
   "/PyTgCalls/Advanced Methods/Change Volume Call.xml": {
@@ -5370,7 +5380,6 @@
       "code": "from pytgcalls import Client\nfrom pytgcalls import idle\n...\n\napp = PyTgCalls(client)\napp.start()\n\n...  # Call API methods\n\napp.change_volume_call(\n    -1001185324811,\n    175,\n)\n\nidle()"
     },
     "details": {
-      "signature": "PyTgCalls.change_volume_call()",
       "sections": [
         {
           "title": "PARAMETERS",
@@ -5403,7 +5412,8 @@
             }
           ]
         }
-      ]
+      ],
+      "signature": "PyTgCalls.change_volume_call()"
     },
     "doc_url": "https://pytgcalls.github.io/PyTgCalls/Advanced Methods/Change Volume Call"
   },
@@ -5417,7 +5427,6 @@
       "code": "from pytgcalls import Client\nfrom pytgcalls import idle\n...\n\napp = PyTgCalls(client)\napp.start()\n\n...  # Call API methods\n\napp.get_participants(\n    -1001185324811,\n)\n\nidle()"
     },
     "details": {
-      "signature": "PyTgCalls.get_participants() -> list[GroupCallParticipant]",
       "sections": [
         {
           "title": "PARAMETERS",
@@ -5443,7 +5452,8 @@
             }
           ]
         }
-      ]
+      ],
+      "signature": "PyTgCalls.get_participants() -> list[GroupCallParticipant]"
     },
     "doc_url": "https://pytgcalls.github.io/PyTgCalls/Advanced Methods/Get Participants"
   },
@@ -5457,7 +5467,6 @@
       "code": "from pytgcalls import PyTgCalls\nfrom pytgcalls import Device\nfrom pytgcalls.types import Frame\nfrom datetime import datetime\n...\n\napp = PyTgCalls()\n...\npcm16_le_data = ...\n\napp.send_frame(\n    -1001185324811,\n    Device.MICROPHONE,\n    pcm16_le_data,\n    Frame.Info(\n        int(datetime.now().timestamp()),\n    )\n)"
     },
     "details": {
-      "signature": "PyTgCalls.send_frame()",
       "sections": [
         {
           "title": "PARAMETERS",
@@ -5504,7 +5513,8 @@
             }
           ]
         }
-      ]
+      ],
+      "signature": "PyTgCalls.send_frame()"
     },
     "doc_url": "https://pytgcalls.github.io/PyTgCalls/Advanced Methods/Send Frame"
   },
@@ -6343,7 +6353,6 @@
       "code": "from pytgcalls import Client\nfrom pytgcalls import idle\n...\n\napp = PyTgCalls(client)\napp.start()\n\n...  # Call API methods\n\napp.leave_call(\n    -1001185324811,\n)\n\nidle()"
     },
     "details": {
-      "signature": "PyTgCalls.leave_call()",
       "sections": [
         {
           "title": "PARAMETERS",
@@ -6376,7 +6385,8 @@
             }
           ]
         }
-      ]
+      ],
+      "signature": "PyTgCalls.leave_call()"
     },
     "doc_url": "https://pytgcalls.github.io/PyTgCalls/Basic Methods/Leave Call"
   },
@@ -6390,7 +6400,6 @@
       "code": "from pytgcalls import Client\nfrom pytgcalls import idle\n...\napp = Client(client)\n\n...  # Call API decorators / MtProto decorators\n\napp.run()"
     },
     "details": {
-      "signature": "PyTgCalls.run()",
       "sections": [
         {
           "title": "RAISES",
@@ -6404,7 +6413,8 @@
             }
           ]
         }
-      ]
+      ],
+      "signature": "PyTgCalls.run()"
     },
     "doc_url": "https://pytgcalls.github.io/PyTgCalls/Basic Methods/Run"
   },
@@ -6418,7 +6428,6 @@
       "code": "from pytgcalls import Client\nfrom pytgcalls import idle\n...\napp = Client(client)\n\n...  # Call API decorators / MTProto decorators\n\napp.start()"
     },
     "details": {
-      "signature": "PyTgCalls.start()",
       "sections": [
         {
           "title": "RAISES",
@@ -6432,7 +6441,8 @@
             }
           ]
         }
-      ]
+      ],
+      "signature": "PyTgCalls.start()"
     },
     "doc_url": "https://pytgcalls.github.io/PyTgCalls/Basic Methods/Start"
   },
@@ -6445,14 +6455,16 @@
       "language": "python",
       "code": "from pytgcalls import PyTgCalls\nfrom pytgcalls import idle\n...\napi_id = 12345\napi_hash = '0123456789abcdef0123456789abcdef'\n...\napp = PyTgCalls(client)\napp.start()\napp.play(\n    -1001185324811,\n    'http://docs.evostream.com/sample_content/assets/sintel1m720p.mp4',\n)\nidle()"
     },
-    "details": {},
+    "details": {
+      "signature": null
+    },
     "doc_url": "https://pytgcalls.github.io/PyTgCalls/Calling Methods"
   },
   "/PyTgCalls/Changelogs.xml": {
     "title": "Changelogs",
     "lib": "PyTgCalls",
-    "kind": "info",
-    "description": "",
+    "kind": "misc",
+    "description": "Bug Fixes: Addressed various bugs for a more stable experience. Now the The repository Now the Some media management methods were renamed, for example, for example To retrieve the current call status, use the Now the Removed Bug Fixes: Addressed various bugs for a more stable experience.  Bug Fixes: Addressed various bugs for a more stable experience. Now methods like Now all listeners like Reworked Removed Removed all legacy types and input stream, now is a mandatory to use Now Removed Renamed Moved Now Renamed For more info about breaking changes, check the We're pleased to announce that now is available an unofficial porting of NTgCalls for Rust, for more info, check the Bug Fixes: Addressed various bugs for a more stable experience. Now all raw methods like AudioParameters, VideoParameters, AudioStream, VideoStream, and Stream are all under The exception class We're pleased to announce that pre-compiled wheels optimized for ARM64 devices are now available. Encourage upvotes by reposting this message in your channels. The bot with the highest upvotes earns a prestigious place in the PyTgCalls documentation. Make sure your repository goes beyond minor tweaks of a fork. Use the Your repository should be public. Join the contest now and showcase your PyTgCalls-powered bot for a chance to be featured prominently on the PyTgCalls documentation! Good luck! Bug Fixes: Addressed various bugs for a more stable experience. As we said in the last post,\n                now PyTgCalls AudioImagePiped AudioPiped AudioVideoPiped CaptureAudioDevice CaptureAVDesktop CaptureAVDeviceDesktop CaptureVideoDesktop VideoPiped Bug Fixes: Addressed various bugs for a more stable experience.   As we know, Google is in charge of financing Python.\n                Due to the recent events with the Bug Fixes: Addressed various bugs for a more stable experience. Bug Fixes: Addressed various bugs for a more stable experience.",
     "example": {},
     "details": {
       "sections": [
@@ -6552,15 +6564,16 @@
             }
           ]
         }
-      ]
+      ],
+      "signature": null
     },
     "doc_url": "https://pytgcalls.github.io/PyTgCalls/Changelogs"
   },
   "/PyTgCalls/Client.xml": {
     "title": "PyTgCalls Client",
     "lib": "PyTgCalls",
-    "kind": "info",
-    "description": "You now are in the API Reference section. Here you can find detailed information about PyTgCalls API:\n        the main Client class, all available methods, types, attributes and decorators detailed descriptions can be found starting from this page.\n\n        This page is about the Client class, which exposes high-level methods for easy access to the API.",
+    "kind": "misc",
+    "description": "You now are in the API Reference section. Here you can find detailed information about PyTgCalls API:\n        the main Client class, all available methods, types, attributes and decorators detailed descriptions can be found starting from this page.\n\n        This page is about the Client class, which exposes high-level methods for easy access to the API. PyTgCalls Client, the main tool for interacting with Telegram Calls. Pass the MTProto Client Cache duration of a Full Chat query Get a list of all calls. Get all group calls Get all private calls pyrogram.InputPeer\ntelethon.InputPeer\nhydrogram.InputPeer Get current Telegram user Ping of NTgCalls core Get the MTProto client Get the CPU usage of the current process You set an invalid MTProto client.",
     "example": {
       "language": "python",
       "code": "from pytgcalls import PyTgCalls\n\napp = PyTgCalls(client)\napp.start()"
@@ -6664,15 +6677,16 @@
             }
           ]
         }
-      ]
+      ],
+      "signature": null
     },
     "doc_url": "https://pytgcalls.github.io/PyTgCalls/Client"
   },
   "/PyTgCalls/Custom Api.xml": {
     "title": "Custom API",
     "lib": "PyTgCalls",
-    "kind": "info",
-    "description": "You now are in the API Reference section where you can find detailed information about the Custom API:\n        the Front-end API class, all available methods, types, attributes and decorators detailed descriptions can be found starting from this page.\n\n        This page is about the CustomAPI class, which exposes high-level methods for easy access to the API.",
+    "kind": "misc",
+    "description": "You now are in the API Reference section where you can find detailed information about the Custom API:\n        the Front-end API class, all available methods, types, attributes and decorators detailed descriptions can be found starting from this page.\n\n        This page is about the CustomAPI class, which exposes high-level methods for easy access to the API. CustomApi, the main means host the local http api server. CustomApi port of the http server This method starts the internal http webserver, this is helpful if you need an API interface to PyTgCalls.",
     "example": {
       "language": "python",
       "code": "from pytgcalls import CustomApi\n\napi = CustomApi()\n\n@api.on_update_custom_api()\nasync def custom_api_request(request: dict):\n    print(request)\n    return {\n        'response': 'FOXES',\n    }\napi.start()"
@@ -6715,21 +6729,21 @@
             }
           ]
         }
-      ]
+      ],
+      "signature": null
     },
     "doc_url": "https://pytgcalls.github.io/PyTgCalls/Custom Api"
   },
   "/PyTgCalls/Decorators.xml": {
     "title": "Decorators",
     "lib": "PyTgCalls",
-    "kind": "info",
-    "description": "While still being methods bound to the",
+    "kind": "misc",
+    "description": "While still being methods bound to the Decorator for handling all incoming updates.\n                When any update is received, this decorator will be triggered. Decorator for handling incoming HTTP events. You have set too many decorators.",
     "example": {
       "language": "python",
       "code": "from pytgcalls import PyTgCalls\nfrom pytgcalls.types import Update\nfrom pytgcalls import filters as call_filters\n...\nclient = # Here Your MTProto Client\napp = PyTgCalls(client)\n\n@app.on_update(call_filters.stream_end())\nasync def handler(client: PyTgCalls, update: Update):\n    print(update)\n\napp.run()"
     },
     "details": {
-      "signature": "@CustomApi.on_update_custom_api()",
       "sections": [
         {
           "title": "",
@@ -6743,24 +6757,27 @@
             }
           ]
         }
-      ]
+      ],
+      "signature": "@CustomApi.on_update_custom_api()"
     },
     "doc_url": "https://pytgcalls.github.io/PyTgCalls/Decorators"
   },
   "/PyTgCalls/Examples.xml": {
     "title": "Examples",
     "lib": "PyTgCalls",
-    "kind": "info",
+    "kind": "misc",
     "description": "This page contains example scripts to demonstrate how PyTgCalls looks like.\n\n        Every script is working right away (assuming you correctly set up your credentials), meaning you can simply copy-paste them\n        and run. The only things you have to modify are session names and target chats, where applicable.\n\n        The examples listed below can be treated as building blocks for your own applications and are designed to be simple enough\n        to give you a basic idea.",
     "example": {},
-    "details": {},
+    "details": {
+      "signature": null
+    },
     "doc_url": "https://pytgcalls.github.io/PyTgCalls/Examples"
   },
   "/PyTgCalls/Filters.xml": {
     "title": "Filters",
     "lib": "PyTgCalls",
-    "kind": "info",
-    "description": "Filters are objects that can be used to filter the content of incoming updates.",
+    "kind": "misc",
+    "description": "Filters are objects that can be used to filter the content of incoming updates. Easily create a custom filter.\n\n                Custom filters give you extra control over which updates are allowed or not to be processed by your handlers. A function that accepts three positional arguments (filter, client, update) and returns a boolean: True if the update\n                        should be handled, False otherwise. The filter argument refers to the filter itself and can be used to access keyword\n                        arguments (read below). The client argument refers to the Client that received the update. The update argument type will\n                        vary depending on which Your filter’s name. Can be anything you like. Defaults to \"CustomFilter\". Any additional keyword arguments you want to pass to your filter function. Filter updates for yourself. Filter updates for when a stream ends. Pass one or more stream type to filter stream end updates. Pass one or more devices to filter stream end updates. Filter updates coming from one or more chats.\n                You can use Pass one or more chat ids/usernames to filter chats. Defaults to None (no chats). Filter specific type of chat updates. Pass one or more flags to filter chat updates. Filter updates for when a call participant joins, leaves or is updated. Pass one or more flags to filter call participant updates. Filter updates for when stream frames are received. Pass one or more directions to filter stream frames. Pass one or more devices to filter stream frames.",
     "example": {},
     "details": {
       "sections": [
@@ -6776,39 +6793,44 @@
             }
           ]
         }
-      ]
+      ],
+      "signature": null
     },
     "doc_url": "https://pytgcalls.github.io/PyTgCalls/Filters"
   },
   "/PyTgCalls/Handling Updates.xml": {
     "title": "Handling Updates",
     "lib": "PyTgCalls",
-    "kind": "info",
-    "description": "Calling API methods sequentially is cool, but what if, for example, the list of participants changes?\n        This page covers updates and how to handle such events in PyTgCalls. Let’s have a look at how they work.",
+    "kind": "misc",
+    "description": "Calling API methods sequentially is cool, but what if, for example, the list of participants changes?\n        This page covers updates and how to handle such events in PyTgCalls. Let’s have a look at how they work. First of all, let's define what these updates are. As hinted earlier, updates are events that happen in PyTgCalls, such as\n        joining a group call, changes in the participant list, stream ended etc. They are meant to notify you about a new\n        specific state change. These updates are handled by registering one or more callback functions in your app\n        using To explain how handlers work, let's examine the one that will be in charge of handling The most elegant way to register a stream end handler is by using the The defined The",
     "example": {
       "language": "python",
       "code": "from pytgcalls import PyTgCalls, filters\nfrom pytgcalls.types import Update\nfrom pytgcalls.types import MediaStream\n...\napp = PyTgCalls(client)\n\n@app.on_update(filters.stream_end())\nasync def my_handler(client: PyTgCalls, update: Update):\n    if isinstance(update, StreamVideoEnded):\n        await pytgcalls.play(\n            -1001185324811,\n            'http://docs.evostream.com/sample_content/assets/sintel1m720p.mp4',\n        )\n\napp.run()"
     },
-    "details": {},
+    "details": {
+      "signature": null
+    },
     "doc_url": "https://pytgcalls.github.io/PyTgCalls/Handling Updates"
   },
   "/PyTgCalls/Install Guide.xml": {
     "title": "Install Guide",
     "lib": "PyTgCalls",
-    "kind": "info",
-    "description": "Being a modern Python library,",
+    "kind": "misc",
+    "description": "Being a modern Python library, The easiest way to install and upgrade PyTgCalls to its latest stable version is by using pip: PyTgCalls is always evolving: although new releases on PyPI are only published when a significant number of changes are added,\n        this doesn’t mean you can’t try new features right now!\n\n        In case you’d like to try out the latest PyTgCalls’ features, the To verify that PyTgCalls is correctly installed, open a Python shell and import it. If no errors show up you are good to go.",
     "example": {
       "language": "bash",
       "code": "$ pip3 install -U py-tgcalls"
     },
-    "details": {},
+    "details": {
+      "signature": null
+    },
     "doc_url": "https://pytgcalls.github.io/PyTgCalls/Install Guide"
   },
   "/PyTgCalls/Media Devices.xml": {
     "title": "Media Devices",
     "lib": "PyTgCalls",
-    "kind": "info",
-    "description": "This class offers methods to access information regarding media devices available on your system.\n        This functionality proves valuable when you intend to stream content from either your screen or microphone.",
+    "kind": "misc",
+    "description": "This class offers methods to access information regarding media devices available on your system.\n        This functionality proves valuable when you intend to stream content from either your screen or microphone. MediaDevices, the main tool for retrieving media devices list. Retrieve a list of available microphone devices Retrieve a list of available speaker devices Retrieve a list of available camera devices Retrieve a list of available screen devices",
     "example": {
       "language": "python",
       "code": "from pytgcalls import Client\nfrom pytgcalls import idle\nfrom pytgcalls import MediaDevices\n...\n\napp = PyTgCalls(client)\napp.start()\n\n...  # Call API methods\n\napp.play(\n    -1001185324811,\n    MediaDevices.get_audio_devices()[0],\n)\n\nidle()"
@@ -6860,93 +6882,271 @@
             }
           ]
         }
-      ]
+      ],
+      "signature": null
     },
     "doc_url": "https://pytgcalls.github.io/PyTgCalls/Media Devices"
   },
   "/PyTgCalls/Quick Start.xml": {
     "title": "Quick Start",
     "lib": "PyTgCalls",
-    "kind": "info",
-    "description": "The next few steps serve as a quick start for all new Pythoneers that want to see PyTgCalls in action as quickly as possible. Let’s go!",
+    "kind": "misc",
+    "description": "The next few steps serve as a quick start for all new Pythoneers that want to see PyTgCalls in action as quickly as possible. Let’s go! That was just a brief overview that barely scratched the surface!\n        In the following few pages of the introduction,\n        we’ll have a much more in-depth look at what we have just done.\n\n        Are you feeling eager to continue?\n        You can take a shortcut to Call Methods and return later to learn more details.",
     "example": {},
-    "details": {},
+    "details": {
+      "signature": null
+    },
     "doc_url": "https://pytgcalls.github.io/PyTgCalls/Quick Start"
   },
   "/PyTgCalls/Stream Descriptors/AudioParameters.xml": {
     "title": "AudioParameters",
     "lib": "PyTgCalls",
-    "kind": "info",
-    "description": "",
+    "kind": "descriptor",
+    "description": "Stream’s Audio Configuration",
     "example": {},
     "details": {
-      "signature": "class pytgcalls.types.raw.AudioParameters"
+      "signature": "class pytgcalls.types.raw.AudioParameters",
+      "parameters": [
+        {
+          "name": "bitrate",
+          "type": "int",
+          "description": "Audio sample rate (0-96000, max allowed by PCM16L).",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "channels",
+          "type": "int",
+          "description": "Audio channel count (1-2, max allowed by PCM16L).",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "from_quality(quality",
+          "type": "AudioQuality)",
+          "description": "This method was deprecated on PyTgCalls 1.2.X, use directly AudioQuality in MediaStream instead Create an AudioParameters instance from an AudioQuality enumeration.",
+          "source_config": null,
+          "value": null
+        }
+      ]
     },
     "doc_url": "https://pytgcalls.github.io/PyTgCalls/Stream Descriptors/AudioParameters"
   },
   "/PyTgCalls/Stream Descriptors/AudioStream.xml": {
     "title": "AudioStream",
     "lib": "PyTgCalls",
-    "kind": "info",
-    "description": "",
+    "kind": "descriptor",
+    "description": "The raw audio stream (PCM16L) descriptor",
     "example": {},
     "details": {
-      "signature": "class pytgcalls.types.raw.AudioStream"
+      "signature": "class pytgcalls.types.raw.AudioStream",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "str",
+          "description": "The audio file path or shell command (PCM16L format only).",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "parameters",
+          "type": "pytgcalls.types.raw.AudioParameters",
+          "description": "Stream’s audio parameters.",
+          "source_config": null,
+          "value": null
+        }
+      ]
     },
     "doc_url": "https://pytgcalls.github.io/PyTgCalls/Stream Descriptors/AudioStream"
   },
   "/PyTgCalls/Stream Descriptors/MediaStream.xml": {
     "title": "MediaStream",
     "lib": "PyTgCalls",
-    "kind": "info",
-    "description": "",
+    "kind": "descriptor",
+    "description": "The media stream piped descriptor.",
     "example": {},
     "details": {
-      "signature": "class pytgcalls.types.MediaStream"
+      "signature": "class pytgcalls.types.MediaStream",
+      "parameters": [
+        {
+          "name": "media_path",
+          "type": "Union[str, ScreenInfo, DeviceInfo]",
+          "description": "The audio, video, image or media device path. audio_parameters: Optional[Union[pytgcalls.types.raw.AudioParameters, pytgcalls.types.AudioQuality]]\nStream’s audio parameters. video_parameters: Optional[Union[pytgcalls.types.raw.VideoParameters, pytgcalls.types.VideoQuality]]\nStream’s video parameters.",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "audio_path",
+          "type": "Optional[Union[str, Path, InputDevice, ExternalMedia]]",
+          "description": "The audio or input audio device path.",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "audio_flags",
+          "type": "Optional[Flags]",
+          "description": "Flag used to control the handling of the audio stream in the media. It allows the system to decide whether to automatically detect, ignore, or require the audio stream.",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "video_flags",
+          "type": "Optional[Flags]",
+          "description": "Flag used to control the handling of the video stream in the media. It allows the system to decide whether to automatically detect, ignore, or require the video stream. headers: Optional[dict[str, str]]\nHTTP connection’s headers.",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "ffmpeg_parameters",
+          "type": "Optional[str]",
+          "description": "FFmpeg additional parameters.",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "ytdlp_parameters",
+          "type": "Optional[str]",
+          "description": "yt-dlp additional parameters.",
+          "source_config": null,
+          "value": null
+        }
+      ]
     },
     "doc_url": "https://pytgcalls.github.io/PyTgCalls/Stream Descriptors/MediaStream"
   },
   "/PyTgCalls/Stream Descriptors/RecordStream.xml": {
     "title": "RecordStream",
     "lib": "PyTgCalls",
-    "kind": "info",
-    "description": "",
+    "kind": "descriptor",
+    "description": "The record stream piped descriptor.",
     "example": {},
     "details": {
-      "signature": "class pytgcalls.types.RecordStream"
+      "signature": "class pytgcalls.types.RecordStream",
+      "parameters": [
+        {
+          "name": "audio",
+          "type": "Optional[Union[bool, str, SpeakerDevice]]",
+          "description": "The speaker device, audio file or if it should be sent as updates. audio_parameters: Optional[Union[pytgcalls.types.raw.AudioParameters, pytgcalls.types.AudioQuality]]\nStream’s audio parameters.",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "camera",
+          "type": "Optional[bool]",
+          "description": "Whether to record the camera.",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "screen",
+          "type": "Optional[bool]",
+          "description": "Whether to record the screen.",
+          "source_config": null,
+          "value": null
+        }
+      ]
     },
     "doc_url": "https://pytgcalls.github.io/PyTgCalls/Stream Descriptors/RecordStream"
   },
   "/PyTgCalls/Stream Descriptors/Stream.xml": {
     "title": "Stream",
     "lib": "PyTgCalls",
-    "kind": "info",
-    "description": "",
+    "kind": "descriptor",
+    "description": "Stream Descriptor.",
     "example": {},
     "details": {
-      "signature": "class pytgcalls.types.Stream"
+      "signature": "class pytgcalls.types.Stream",
+      "parameters": [
+        {
+          "name": "microphone",
+          "type": "Optional[pytgcalls.types.raw.AudioStream]",
+          "description": "Microphone configuration for the stream.",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "speaker",
+          "type": "Optional[pytgcalls.types.raw.AudioStream]",
+          "description": "Speaker configuration for the stream.",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "camera",
+          "type": "Optional[pytgcalls.types.raw.VideoStream]",
+          "description": "Camera configuration for the stream.",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "screen",
+          "type": "Optional[pytgcalls.types.raw.VideoStream]",
+          "description": "Screen configuration for the stream.",
+          "source_config": null,
+          "value": null
+        }
+      ]
     },
     "doc_url": "https://pytgcalls.github.io/PyTgCalls/Stream Descriptors/Stream"
   },
   "/PyTgCalls/Stream Descriptors/VideoParameters.xml": {
     "title": "VideoParameters",
     "lib": "PyTgCalls",
-    "kind": "info",
-    "description": "",
+    "kind": "descriptor",
+    "description": "Stream’s video parameters.",
     "example": {},
     "details": {
-      "signature": "class pytgcalls.types.raw.VideoParameters"
+      "signature": "class pytgcalls.types.raw.VideoParameters",
+      "parameters": [
+        {
+          "name": "frame_rate",
+          "type": "int",
+          "description": "Frames per second (FPS) for video playback.",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "adjust_by_height",
+          "type": "bool",
+          "description": "Adjust the video resolution by height instead of width.",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "from_quality(quality",
+          "type": "VideoQuality)",
+          "description": "This method was deprecated on PyTgCalls 1.2.X, use directly VideoQuality in MediaStream instead Create an VideoParameters instance from an VideoQuality enumeration.",
+          "source_config": null,
+          "value": null
+        }
+      ]
     },
     "doc_url": "https://pytgcalls.github.io/PyTgCalls/Stream Descriptors/VideoParameters"
   },
   "/PyTgCalls/Stream Descriptors/VideoStream.xml": {
     "title": "VideoStream",
     "lib": "PyTgCalls",
-    "kind": "info",
-    "description": "",
+    "kind": "descriptor",
+    "description": "The raw video stream (YUV420P) descriptor",
     "example": {},
     "details": {
-      "signature": "class pytgcalls.types.raw.VideoStream"
+      "signature": "class pytgcalls.types.raw.VideoStream",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "str",
+          "description": "The video file path or shell command (YUV420P format only).",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "parameters",
+          "type": "pytgcalls.types.raw.VideoParameters",
+          "description": "Stream’s video parameters.",
+          "source_config": null,
+          "value": null
+        }
+      ]
     },
     "doc_url": "https://pytgcalls.github.io/PyTgCalls/Stream Descriptors/VideoStream"
   },
@@ -6960,7 +7160,6 @@
       "code": "from pytgcalls import Client\nfrom pytgcalls import idle\n...\n\napp = PyTgCalls(client)\napp.start()\n\n...  # Call API methods\n\napp.mute(\n    -1001185324811,\n)\n\nidle()"
     },
     "details": {
-      "signature": "PyTgCalls.mute() -> bool",
       "sections": [
         {
           "title": "PARAMETERS",
@@ -6986,7 +7185,8 @@
             }
           ]
         }
-      ]
+      ],
+      "signature": "PyTgCalls.mute() -> bool"
     },
     "doc_url": "https://pytgcalls.github.io/PyTgCalls/Stream Methods/Mute"
   },
@@ -7000,7 +7200,6 @@
       "code": "from pytgcalls import Client\nfrom pytgcalls import idle\n...\n\napp = PyTgCalls(client)\napp.start()\n\n...  # Call API methods\n\napp.pause(\n    -1001185324811,\n)\n\nidle()"
     },
     "details": {
-      "signature": "PyTgCalls.pause() -> bool",
       "sections": [
         {
           "title": "PARAMETERS",
@@ -7026,7 +7225,8 @@
             }
           ]
         }
-      ]
+      ],
+      "signature": "PyTgCalls.pause() -> bool"
     },
     "doc_url": "https://pytgcalls.github.io/PyTgCalls/Stream Methods/Pause"
   },
@@ -7040,7 +7240,6 @@
       "code": "from pytgcalls import Client\nfrom pytgcalls import idle\n...\n\napp = PyTgCalls(client)\napp.start()\n\n...  # Call API methods\n\napp.play(\n    -1001185324811,\n    'test.mp4',\n)\n\nidle()"
     },
     "details": {
-      "signature": "PyTgCalls.play()",
       "sections": [
         {
           "title": "PARAMETERS",
@@ -7080,7 +7279,8 @@
             }
           ]
         }
-      ]
+      ],
+      "signature": "PyTgCalls.play()"
     },
     "doc_url": "https://pytgcalls.github.io/PyTgCalls/Stream Methods/Play"
   },
@@ -7094,7 +7294,6 @@
       "code": "from pytgcalls import Client\nfrom pytgcalls import idle\n...\n\napp = PyTgCalls(client)\napp.start()\n\n...  # Call API methods\n\napp.record(\n    -1001185324811,\n    'record.mp3',\n)\n\nidle()"
     },
     "details": {
-      "signature": "PyTgCalls.record()",
       "sections": [
         {
           "title": "PARAMETERS",
@@ -7134,7 +7333,8 @@
             }
           ]
         }
-      ]
+      ],
+      "signature": "PyTgCalls.record()"
     },
     "doc_url": "https://pytgcalls.github.io/PyTgCalls/Stream Methods/Record"
   },
@@ -7148,7 +7348,6 @@
       "code": "from pytgcalls import Client\nfrom pytgcalls import idle\n...\n\napp = PyTgCalls(client)\napp.start()\n\n...  # Call API methods\n\napp.resume(\n    -1001185324811,\n)\n\nidle()"
     },
     "details": {
-      "signature": "PyTgCalls.resume() -> bool",
       "sections": [
         {
           "title": "PARAMETERS",
@@ -7174,7 +7373,8 @@
             }
           ]
         }
-      ]
+      ],
+      "signature": "PyTgCalls.resume() -> bool"
     },
     "doc_url": "https://pytgcalls.github.io/PyTgCalls/Stream Methods/Resume"
   },
@@ -7188,7 +7388,6 @@
       "code": "from pytgcalls import Client\nfrom pytgcalls import idle\n...\n\napp = PyTgCalls(client)\napp.start()\n\n...  # Call API methods\n\nprint(\n    app.time(\n        -1001185324811,\n    )\n)\n\nidle()"
     },
     "details": {
-      "signature": "PyTgCalls.time() -> int",
       "sections": [
         {
           "title": "PARAMETERS",
@@ -7221,7 +7420,8 @@
             }
           ]
         }
-      ]
+      ],
+      "signature": "PyTgCalls.time() -> int"
     },
     "doc_url": "https://pytgcalls.github.io/PyTgCalls/Stream Methods/Time"
   },
@@ -7235,7 +7435,6 @@
       "code": "from pytgcalls import Client\nfrom pytgcalls import idle\n...\n\napp = PyTgCalls(client)\napp.start()\n\n...  # Call API methods\n\napp.unmute(\n    -1001185324811,\n)\n\nidle()"
     },
     "details": {
-      "signature": "PyTgCalls.unmute() -> bool",
       "sections": [
         {
           "title": "PARAMETERS",
@@ -7261,29 +7460,34 @@
             }
           ]
         }
-      ]
+      ],
+      "signature": "PyTgCalls.unmute() -> bool"
     },
     "doc_url": "https://pytgcalls.github.io/PyTgCalls/Stream Methods/UnMute"
   },
   "/PyTgCalls/Using Filters.xml": {
     "title": "Using Filters",
     "lib": "PyTgCalls",
-    "kind": "info",
-    "description": "So far we’ve seen",
+    "kind": "misc",
+    "description": "So far we’ve seen Let’s start right away with a simple example: This example will show you how to only handle updates that are an Incoming Call\n                and ignore any other update. Filters are passed as the first argument of the decorator: or, without decorators. Here filters are passed as the second argument of the add_handler function;\n                the first is the callback function itself: Filters can be used in a more advanced way by inverting and combining more filters together using bitwise operators This example will show you how to only handle updates that are This example will show you how to only handle updates that are",
     "example": {},
-    "details": {},
+    "details": {
+      "signature": null
+    },
     "doc_url": "https://pytgcalls.github.io/PyTgCalls/Using Filters"
   },
   "/PyTgCalls/Using Handlers.xml": {
     "title": "Using Handlers",
     "lib": "PyTgCalls",
-    "kind": "info",
-    "description": "Handlers are used to instruct PyTgCalls to execute a specific function when a certain event occurs.\n        For a much more convenient way to handle updates, you can use the",
+    "kind": "misc",
+    "description": "Handlers are used to instruct PyTgCalls to execute a specific function when a certain event occurs.\n        For a much more convenient way to handle updates, you can use the To register a handler, you need to use the To remove a handler, you need to use the",
     "example": {
       "language": "python",
       "code": "from pytgcalls import PyTgCalls\nfrom pytgcalls.types import Update\nfrom pytgcalls import filters as call_filters\n...\n\nclient = # Here Your MTProto Client\napp = PyTgCalls(client)\n\nasync def handler(client: PyTgCalls, update: Update):\n    print(update)\n...\napp.add_handler(handler, call_filters.stream_end())\n..."
     },
-    "details": {},
+    "details": {
+      "signature": null
+    },
     "doc_url": "https://pytgcalls.github.io/PyTgCalls/Using Handlers"
   }
 }

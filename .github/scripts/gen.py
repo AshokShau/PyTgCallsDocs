@@ -110,7 +110,7 @@ def parse_type_page(page, config_map):
     description_parts = []
     members = []
     properties = []
-    parameters = []  # for Stream Descriptor parameters
+    parameters = []
     current = None
 
     def handle_member_block(block):
@@ -302,20 +302,38 @@ def parse_map(map_source: Union[str, Path], config_map):
             lib = "Unknown"
             path_suffix = path
 
-        if "Available Types" in path or "Available Structs" in path or "Advanced Types" in path:
-            kind = "type"
-        elif "Available Enums" in path:
+        if "Available Enums" in path:
             kind = "enum"
         elif "Methods" in path:
             kind = "method"
+        elif "Available Structs" in path:
+            kind = "struct"
+        elif "Available Types" in path or "Advanced Types" in path:
+            kind = "type"
+        elif "Stream Descriptors" in path:
+            kind = "descriptor"
         else:
-            kind = "info"
+            kind = "misc"
 
-        desc_node = page.find("config")
-        if desc_node is not None:
-            description = config_map.get(desc_node.attrib["id"], "")
+        if kind == "misc":
+            def extract_full_description(node):
+                parts = []
+                for child in node.iter():
+                    if child.tag == "config":
+                        cid = child.attrib.get("id")
+                        if cid:
+                            parts.append(config_map.get(cid, f"[UNRESOLVED:{cid}]"))
+                    elif child.tag == "text" and child.text:
+                        parts.append(child.text.strip())
+                return " ".join(parts).strip()
+
+            description = extract_full_description(page)
         else:
-            description = "".join(page.findtext("text", "") or "")
+            desc_node = page.find("config")
+            if desc_node is not None:
+                description = config_map.get(desc_node.attrib["id"], "")
+            else:
+                description = "".join(page.findtext("text", "") or "")
 
         example = {}
         ex_node = page.find("syntax-highlight")
@@ -326,60 +344,50 @@ def parse_map(map_source: Union[str, Path], config_map):
             example["code"] = code_clean
 
         details = {}
+        sections = []
+        for cat in page.findall(".//category"):
+            section_title = cat.findtext("pg-title", "").strip()
+            raw_items = []
+            for sub in cat.findall("subtext"):
+                for item in sub:
+                    if item.tag == "config":
+                        cid = item.attrib["id"]
+                        raw_items.append({
+                            "config_id": cid,
+                            "resolved": config_map.get(cid, f"[UNRESOLVED:{cid}]")
+                        })
+                    elif item.tag == "category-title":
+                        raw_items.append({"raw": "".join(item.itertext()).strip()})
+                    elif item.tag == "text":
+                        if item.text:
+                            raw_items.append({"text": item.text.strip()})
+            if norm_items := normalize_items(raw_items):
+                sections.append({"title": section_title, "items": norm_items})
 
-        if kind in ["method", "info"]:
-            sig = page.find("category-title")
-            if sig is not None:
-                details["signature"] = "".join(sig.itertext()).strip()
+        if sections:
+            details["sections"] = sections
+        parsed = parse_type_page(page, config_map)
+        details["signature"] = parsed["signature"]
+        if parsed["members"]:
+            details["members"] = parsed["members"]
+        if parsed["properties"]:
+            details["properties"] = parsed["properties"]
+        if parsed["parameters"]:
+            details["parameters"] = parsed["parameters"]
 
-            sections = []
-            for cat in page.findall(".//category"):
-                section_title = cat.findtext("pg-title", "").strip()
-                raw_items = []
-                for sub in cat.findall("subtext"):
-                    for item in sub:
-                        if item.tag == "config":
-                            cid = item.attrib["id"]
-                            raw_items.append({
-                                "config_id": cid,
-                                "resolved": config_map.get(cid, f"[UNRESOLVED:{cid}]")
-                            })
-                        elif item.tag == "category-title":
-                            raw_items.append({"raw": "".join(item.itertext()).strip()})
-                        elif item.tag == "text":
-                            if item.text:
-                                raw_items.append({"text": item.text.strip()})
-                if norm_items := normalize_items(raw_items):
-                    sections.append({"title": section_title, "items": norm_items})
-            if sections:
-                details["sections"] = sections
-
-        elif kind in ("enum", "type"):
-            parsed = parse_type_page(page, config_map)
-            details["signature"] = parsed["signature"]
-            if parsed["members"]:
-                details["members"] = parsed["members"]
-            if parsed["properties"]:
-                details["properties"] = parsed["properties"]
-            if parsed["parameters"]:
-                details["parameters"] = parsed["parameters"]
-
-            if not description:
-                # Ok for now
-                for sub in page.findall("subtext"):
-                    # always grab <text> even if <pg-title> exists
-                    for txt_node in sub.findall("text"):
-                        if txt_node.text and txt_node.text.strip():
-                            description = txt_node.text.strip()
-                            break
-                    # grab <config> if present
-                    for cfg_node in sub.findall("config"):
-                        if cid := cfg_node.attrib.get("id"):
-                            description = config_map.get(cid, f"[UNRESOLVED:{cid}]")
-                    if description:
-                        break  # stop after first valid description
-
-                            # description = parsed["description"]
+        if not description:
+            for sub in page.findall("subtext"):
+                # always grab <text> even if <pg-title> exists
+                for txt_node in sub.findall("text"):
+                    if txt_node.text and txt_node.text.strip():
+                        description = txt_node.text.strip()
+                        break
+                # grab <config> if present
+                for cfg_node in sub.findall("config"):
+                    if cid := cfg_node.attrib.get("id"):
+                        description = config_map.get(cid, f"[UNRESOLVED:{cid}]")
+                if description:
+                    break  # stop after first valid description
 
         if path_suffix.endswith(".xml"):
             path_suffix = path_suffix[:-4]
