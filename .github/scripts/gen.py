@@ -1,4 +1,5 @@
 import json
+import re
 import textwrap
 import urllib.request
 import xml.etree.ElementTree as ET
@@ -393,6 +394,8 @@ def parse_map(map_source: Union[str, Path], config_map):
             path_suffix = path_suffix[:-4]
         doc_url = f"https://pytgcalls.github.io/{lib}/{path_suffix}"
 
+        description = textwrap.dedent(description).strip("\n")
+        description = re.sub(r'\s+', ' ', description).strip()
         docs[path] = {
             "title": title,
             "lib": lib,
