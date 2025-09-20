@@ -3,5 +3,4 @@ __pycache__
 .venv
 pytgcallsdocs.egg-info
 .env
-database/db.sqlite
 /database
