@@ -30,14 +30,14 @@ wheels = [
 
 [[package]]
 name = "deepdiff"
-version = "8.6.0"
+version = "8.6.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "orderly-set" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/03/65/57d5047a03700ccb3eaab9d86837168701b1527fdd2bd9fe7a212bee83b1/deepdiff-8.6.0.tar.gz", hash = "sha256:6197216c2d777c3106a9989055c230e25848e599b26dcbcdc66226bd8d7fe901", size = 631801, upload-time = "2025-08-08T19:00:27.563Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/19/76/36c9aab3d5c19a94091f7c6c6e784efca50d87b124bf026c36e94719f33c/deepdiff-8.6.1.tar.gz", hash = "sha256:ec56d7a769ca80891b5200ec7bd41eec300ced91ebcc7797b41eb2b3f3ff643a", size = 634054, upload-time = "2025-09-03T19:40:41.461Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/4a/4d/4c9ba906175430d6f1cb40b7aa90673720c2c4b3fcea03a3719b1906f983/deepdiff-8.6.0-py3-none-any.whl", hash = "sha256:db80677a434ac1f84147fd1598e93f1beb06d467e107af45fcf77cf8a681169f", size = 91121, upload-time = "2025-08-08T19:00:25.575Z" },
+    { url = "https://files.pythonhosted.org/packages/f7/e6/efe534ef0952b531b630780e19cabd416e2032697019d5295defc6ef9bd9/deepdiff-8.6.1-py3-none-any.whl", hash = "sha256:ee8708a7f7d37fb273a541fa24ad010ed484192cd0c4ffc0fa0ed5e2d4b9e78b", size = 91378, upload-time = "2025-09-03T19:40:39.679Z" },
 ]
 
 [[package]]
@@ -163,21 +163,24 @@ dependencies = [
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/cb/17/f89a861268c3205470c8f9f6df93d0d803faf034d9cc9e5cb5b29d14068f/pytdbot-0.9.6.tar.gz", hash = "sha256:20390f8e043c66d5cb94a8b5f7258dc209bee02000aa9ca864763fc4b0838550", size = 474510, upload-time = "2025-09-02T07:10:50.385Z" }
 
+[package.optional-dependencies]
+tdjson = [
+    { name = "tdjson" },
+]
+
 [[package]]
 name = "pytgcallsdocs"
 version = "0.1.0"
 source = { editable = "." }
 dependencies = [
-    { name = "pytdbot" },
+    { name = "pytdbot", extra = ["tdjson"] },
     { name = "python-dotenv" },
-    { name = "tdjson" },
 ]
 
 [package.metadata]
 requires-dist = [
-    { name = "pytdbot", specifier = ">=0.9.6" },
+    { name = "pytdbot", extras = ["tdjson"], specifier = ">=0.9.6" },
     { name = "python-dotenv", specifier = ">=1.1.1" },
-    { name = "tdjson", specifier = ">=1.8.52" },
 ]
 
 [[package]]
@@ -191,11 +194,11 @@ wheels = [
 
 [[package]]
 name = "tdjson"
-version = "1.8.52"
+version = "1.8.55"
 source = { registry = "https://pypi.org/simple" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/09/f4/50a3249b2479cf269ea780cc2f10d6624375b29a7756bf2488553fb1c023/tdjson-1.8.52-cp312-abi3-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:404d93f46fc9307f633667d737062e9760218e2ad10eff808e5030fa5f546270", size = 15444587, upload-time = "2025-08-08T12:00:54.363Z" },
-    { url = "https://files.pythonhosted.org/packages/d5/a4/192015ac482b1eac0572008cbbbc46e28822307a8546842f6fc0ba2506b6/tdjson-1.8.52-cp313-cp313t-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:d0fabfc868b0047c948ca924fa39e1c56b9c996255cf7787c36f30afc360c925", size = 15447379, upload-time = "2025-08-08T12:00:56.392Z" },
+    { url = "https://files.pythonhosted.org/packages/ac/48/c90668757db058660e057252f20f0782df7c92453c553bce762ad05b7953/tdjson-1.8.55-cp312-abi3-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:676d817384ef599cfb6080ef9736768b7dbba48e62b502034e0bfe816b8ace03", size = 16101554, upload-time = "2025-09-19T13:19:29.851Z" },
+    { url = "https://files.pythonhosted.org/packages/2f/28/9d3b6b028ce8693543402f67127fe0a3045a38f6c99524517594a5df3299/tdjson-1.8.55-cp313-cp313t-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:a21c386fb4585f9a48c3594ce70d736cebad3ef14719a1faf5bbd9706ce4daf0", size = 16104327, upload-time = "2025-09-19T13:19:32.332Z" },
 ]
 
 [[package]]
