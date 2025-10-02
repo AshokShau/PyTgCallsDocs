@@ -77,7 +77,7 @@ async def _handle_pattern_query(client: Client, update: types.UpdateNewInlineQue
         result = types.InputInlineQueryResultArticle(
             id=str(uuid.uuid4()),
             title=link.title,
-            description=link.result_text[:100],
+            description=link.title,
             thumbnail_url=_thumb_url,
             input_message_content=types.InputMessageText(
                 text=await client.parseTextEntities(link.result_text, types.TextParseModeHTML())

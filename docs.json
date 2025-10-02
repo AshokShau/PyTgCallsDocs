@@ -306,7 +306,7 @@
     "title": "Send External Frame",
     "lib": "NTgCalls",
     "kind": "method",
-    "description": "This method allows sending an external video frame to the WebRTC connection.",
+    "description": "This method allows sending an external audio or video frame to the WebRTC connection.",
     "example": {
       "language": "python",
       "code": "from ntgcalls import NTgCalls\nfrom ntgcalls import StreamDevice\nfrom ntgcalls import FrameData\nfrom datetime import datetime\n...\n\napp = NTgCalls()\n...\npcm16_le_data = ...\n\nawait app.send_external_frame(\n    -1001185324811,\n    StreamDevice.MICROPHONE,\n    pcm16_le_data,\n    FrameData(\n        int(datetime.now().timestamp()),\n        0,\n        0,\n        0,\n    )\n)"
@@ -920,7 +920,7 @@
     "title": "ntg_send_external_frame",
     "lib": "NTgCalls",
     "kind": "method",
-    "description": "This method allows sending an external video frame to the WebRTC connection.",
+    "description": "This method allows sending an external audio or video frame to the WebRTC connection.",
     "example": {
       "language": "c",
       "code": "#include <stdint.h>\n#include \"ntgcalls.h\"\n\nint main() {\n    uintptr_t ptr = ntg_init();\n    ...\n    int64_t chatID = ...; // Obtain the chat ID\n    uint8_t* pcm16_le_data = ...; // Obtain the PCM16 LE data\n    int size = ...; // Obtain the size of the PCM16 LE data\n    ntg_frame_data frame_data = {\n        .timestamp = ..., // Obtain the timestamp\n        .flags = 0,\n        .rotation = 0,\n        .layer = 0,\n    };\n    // Initialize the async struct\n    ntg_async_struct future;\n    ntg_send_external_frame(ptr, chatID, NTG_STREAM_DEVICE_MICROPHONE, pcm16_le_data, size, &frame_data, &future);\n    // Wait for the async operation to complete\n    return 0;\n}"
@@ -4324,7 +4324,7 @@
     "title": "Introduction",
     "lib": "NTgCalls",
     "kind": "misc",
-    "description": "Being a modern library, Below, we will guide you through the step-by-step process of installing the prerequisites required to compile NTgCalls on your operating system. In this section, you'll learn how to clone the NTgCalls repository and build the library from source. To begin building NTgCalls from source, you need to clone the GitHub repository. Follow these steps to clone the repo: Now that you have successfully installed all the required prerequisites for NTgCalls, it's time to build the library. Follow these steps to compile NTgCalls on your system. For developers looking to use NTgCalls with C and C++, we provide C Bindings. Follow these steps to compile NTgCalls with C Bindings in either Release or Debug mode: NTgCalls offers Python Bindings, facilitating seamless integration with Python. Follow these steps to compile NTgCalls with Python Bindings: NTgCalls offers Java for Android Bindings, facilitating seamless integration with Java for Android. Follow these steps to compile NTgCalls with Java for Android Bindings:",
+    "description": "Being a modern library, requires CMake 3.31+ to be built on your system, on Linux is required at least CLang 20+, libasound2 and libpulse-dev. We recommend using the latest versions of both CMake and CLang. Below, we will guide you through the step-by-step process of installing the prerequisites required to compile NTgCalls on your operating system. In this section, you'll learn how to clone the NTgCalls repository and build the library from source. To begin building NTgCalls from source, you need to clone the GitHub repository. Follow these steps to clone the repo: Now that you have successfully installed all the required prerequisites for NTgCalls, it's time to build the library. Follow these steps to compile NTgCalls on your system. For developers looking to use NTgCalls with C and C++, we provide C Bindings. Follow these steps to compile NTgCalls with C Bindings in either Release or Debug mode: NTgCalls offers Python Bindings, facilitating seamless integration with Python. Follow these steps to compile NTgCalls with Python Bindings: NTgCalls offers Java for Android Bindings, facilitating seamless integration with Java for Android. Follow these steps to compile NTgCalls with Java for Android Bindings:",
     "example": {},
     "details": {
       "signature": null
@@ -4335,7 +4335,7 @@
     "title": "Callback Registration",
     "lib": "NTgCalls",
     "kind": "misc",
-    "description": "Callbacks registration allows you to specify custom functions to be executed when specific events occur or conditions are met within your application. These events might include changes in call status, media state updates, or other critical moments in the NTgCalls library's operation. When registering callbacks, keep in mind that each registration replaces the previously set callback. Callback for handling when a stream playback ends. When a stream ends, this callback will be triggered. uintptr_t ptr The pointer to the NTgCalls instance. The callback function to be executed when the stream ends. void* userData Custom data that can be passed to the callback function. Callback for handling when is needed to update GroupCall MTProto Configurations. uintptr_t ptr The pointer to the NTgCalls instance. The callback function to be executed when the stream needs to update MTProto stream parameters. void* userData Custom data that can be passed to the callback function. Callback to listen for when the WebRTC connection has changed his state. uintptr_t ptr The pointer to the NTgCalls instance. The callback function to be executed when the connection state changes. void* userData Custom data that can be passed to the callback function. Callback for handling when a signaling message is received. uintptr_t ptr The pointer to the NTgCalls instance. The callback function to be executed when signaling data is received. void* userData Custom data that can be passed to the callback function. Callback for handling when a group of frames is received. uintptr_t ptr The pointer to the NTgCalls instance. Callback function to be executed when frames are received. void* userData Custom data that can be passed to the callback function. Callback for handling when the remote source changes. uintptr_t ptr The pointer to the NTgCalls instance. Callback function to be executed when a remote source is added or removed. void* userData Custom data that can be passed to the callback function. Register a logger for the library, this logger will be used for all instances. Callback for logging messages. Callback for handling when a broadcast stream part is being requested. uintptr_t ptr The pointer to the NTgCalls instance. Callback function to be executed when a broadcast part is requested. void* userData Custom data that can be passed to the callback function. Callback for handling when the broadcast timestamp is being requested. uintptr_t ptr The pointer to the NTgCalls instance. Callback function to be executed when the broadcast timestamp is requested. void* userData Custom data that can be passed to the callback function.",
+    "description": "Callbacks registration allows you to specify custom functions to be executed when specific events occur or conditions are met within your application. These events might include changes in call status, media state updates, or other critical moments in the NTgCalls library's operation. When registering callbacks, keep in mind that each registration replaces the previously set callback.",
     "example": {},
     "details": {
       "sections": [
@@ -4620,7 +4620,7 @@
     "title": "Callbacks",
     "lib": "NTgCalls",
     "kind": "misc",
-    "description": "Callbacks allows you to define custom behavior or actions that should be triggered in response to specific events or conditions within your application. These events could include call-related occurrences, state changes, or other interactions with the NTgCalls library. When registering callbacks, keep in mind that each registration replaces the previously set callback. Callback for handling when a stream playback ends. When a stream ends, this callback will be triggered. Callback for handling when is needed to update GroupCall MTProto Configurations. Callback to listen for when the WebRTC connection has changed his state. Callback for handling when a signaling message is received. Callback for handling when a group of frames is received. Callback for handling when the remote source changes. Callback for handling when a broadcast stream part is being requested. Callback for handling when the broadcast timestamp is being requested.",
+    "description": "Callbacks allows you to define custom behavior or actions that should be triggered in response to specific events or conditions within your application. These events could include call-related occurrences, state changes, or other interactions with the NTgCalls library. When registering callbacks, keep in mind that each registration replaces the previously set callback.",
     "example": {},
     "details": {
       "sections": [
@@ -4729,7 +4729,7 @@
     "title": "NTgCalls Client",
     "lib": "NTgCalls",
     "kind": "misc",
-    "description": "Welcome to the API Reference section, where you'll find comprehensive information about the NTgCalls API. This is your gateway to in-depth details about the main Client class, its methods, types, all of which play a crucial role in utilizing NTgCalls effectively. The NTgCalls Client is your primary interface for seamless interaction with Group Calls. Get a list of all calls. Get an estimate of the CPU usage of the current process. Return \"pong\" message when calling this method This method allows getting the protocol for a Private Call connection with the output params for Telegram constructor PhoneCallProtocol. This method allows getting all the available media devices, such as microphones and cameras. Enable the GLib main loop to allow the library to use it for PipeWire on OSes that uses Wayland. Enable or disable the GLib main loop.",
+    "description": "Welcome to the API Reference section, where you'll find comprehensive information about the NTgCalls API. This is your gateway to in-depth details about the main Client class, its methods, types, all of which play a crucial role in utilizing NTgCalls effectively.",
     "example": {
       "language": "python",
       "code": "from ntgcalls import NTgCalls\n\napp = NTgCalls()\nprint(app.ping())"
@@ -4816,7 +4816,7 @@
     "title": "Getting Started",
     "lib": "NTgCalls",
     "kind": "misc",
-    "description": "This section provides documentation for the NTgCalls C API, which allows you to use NTgCalls in various programming languages, including C, C++, Go, Rust, Deno, and more. Below, you will find detailed information about the initialization and cleanup functions. To get started with NTgCalls in your application, you need to initialize the library using the To clean up and release the resources used by NTgCalls, you should call the You can retrieve the version of the NTgCalls library currently in use using the Retrieve library version A character buffer to store the version string.",
+    "description": "This section provides documentation for the NTgCalls C API, which allows you to use NTgCalls in various programming languages, including C, C++, Go, Rust, Deno, and more. Below, you will find detailed information about the initialization and cleanup functions. To get started with NTgCalls in your application, you need to initialize the library using the function. This function sets up the necessary resources and prepares NTgCalls for use. To clean up and release the resources used by NTgCalls, you should call the function. This function deallocates memory and performs necessary cleanup operations. You can retrieve the version of the NTgCalls library currently in use using the function. This function returns a string containing the version number. () Retrieve library version",
     "example": {},
     "details": {
       "sections": [
@@ -4841,7 +4841,7 @@
     "title": "Quick Start",
     "lib": "NTgCalls",
     "kind": "misc",
-    "description": "Welcome to this section, which is primarily intended for developers who are moderately experienced or seeking to perform a porting in their language using C bindings. If you are new to Python development, we strongly recommend using Looking for real-world implementations? Below is a selection of bots actively maintained and recommended by the community, all using NTgCalls/Py-TgCalls under the hood. These can be a great source of inspiration or even a solid starting point for your own project. In the following section, we present a comprehensive catalog of libraries, thoughtfully crafted by the community and officially endorsed, all of which leverage the robust capabilities of NTgCalls. What we've just seen are simplified ports of NTgCalls. However, now let's delve deeper! In the upcoming pages, we'll explore NTgCalls in a step-by-step manner, covering how it functions, how to install it, and more. Are you feeling eager to continue? You can take a shortcut to the Call Methods section and return later to delve into more details.",
+    "description": "Welcome to this section, which is primarily intended for developers who are moderately experienced or seeking to perform a porting in their language using C bindings. If you are new to Python development, we strongly recommend using . However, if you fall into the aforementioned categories, you can find an example of usage with the various porting below. Looking for real-world implementations? Below is a selection of bots actively maintained and recommended by the community, all using NTgCalls/Py-TgCalls under the hood. These can be a great source of inspiration or even a solid starting point for your own project. In the following section, we present a comprehensive catalog of libraries, thoughtfully crafted by the community and officially endorsed, all of which leverage the robust capabilities of NTgCalls. What we've just seen are simplified ports of NTgCalls. However, now let's delve deeper! In the upcoming pages, we'll explore NTgCalls in a step-by-step manner, covering how it functions, how to install it, and more. Are you feeling eager to continue? You can take a shortcut to the Call Methods section and return later to delve into more details.",
     "example": {},
     "details": {
       "signature": null
@@ -5360,7 +5360,7 @@
     "title": "Using Async",
     "lib": "NTgCalls",
     "kind": "misc",
-    "description": "NTgCalls starting from version 1.2.0 supports asynchronous calls to function using To make an async call in a sync way, you can use a mutex to wait for the operation to complete: You can pass custom data to the async call by using the",
+    "description": "NTgCalls starting from version 1.2.0 supports asynchronous calls to function using , which contains that can be used to pass data between the caller and the callback, that is called when the operation is completed, and that is set when an error occurs, but by default it is set to (-4) until the operation is completed. To make an async call in a sync way, you can use a mutex to wait for the operation to complete: You can pass custom data to the async call by using the field:",
     "example": {
       "language": "cpp",
       "code": "#include <ntgcalls.h>\n#include <mutex>\n\nvoid onCallReady(void* data) {\n    ((std::mutex*)data)->unlock();\n}\n\nvoid makeAsyncCall() {\n    ntg_async_struct asyncData;\n    std::mutex mtx;\n    asyncData.userData = &mtx;\n    asyncData.promise = onCallReady;\n    mtx.lock();\n    int error = ntg_pause(asyncData);\n    if (error != 0) {\n        // Handle error\n    }\n    mtx.lock();\n    // Async operation completed\n    if (asyncData.errorCode != 0) {\n        // Handle Async error\n    }\n}"
@@ -6464,7 +6464,7 @@
     "title": "Changelogs",
     "lib": "PyTgCalls",
     "kind": "misc",
-    "description": "Bug Fixes: Addressed various bugs for a more stable experience. Now the The repository Now the Some media management methods were renamed, for example, for example To retrieve the current call status, use the Now the Removed Bug Fixes: Addressed various bugs for a more stable experience. Bug Fixes: Addressed various bugs for a more stable experience. Now methods like Now all listeners like Reworked Removed Removed all legacy types and input stream, now is a mandatory to use Now Removed Renamed Moved Now Renamed For more info about breaking changes, check the We're pleased to announce that now is available an unofficial porting of NTgCalls for Rust, for more info, check the Bug Fixes: Addressed various bugs for a more stable experience. Now all raw methods like AudioParameters, VideoParameters, AudioStream, VideoStream, and Stream are all under The exception class We're pleased to announce that pre-compiled wheels optimized for ARM64 devices are now available. Encourage upvotes by reposting this message in your channels. The bot with the highest upvotes earns a prestigious place in the PyTgCalls documentation. Make sure your repository goes beyond minor tweaks of a fork. Use the Your repository should be public. Join the contest now and showcase your PyTgCalls-powered bot for a chance to be featured prominently on the PyTgCalls documentation! Good luck! Bug Fixes: Addressed various bugs for a more stable experience. As we said in the last post, now PyTgCalls AudioImagePiped AudioPiped AudioVideoPiped CaptureAudioDevice CaptureAVDesktop CaptureAVDeviceDesktop CaptureVideoDesktop VideoPiped Bug Fixes: Addressed various bugs for a more stable experience. As we know, Google is in charge of financing Python. Due to the recent events with the Bug Fixes: Addressed various bugs for a more stable experience. Bug Fixes: Addressed various bugs for a more stable experience.",
+    "description": "",
     "example": {},
     "details": {
       "sections": [
@@ -6573,7 +6573,7 @@
     "title": "PyTgCalls Client",
     "lib": "PyTgCalls",
     "kind": "misc",
-    "description": "You now are in the API Reference section. Here you can find detailed information about PyTgCalls API: the main Client class, all available methods, types, attributes and decorators detailed descriptions can be found starting from this page. This page is about the Client class, which exposes high-level methods for easy access to the API. PyTgCalls Client, the main tool for interacting with Telegram Calls. Pass the MTProto Client Cache duration of a Full Chat query Get a list of all calls. Get all group calls Get all private calls pyrogram.InputPeer telethon.InputPeer hydrogram.InputPeer Get current Telegram user Ping of NTgCalls core Get the MTProto client Get the CPU usage of the current process You set an invalid MTProto client.",
+    "description": "You now are in the API Reference section. Here you can find detailed information about PyTgCalls API: the main Client class, all available methods, types, attributes and decorators detailed descriptions can be found starting from this page. This page is about the Client class, which exposes high-level methods for easy access to the API.",
     "example": {
       "language": "python",
       "code": "from pytgcalls import PyTgCalls\n\napp = PyTgCalls(client)\napp.start()"
@@ -6686,7 +6686,7 @@
     "title": "Custom API",
     "lib": "PyTgCalls",
     "kind": "misc",
-    "description": "You now are in the API Reference section where you can find detailed information about the Custom API: the Front-end API class, all available methods, types, attributes and decorators detailed descriptions can be found starting from this page. This page is about the CustomAPI class, which exposes high-level methods for easy access to the API. CustomApi, the main means host the local http api server. CustomApi port of the http server This method starts the internal http webserver, this is helpful if you need an API interface to PyTgCalls.",
+    "description": "You now are in the API Reference section where you can find detailed information about the Custom API: the Front-end API class, all available methods, types, attributes and decorators detailed descriptions can be found starting from this page. This page is about the CustomAPI class, which exposes high-level methods for easy access to the API.",
     "example": {
       "language": "python",
       "code": "from pytgcalls import CustomApi\n\napi = CustomApi()\n\n@api.on_update_custom_api()\nasync def custom_api_request(request: dict):\n    print(request)\n    return {\n        'response': 'FOXES',\n    }\napi.start()"
@@ -6738,7 +6738,7 @@
     "title": "Decorators",
     "lib": "PyTgCalls",
     "kind": "misc",
-    "description": "While still being methods bound to the Decorator for handling all incoming updates. When any update is received, this decorator will be triggered. Decorator for handling incoming HTTP events. You have set too many decorators.",
+    "description": "While still being methods bound to the class, decorators hold a special significance that justifies a dedicated page. Decorators allow you to register callback functions for handling updates in a much easier and cleaner way. All you need to do is add the decorators on top of your functions. () Decorator for handling incoming HTTP events. exception You have set too many decorators.",
     "example": {
       "language": "python",
       "code": "from pytgcalls import PyTgCalls\nfrom pytgcalls.types import Update\nfrom pytgcalls import filters as call_filters\n...\nclient = # Here Your MTProto Client\napp = PyTgCalls(client)\n\n@app.on_update(call_filters.stream_end())\nasync def handler(client: PyTgCalls, update: Update):\n    print(update)\n\napp.run()"
@@ -6777,7 +6777,7 @@
     "title": "Filters",
     "lib": "PyTgCalls",
     "kind": "misc",
-    "description": "Filters are objects that can be used to filter the content of incoming updates. Easily create a custom filter. Custom filters give you extra control over which updates are allowed or not to be processed by your handlers. A function that accepts three positional arguments (filter, client, update) and returns a boolean: True if the update should be handled, False otherwise. The filter argument refers to the filter itself and can be used to access keyword arguments (read below). The client argument refers to the Client that received the update. The update argument type will vary depending on which Your filter’s name. Can be anything you like. Defaults to \"CustomFilter\". Any additional keyword arguments you want to pass to your filter function. Filter updates for yourself. Filter updates for when a stream ends. Pass one or more stream type to filter stream end updates. Pass one or more devices to filter stream end updates. Filter updates coming from one or more chats. You can use Pass one or more chat ids/usernames to filter chats. Defaults to None (no chats). Filter specific type of chat updates. Pass one or more flags to filter chat updates. Filter updates for when a call participant joins, leaves or is updated. Pass one or more flags to filter call participant updates. Filter updates for when stream frames are received. Pass one or more directions to filter stream frames. Pass one or more devices to filter stream frames.",
+    "description": "Filters are objects that can be used to filter the content of incoming updates.",
     "example": {},
     "details": {
       "sections": [
@@ -6802,7 +6802,7 @@
     "title": "Handling Updates",
     "lib": "PyTgCalls",
     "kind": "misc",
-    "description": "Calling API methods sequentially is cool, but what if, for example, the list of participants changes? This page covers updates and how to handle such events in PyTgCalls. Let’s have a look at how they work. First of all, let's define what these updates are. As hinted earlier, updates are events that happen in PyTgCalls, such as joining a group call, changes in the participant list, stream ended etc. They are meant to notify you about a new specific state change. These updates are handled by registering one or more callback functions in your app using To explain how handlers work, let's examine the one that will be in charge of handling The most elegant way to register a stream end handler is by using the The defined The",
+    "description": "Calling API methods sequentially is cool, but what if, for example, the list of participants changes? This page covers updates and how to handle such events in PyTgCalls. Let’s have a look at how they work. First of all, let's define what these updates are. As hinted earlier, updates are events that happen in PyTgCalls, such as joining a group call, changes in the participant list, stream ended etc. They are meant to notify you about a new specific state change. These updates are handled by registering one or more callback functions in your app using . Each handler deals with a specific event. When a matching update arrives from Telegram or NTgCalls, the registered callback function will be called back by the framework, and its body will execute. To explain how handlers work, let's examine the one that will be in charge of handling updates, which occur when a video stream ends. The same setup logic is shared with every type of handler, and you should not have troubles settings them up once you have learned from this section. The most elegant way to register a stream end handler is by using the decorator: The defined function, which accepts two arguments (client, update), will be executed whenever a new update arrives. The method takes any handler instance that wraps around your defined callback function and registers it in your Client. It is useful in case you want to programmatically add handlers.",
     "example": {
       "language": "python",
       "code": "from pytgcalls import PyTgCalls, filters\nfrom pytgcalls.types import Update\nfrom pytgcalls.types import MediaStream\n...\napp = PyTgCalls(client)\n\n@app.on_update(filters.stream_end())\nasync def my_handler(client: PyTgCalls, update: Update):\n    if isinstance(update, StreamVideoEnded):\n        await pytgcalls.play(\n            -1001185324811,\n            'http://docs.evostream.com/sample_content/assets/sintel1m720p.mp4',\n        )\n\napp.run()"
@@ -6816,7 +6816,7 @@
     "title": "Install Guide",
     "lib": "PyTgCalls",
     "kind": "misc",
-    "description": "Being a modern Python library, The easiest way to install and upgrade PyTgCalls to its latest stable version is by using pip: PyTgCalls is always evolving: although new releases on PyPI are only published when a significant number of changes are added, this doesn’t mean you can’t try new features right now! In case you’d like to try out the latest PyTgCalls’ features, the To verify that PyTgCalls is correctly installed, open a Python shell and import it. If no errors show up you are good to go.",
+    "description": "Being a modern Python library, requires Python 3.9+ to be installed in your system. We recommend using the latest versions of both Python 3 and pip. The easiest way to install and upgrade PyTgCalls to its latest stable version is by using pip: PyTgCalls is always evolving: although new releases on PyPI are only published when a significant number of changes are added, this doesn’t mean you can’t try new features right now! In case you’d like to try out the latest PyTgCalls’ features, the is constantly updated with new changes; you can install the development version straight from the branch using this command (note “master.zip” in the link): To verify that PyTgCalls is correctly installed, open a Python shell and import it. If no errors show up you are good to go.",
     "example": {
       "language": "bash",
       "code": "$ pip3 install -U py-tgcalls"
@@ -6830,7 +6830,7 @@
     "title": "Media Devices",
     "lib": "PyTgCalls",
     "kind": "misc",
-    "description": "This class offers methods to access information regarding media devices available on your system. This functionality proves valuable when you intend to stream content from either your screen or microphone. MediaDevices, the main tool for retrieving media devices list. Retrieve a list of available microphone devices Retrieve a list of available speaker devices Retrieve a list of available camera devices Retrieve a list of available screen devices",
+    "description": "This class offers methods to access information regarding media devices available on your system. This functionality proves valuable when you intend to stream content from either your screen or microphone.",
     "example": {
       "language": "python",
       "code": "from pytgcalls import Client\nfrom pytgcalls import idle\nfrom pytgcalls import MediaDevices\n...\n\napp = PyTgCalls(client)\napp.start()\n\n...  # Call API methods\n\napp.play(\n    -1001185324811,\n    MediaDevices.get_audio_devices()[0],\n)\n\nidle()"
@@ -7469,7 +7469,7 @@
     "title": "Using Filters",
     "lib": "PyTgCalls",
     "kind": "misc",
-    "description": "So far we’ve seen Let’s start right away with a simple example: This example will show you how to only handle updates that are an Incoming Call and ignore any other update. Filters are passed as the first argument of the decorator: or, without decorators. Here filters are passed as the second argument of the add_handler function; the first is the callback function itself: Filters can be used in a more advanced way by inverting and combining more filters together using bitwise operators This example will show you how to only handle updates that are This example will show you how to only handle updates that are",
+    "description": "So far we’ve seen function that executes every time an update comes from the server, but there’s much more than that to come. Here we’ll discuss . Filters enable a fine-grain control over what kind of updates are allowed or not to be passed in your callback functions, based on their inner details. Let’s start right away with a simple example: Filters can be used in a more advanced way by inverting and combining more filters together using bitwise operators , and : Here are some examples:",
     "example": {},
     "details": {
       "signature": null
@@ -7480,7 +7480,7 @@
     "title": "Using Handlers",
     "lib": "PyTgCalls",
     "kind": "misc",
-    "description": "Handlers are used to instruct PyTgCalls to execute a specific function when a certain event occurs. For a much more convenient way to handle updates, you can use the To register a handler, you need to use the To remove a handler, you need to use the",
+    "description": "Handlers are used to instruct PyTgCalls to execute a specific function when a certain event occurs. For a much more convenient way to handle updates, you can use the instead. To register a handler, you need to use the method. This method takes two arguments: the first is the callback function, and the second is the filter. To remove a handler, you need to use the method. This method takes the callback function as its only argument.",
     "example": {
       "language": "python",
       "code": "from pytgcalls import PyTgCalls\nfrom pytgcalls.types import Update\nfrom pytgcalls import filters as call_filters\n...\n\nclient = # Here Your MTProto Client\napp = PyTgCalls(client)\n\nasync def handler(client: PyTgCalls, update: Update):\n    print(update)\n...\napp.add_handler(handler, call_filters.stream_end())\n..."

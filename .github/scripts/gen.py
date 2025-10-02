@@ -319,16 +319,38 @@ def parse_map(map_source: Union[str, Path], config_map):
         if kind == "misc":
             def extract_full_description(node):
                 parts = []
-                for child in node.iter():
-                    if child.tag == "config":
-                        cid = child.attrib.get("id")
-                        if cid:
-                            parts.append(config_map.get(cid, f"[UNRESOLVED:{cid}]"))
-                    elif child.tag == "text" and child.text:
-                        parts.append(child.text.strip())
-                return " ".join(parts).strip()
+                
+                def process_element(elem, in_parameters=False):
+                    text_parts = []
+                    if elem.text and elem.text.strip():
+                        text = elem.text.strip()
+                        if in_parameters and elem.tag == "category-title":
+                            text = f"{text}:"
+                        text_parts.append(text)
+                    
+                    for child in elem:
+                        if child.tag == "config":
+                            cid = child.attrib.get("id")
+                            if cid:
+                                text_parts.append(config_map.get(cid, f"[UNRESOLVED:{cid}]"))
+                        elif child.tag in ("text", "subtext", "category-title"):
+                            child_text = process_element(child, in_parameters or elem.tag == "pg-title")
+                            if child_text:
+                                text_parts.append(child_text)
+                        elif child.tag == "pg-title" and child.text and child.text.upper() == "PARAMETERS":
+                            text_parts.append("\nParameters:")
+                            process_element(child, True)
+                        
+                        if child.tail and child.tail.strip():
+                            text_parts.append(child.tail.strip())
+                    
+                    return " ".join(text_parts).strip()
+                
+                return process_element(node)
 
             description = extract_full_description(page)
+            description = "\n".join(line.strip() for line in description.splitlines() if line.strip())
+            description = " ".join(description.split())
         else:
             desc_node = page.find("config")
             if desc_node is not None:
