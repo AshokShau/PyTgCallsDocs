@@ -4816,7 +4816,7 @@
     "title": "Getting Started",
     "lib": "NTgCalls",
     "kind": "misc",
-    "description": "This section provides documentation for the NTgCalls C API, which allows you to use NTgCalls in various programming languages, including C, C++, Go, Rust, Deno, and more. Below, you will find detailed information about the initialization and cleanup functions. To get started with NTgCalls in your application, you need to initialize the library using the function. This function sets up the necessary resources and prepares NTgCalls for use. To clean up and release the resources used by NTgCalls, you should call the function. This function deallocates memory and performs necessary cleanup operations. You can retrieve the version of the NTgCalls library currently in use using the function. This function returns a string containing the version number. () Retrieve library version",
+    "description": "This section provides documentation for the NTgCalls C API, which allows you to use NTgCalls in various programming languages, including C, C++, Go, Rust, Deno, and more. Below, you will find detailed information about the initialization and cleanup functions. To get started with NTgCalls in your application, you need to initialize the library using the function. This function sets up the necessary resources and prepares NTgCalls for use. To clean up and release the resources used by NTgCalls, you should call the function. This function deallocates memory and performs necessary cleanup operations. You can retrieve the version of the NTgCalls library currently in use using the function. This function returns a string containing the version number. Retrieve library version",
     "example": {},
     "details": {
       "sections": [
@@ -4841,7 +4841,7 @@
     "title": "Quick Start",
     "lib": "NTgCalls",
     "kind": "misc",
-    "description": "Welcome to this section, which is primarily intended for developers who are moderately experienced or seeking to perform a porting in their language using C bindings. If you are new to Python development, we strongly recommend using . However, if you fall into the aforementioned categories, you can find an example of usage with the various porting below. Looking for real-world implementations? Below is a selection of bots actively maintained and recommended by the community, all using NTgCalls/Py-TgCalls under the hood. These can be a great source of inspiration or even a solid starting point for your own project. In the following section, we present a comprehensive catalog of libraries, thoughtfully crafted by the community and officially endorsed, all of which leverage the robust capabilities of NTgCalls. What we've just seen are simplified ports of NTgCalls. However, now let's delve deeper! In the upcoming pages, we'll explore NTgCalls in a step-by-step manner, covering how it functions, how to install it, and more. Are you feeling eager to continue? You can take a shortcut to the Call Methods section and return later to delve into more details.",
+    "description": "Welcome to this section, which is primarily intended for developers who are moderately experienced or seeking to perform a porting in their language using C bindings. If you are new to Python development, we strongly recommend using Py-TgCalls . However, if you fall into the aforementioned categories, you can find an example of usage with the various porting below. Looking for real-world implementations? Below is a selection of bots actively maintained and recommended by the community, all using NTgCalls/Py-TgCalls under the hood. These can be a great source of inspiration or even a solid starting point for your own project. In the following section, we present a comprehensive catalog of libraries, thoughtfully crafted by the community and officially endorsed, all of which leverage the robust capabilities of NTgCalls. What we've just seen are simplified ports of NTgCalls. However, now let's delve deeper! In the upcoming pages, we'll explore NTgCalls in a step-by-step manner, covering how it functions, how to install it, and more. Are you feeling eager to continue? You can take a shortcut to the Call Methods section and return later to delve into more details.",
     "example": {},
     "details": {
       "signature": null
@@ -6738,7 +6738,7 @@
     "title": "Decorators",
     "lib": "PyTgCalls",
     "kind": "misc",
-    "description": "While still being methods bound to the class, decorators hold a special significance that justifies a dedicated page. Decorators allow you to register callback functions for handling updates in a much easier and cleaner way. All you need to do is add the decorators on top of your functions. () Decorator for handling incoming HTTP events. exception You have set too many decorators.",
+    "description": "While still being methods bound to the PyTgCalls class, decorators hold a special significance that justifies a dedicated page. Decorators allow you to register callback functions for handling updates in a much easier and cleaner way. All you need to do is add the decorators on top of your functions. Decorator for handling incoming HTTP events. You have set too many decorators.",
     "example": {
       "language": "python",
       "code": "from pytgcalls import PyTgCalls\nfrom pytgcalls.types import Update\nfrom pytgcalls import filters as call_filters\n...\nclient = # Here Your MTProto Client\napp = PyTgCalls(client)\n\n@app.on_update(call_filters.stream_end())\nasync def handler(client: PyTgCalls, update: Update):\n    print(update)\n\napp.run()"
@@ -6777,7 +6777,7 @@
     "title": "Filters",
     "lib": "PyTgCalls",
     "kind": "misc",
-    "description": "Filters are objects that can be used to filter the content of incoming updates.",
+    "description": "Filters are objects that can be used to filter the content of incoming updates. Read more about how filters work.",
     "example": {},
     "details": {
       "sections": [
@@ -6802,7 +6802,7 @@
     "title": "Handling Updates",
     "lib": "PyTgCalls",
     "kind": "misc",
-    "description": "Calling API methods sequentially is cool, but what if, for example, the list of participants changes? This page covers updates and how to handle such events in PyTgCalls. Let’s have a look at how they work. First of all, let's define what these updates are. As hinted earlier, updates are events that happen in PyTgCalls, such as joining a group call, changes in the participant list, stream ended etc. They are meant to notify you about a new specific state change. These updates are handled by registering one or more callback functions in your app using . Each handler deals with a specific event. When a matching update arrives from Telegram or NTgCalls, the registered callback function will be called back by the framework, and its body will execute. To explain how handlers work, let's examine the one that will be in charge of handling updates, which occur when a video stream ends. The same setup logic is shared with every type of handler, and you should not have troubles settings them up once you have learned from this section. The most elegant way to register a stream end handler is by using the decorator: The defined function, which accepts two arguments (client, update), will be executed whenever a new update arrives. The method takes any handler instance that wraps around your defined callback function and registers it in your Client. It is useful in case you want to programmatically add handlers.",
+    "description": "Calling API methods sequentially is cool, but what if, for example, the list of participants changes? This page covers updates and how to handle such events in PyTgCalls. Let’s have a look at how they work. First of all, let's define what these updates are. As hinted earlier, updates are events that happen in PyTgCalls, such as joining a group call, changes in the participant list, stream ended etc. They are meant to notify you about a new specific state change. These updates are handled by registering one or more callback functions in your app using Decorators . Each handler deals with a specific event. When a matching update arrives from Telegram or NTgCalls, the registered callback function will be called back by the framework, and its body will execute. To explain how handlers work, let's examine the one that will be in charge of handling updates, which occur when a video stream ends. The same setup logic is shared with every type of handler, and you should not have troubles settings them up once you have learned from this section. The most elegant way to register a stream end handler is by using the on_stream_end() decorator: The defined function, which accepts two arguments (client, update), will be executed whenever a new update arrives. The add_handler() method takes any handler instance that wraps around your defined callback function and registers it in your Client. It is useful in case you want to programmatically add handlers.",
     "example": {
       "language": "python",
       "code": "from pytgcalls import PyTgCalls, filters\nfrom pytgcalls.types import Update\nfrom pytgcalls.types import MediaStream\n...\napp = PyTgCalls(client)\n\n@app.on_update(filters.stream_end())\nasync def my_handler(client: PyTgCalls, update: Update):\n    if isinstance(update, StreamVideoEnded):\n        await pytgcalls.play(\n            -1001185324811,\n            'http://docs.evostream.com/sample_content/assets/sintel1m720p.mp4',\n        )\n\napp.run()"
@@ -7469,7 +7469,7 @@
     "title": "Using Filters",
     "lib": "PyTgCalls",
     "kind": "misc",
-    "description": "So far we’ve seen function that executes every time an update comes from the server, but there’s much more than that to come. Here we’ll discuss . Filters enable a fine-grain control over what kind of updates are allowed or not to be passed in your callback functions, based on their inner details. Let’s start right away with a simple example: Filters can be used in a more advanced way by inverting and combining more filters together using bitwise operators , and : Here are some examples:",
+    "description": "So far we’ve seen how to register a decorator function that executes every time an update comes from the server, but there’s much more than that to come. Here we’ll discuss filters . Filters enable a fine-grain control over what kind of updates are allowed or not to be passed in your callback functions, based on their inner details. Let’s start right away with a simple example: Filters can be used in a more advanced way by inverting and combining more filters together using bitwise operators , and : Here are some examples:",
     "example": {},
     "details": {
       "signature": null
@@ -7480,7 +7480,7 @@
     "title": "Using Handlers",
     "lib": "PyTgCalls",
     "kind": "misc",
-    "description": "Handlers are used to instruct PyTgCalls to execute a specific function when a certain event occurs. For a much more convenient way to handle updates, you can use the instead. To register a handler, you need to use the method. This method takes two arguments: the first is the callback function, and the second is the filter. To remove a handler, you need to use the method. This method takes the callback function as its only argument.",
+    "description": "Handlers are used to instruct PyTgCalls to execute a specific function when a certain event occurs. For a much more convenient way to handle updates, you can use the decorators instead. To register a handler, you need to use the method. This method takes two arguments: the first is the callback function, and the second is the filter. To remove a handler, you need to use the method. This method takes the callback function as its only argument.",
     "example": {
       "language": "python",
       "code": "from pytgcalls import PyTgCalls\nfrom pytgcalls.types import Update\nfrom pytgcalls import filters as call_filters\n...\n\nclient = # Here Your MTProto Client\napp = PyTgCalls(client)\n\nasync def handler(client: PyTgCalls, update: Update):\n    print(update)\n...\napp.add_handler(handler, call_filters.stream_end())\n..."
