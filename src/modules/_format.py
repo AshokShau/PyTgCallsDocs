@@ -63,6 +63,8 @@ async def format_doc_info(r, include_raises: bool = False) -> str:
     # description
     if r.description:
         parts.append(html.escape(r.description))
+        # Do not add sections for methods for misc
+        if r.kind == "misc": return "\n".join(parts)
 
     # example code
     if r.example and r.example.get("code"):
