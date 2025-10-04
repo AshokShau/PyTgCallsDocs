@@ -21,6 +21,10 @@ I can help you find information about PyTgCalls and NTgCalls methods, classes, a
 • <code>@{bot_username} Quick start</code>
 • <code>@{bot_username} First, take a look at +Quick start+. To play in a voice chat, use the +play+ method.</code>
 
+• <code>@{bot_username} #10</code>: Bot shows results for pytgcalls/pytgcalls and pytgcalls/ntgcalls
+• <code>@{bot_username} nt#10</code>: Bot shows results for pytgcalls/ntgcalls
+
+
 Made with ❤️ by @AshokShau"""
     ok = await message.reply_text(
         text=welcome_text,

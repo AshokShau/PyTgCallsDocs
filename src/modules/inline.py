@@ -1,9 +1,11 @@
+import html
 import re
 import uuid
 
 from pytdbot import Client, types
 
 from ._format import format_doc_info, keyboard, replace_with_doc_links
+from ._github import search_github_refs
 from .search import DocSearch
 
 # Initialize components
@@ -16,18 +18,20 @@ _RESULTS_PER_PAGE = 10
 @Client.on_updateNewInlineQuery()
 async def inline_search(client: Client, update: types.UpdateNewInlineQuery):
     query = update.query.strip()
-
+    client.logger.info(f"Inline query: {query}")
     if not query:
         await _handle_empty_query(client, update)
         return
 
-    # Check for special pattern matching (e.g., +function+)
-    if re.search(r"\+([A-Za-z0-9 _-]+)\+", query):
-        await _handle_pattern_query(client, update, query)
+    if re.search(r"^(nt)?#(\d+)$", query, re.IGNORECASE):
+        await _handle_github_query(client, update)
         return
 
-    # Handle regular search query
-    await _handle_regular_query(client, update, query)
+    if re.search(r"\+([A-Za-z0-9 _-]+)\+", query):
+        await _handle_pattern_query(client, update)
+        return
+
+    await _handle_regular_query(client, update)
 
 
 async def _handle_empty_query(client: Client, update: types.UpdateNewInlineQuery):
@@ -56,17 +60,61 @@ async def _handle_empty_query(client: Client, update: types.UpdateNewInlineQuery
     await client.answerInlineQuery(
         update.id,
         results=[result],
-        cache_time=60,
         button=webapp_button,
-        is_personal=True
+        cache_time=300,
     )
 
+async def _handle_github_query(client: Client, update: types.UpdateNewInlineQuery):
+    query = update.query.strip()
+    _refs = await search_github_refs(query)
+    if not _refs:
+        await _send_no_results_response(client, update)
+        return
 
-async def _handle_pattern_query(client: Client, update: types.UpdateNewInlineQuery, query: str):
+    results = []
+    for r in _refs:
+        _text = await client.parseTextEntities(
+            f"#{r['number']} {r['type']}: <a href='{r['url']}'>{html.escape(r['title'])}</a> ({r['state']})",
+            types.TextParseModeHTML()
+        )
+
+        if isinstance(_text, types.Error):
+            client.logger.warning(f"Error parsing github result: {_text.message}")
+            continue
+
+        result = types.InputInlineQueryResultArticle(
+            id=str(uuid.uuid4()),
+            title=f"{r['title']}",
+            description=f"{r['repo']}#{r['number']} {r['type']}: {r['state']}",
+            thumbnail_url=_thumb_url,
+            input_message_content=types.InputMessageText(text=_text),
+            reply_markup=types.ReplyMarkupInlineKeyboard([
+                [
+                    types.InlineKeyboardButton(
+                        text="View on GitHub",
+                        type=types.InlineKeyboardButtonTypeUrl(r['url']),
+                    )
+                ]
+            ]),
+        )
+        results.append(result)
+
+    done = await client.answerInlineQuery(
+        update.id,
+        results=results,
+        cache_time=300,
+    )
+    if isinstance(done, types.Error):
+        client.logger.warning(f"Failed to send inline results: {done.message}")
+
+
+async def _handle_pattern_query(client: Client, update: types.UpdateNewInlineQuery):
     """Handle queries with special pattern syntax (e.g., +function+)."""
+    query = update.query.strip()
     doc_links = await replace_with_doc_links(query, searcher)
     if not doc_links:
         client.logger.info(f"No results found for pattern query: {query}")
+        await _send_no_results_response(client, update)
         return
 
     results = []
@@ -82,6 +130,7 @@ async def _handle_pattern_query(client: Client, update: types.UpdateNewInlineQue
             input_message_content=types.InputMessageText(
                 text=await client.parseTextEntities(link.result_text, types.TextParseModeHTML())
             ),
+
         )
         results.append(result)
 
@@ -89,20 +138,20 @@ async def _handle_pattern_query(client: Client, update: types.UpdateNewInlineQue
         update.id,
         results=results,
         cache_time=300,
-        is_personal=True
     )
 
     if isinstance(response, types.Error):
         client.logger.warning(f"Failed to send inline results: {response.message}")
 
 
-async def _handle_regular_query(client: Client, update: types.UpdateNewInlineQuery, query: str):
+async def _handle_regular_query(client: Client, update: types.UpdateNewInlineQuery):
     """Handle regular search queries."""
+    query = update.query.strip()
     offset = int(update.offset) if update.offset else 0
     all_results = searcher.search(query, limit=50)
 
     if not all_results:
-        await _send_no_results_response(client, update, query)
+        await _send_no_results_response(client, update)
         return
 
     # Paginate results
@@ -117,7 +166,7 @@ async def _handle_regular_query(client: Client, update: types.UpdateNewInlineQue
             results.append(inline_result)
 
     if not results:
-        await _send_no_results_response(client, update, query)
+        await _send_no_results_response(client, update)
         return
 
     ok = await client.answerInlineQuery(
@@ -125,7 +174,6 @@ async def _handle_regular_query(client: Client, update: types.UpdateNewInlineQue
         results=results,
         next_offset=next_offset,
         cache_time=300,
-        is_personal=True
     )
     if isinstance(ok, types.Error):
         client.logger.warning(f"Failed to send inline results: {ok.message}")
@@ -164,8 +212,9 @@ async def _create_inline_result(client: Client, search_result) -> types.InputInl
     )
 
 
-async def _send_no_results_response(client: Client, update: types.UpdateNewInlineQuery, query: str):
+async def _send_no_results_response(client: Client, update: types.UpdateNewInlineQuery):
     """Send a response when no results are found."""
+    query = update.query.strip()
     no_results = types.InputInlineQueryResultArticle(
         id=str(uuid.uuid4()),
         title="❌ No Results Found",
@@ -180,6 +229,4 @@ async def _send_no_results_response(client: Client, update: types.UpdateNewInlin
         update.id,
         results=[no_results],
         next_offset="",
-        cache_time=300,
-        is_personal=True
     )
