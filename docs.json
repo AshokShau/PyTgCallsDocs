@@ -6615,21 +6615,21 @@
           "title": "STATIC METHODS",
           "items": [
             {
-              "name": "async calls -> dict[str, Call]",
+              "name": "async calls -> dict[int, Call]",
               "type": null,
               "description": " Get a list of all calls.",
               "source_config": null,
               "value": null
             },
             {
-              "name": "async group_calls -> dict[str, Call]",
+              "name": "async group_calls -> dict[int, Call]",
               "type": null,
               "description": "",
               "source_config": null,
               "value": null
             },
             {
-              "name": "async private_calls -> dict[str, Call]",
+              "name": "async private_calls -> dict[int, Call]",
               "type": null,
               "description": "",
               "source_config": null,
