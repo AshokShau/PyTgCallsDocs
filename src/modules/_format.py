@@ -53,71 +53,78 @@ async def replace_with_doc_links(text: str, searcher: "DocSearch") -> t.List[Doc
     return docs_links
 
 
-async def format_doc_info(r, include_raises: bool = False) -> str:
-    parts = [f"<b>{html.escape(r.title)}</b> <i>({r.kind}, {r.lib})</i>"]
+def _code(text: str) -> str:
+    return f"<code>{html.escape(text.strip())}</code>"
 
+async def format_doc_info(r, include_raises: bool = False) -> str:
+    header = f"<b>{html.escape(r.title)}</b> <i>({r.kind}, {r.lib})</i>\n"
     # signature
     if r.details.signature:
-        parts.append(f"<pre>{html.escape(r.details.signature)}</pre>")
+        header += f"<pre>{html.escape(r.details.signature)}</pre>"
 
+    content = []
     # description
     if r.description:
-        parts.append(html.escape(r.description))
-        # Do not add sections for methods for misc
-        if r.kind == "misc": return "\n".join(parts)
+        content.append(html.escape(r.description))
+        if r.kind == "misc":
+            return header + "\n" + f"<blockquote expandable>{'\n'.join(content)}</blockquote>"
 
     # example code
     if r.example and r.example.get("code"):
-        code = html.escape(r.example["code"].strip())
         lang = r.example.get("language", "")
-        parts.append(f"<b>Example ({lang}):</b>\n<pre>{code}</pre>")
+        content.append(f"<b>Example ({lang}):</b>\n")
+        content.append(_code(r.example["code"]))
 
-    # sections (PARAMETERS etc., skip RAISES unless include_raises=True)
+    # structured sections
     if r.details.sections:
         for s in r.details.sections:
-            if s.title.upper() == "RAISES" and not include_raises:
+            title = s.title.upper()
+            if title == "RAISES" and not include_raises:
                 continue
-            parts.append(f"<b>{html.escape(s.title)}</b>")
-            for it in s.items:
-                nm = it.get("name") or ""
-                tp = it.get("type") or ""
-                ds = (it.get("description") or "").strip()
 
-                if s.title.upper() == "RAISES":
+            content.append(f"<b>{html.escape(s.title)}</b>")
+
+            for item in s.items:
+                name = item.get("name") or ""
+                tp = item.get("type") or ""
+                ds = (item.get("description") or "").strip()
+
+                if title == "RAISES":
                     for line in ds.split("\n"):
-                        if line := line.strip():
-                            parts.append(f"• {html.escape(line)}")
+                        line = line.strip()
+                        if line:
+                            content.append(f"• {html.escape(line)}")
                 else:
-                    param_line = f"<code>{html.escape(nm)}</code>"
+                    line = f"<code>{html.escape(name)}</code>"
                     if tp:
-                        param_line += f": <i>{html.escape(tp)}</i>"
+                        line += f": <i>{html.escape(tp)}</i>"
                     if ds:
-                        param_line += f" — {html.escape(ds)}"
-                    parts.append(f"• {param_line}")
+                        line += f" — {html.escape(ds)}"
+                    content.append(f"• {line}")
 
-    # members (for enums)
+    # enum members
     if r.details.members:
-        parts.append("<b>Members:</b>")
+        content.append("<b>Members:</b>")
         for m in r.details.members:
             line = f"<code>{html.escape(m.name)}</code>"
             if m.value:
                 line += f" = <code>{html.escape(m.value)}</code>"
             if m.description:
                 line += f" — {html.escape(m.description)}"
-            parts.append(f"• {line}")
+            content.append(f"• {line}")
 
-    # properties (for types)
+    # properties
     if r.details.properties:
-        parts.append("<b>Properties:</b>")
+        content.append("<b>Properties:</b>")
         for p in r.details.properties:
             line = f"<code>{html.escape(p.name)}</code>"
             if p.type:
                 line += f" -> <i>{html.escape(p.type)}</i>"
             if p.description:
                 line += f" — {html.escape(p.description)}"
-            parts.append(f"• {line}")
+            content.append(f"• {line}")
 
-    return "\n".join(parts)
+    return header + "\n" + f"<blockquote expandable>{'\n'.join(content)}</blockquote>"
 
 
 keyboard = [
