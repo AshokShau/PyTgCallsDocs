@@ -1871,6 +1871,13 @@
           "description": "Audio channel count (1-2, max allowed by PCM16L).",
           "source_config": null,
           "value": null
+        },
+        {
+          "name": "bool keepOpen",
+          "type": null,
+          "description": "Whether to force the stream change or automatically detect it.",
+          "source_config": null,
+          "value": null
         }
       ]
     },
@@ -2580,6 +2587,13 @@
           "description": "Frames per second (FPS) for video playback.",
           "source_config": null,
           "value": null
+        },
+        {
+          "name": "bool keepOpen",
+          "type": null,
+          "description": "Whether to force the stream change or automatically detect it.",
+          "source_config": null,
+          "value": null
         }
       ]
     },
@@ -2605,6 +2619,13 @@
           "name": "channel_count",
           "type": "int",
           "description": "Audio channel count (1-2, max allowed by PCM16L). input: str\nThe input media source.",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "keep_open",
+          "type": "bool",
+          "description": "Whether to force the stream change or automatically detect it.",
           "source_config": null,
           "value": null
         }
@@ -3212,6 +3233,13 @@
           "name": "fps",
           "type": "int",
           "description": "Frames per second (FPS) for video playback. input: str\nThe input media source.",
+          "source_config": null,
+          "value": null
+        },
+        {
+          "name": "keep_open",
+          "type": "bool",
+          "description": "Whether to force the stream change or automatically detect it.",
           "source_config": null,
           "value": null
         }
