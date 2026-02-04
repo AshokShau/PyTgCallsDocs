@@ -1875,7 +1875,7 @@
         {
           "name": "bool keepOpen",
           "type": null,
-          "description": "Whether to force the stream change or automatically detect it.",
+          "description": "If set to true, the stream will be kept open and changes are detected automatically when the input differs from the previous one, otherwise if set to false, the stream change is always forced.",
           "source_config": null,
           "value": null
         }
@@ -2591,7 +2591,7 @@
         {
           "name": "bool keepOpen",
           "type": null,
-          "description": "Whether to force the stream change or automatically detect it.",
+          "description": "If set to true, the stream will be kept open and changes are detected automatically when the input differs from the previous one, otherwise if set to false, the stream change is always forced.",
           "source_config": null,
           "value": null
         }
@@ -2625,7 +2625,7 @@
         {
           "name": "keep_open",
           "type": "bool",
-          "description": "Whether to force the stream change or automatically detect it.",
+          "description": "If set to true, the stream will be kept open and changes are detected automatically when the input differs from the previous one, otherwise if set to false, the stream change is always forced.",
           "source_config": null,
           "value": null
         }
@@ -3239,7 +3239,7 @@
         {
           "name": "keep_open",
           "type": "bool",
-          "description": "Whether to force the stream change or automatically detect it.",
+          "description": "If set to true, the stream will be kept open and changes are detected automatically when the input differs from the previous one, otherwise if set to false, the stream change is always forced.",
           "source_config": null,
           "value": null
         }
