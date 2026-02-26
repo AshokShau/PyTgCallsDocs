@@ -5405,7 +5405,7 @@
     "description": "This method changes the userbot’s output volume using MTProto APIs.",
     "example": {
       "language": "python",
-      "code": "from pytgcalls import Client\nfrom pytgcalls import idle\n...\n\napp = PyTgCalls(client)\napp.start()\n\n...  # Call API methods\n\napp.change_volume_call(\n    -1001185324811,\n    175,\n)\n\nidle()"
+      "code": "from pytgcalls import PyTgCalls\nfrom pytgcalls import idle\n...\n\napp = PyTgCalls(client)\napp.start()\n\n...  # Call API methods\n\napp.change_volume_call(\n    -1001185324811,\n    175,\n)\n\nidle()"
     },
     "details": {
       "sections": [
@@ -5452,7 +5452,7 @@
     "description": "This method returns the list of a group call’s participants using MTProto APIs.",
     "example": {
       "language": "python",
-      "code": "from pytgcalls import Client\nfrom pytgcalls import idle\n...\n\napp = PyTgCalls(client)\napp.start()\n\n...  # Call API methods\n\napp.get_participants(\n    -1001185324811,\n)\n\nidle()"
+      "code": "from pytgcalls import PyTgCalls\nfrom pytgcalls import idle\n...\n\napp = PyTgCalls(client)\napp.start()\n\n...  # Call API methods\n\napp.get_participants(\n    -1001185324811,\n)\n\nidle()"
     },
     "details": {
       "sections": [
@@ -6364,7 +6364,7 @@
     "description": "This function will run indefinitely in order to block the main script execution and prevent it from exiting while having client(s) that are still running in the background. PyTgCalls works by keeping your handlers in a pool of worker threads, which run concurrently outside the main thread. Calling idle() will ensure that the client(s) remain active, by preventing the main script from ending until you decide to quit. Once a signal is received (e.g.: from CTRL+C) the function will terminate and your main script will continue.",
     "example": {
       "language": "python",
-      "code": "from pytgcalls import Client\nfrom pytgcalls import idle\n...\n\napp1 = PyTgCalls(client1)\napp2 = PyTgCalls(client2)\napp3 = PyTgCalls(client3)\n\n...  # Set handlers up\n\napp1.start()\napp2.start()\napp3.start()\n\nidle()"
+      "code": "from pytgcalls import PyTgCalls\nfrom pytgcalls import idle\n...\n\napp1 = PyTgCalls(client1)\napp2 = PyTgCalls(client2)\napp3 = PyTgCalls(client3)\n\n...  # Set handlers up\n\napp1.start()\napp2.start()\napp3.start()\n\nidle()"
     },
     "details": {
       "signature": "pytgcalls.idle()"
@@ -6378,7 +6378,7 @@
     "description": "This method allows leaving and stopping a group call or a private call, or declining a private call.",
     "example": {
       "language": "python",
-      "code": "from pytgcalls import Client\nfrom pytgcalls import idle\n...\n\napp = PyTgCalls(client)\napp.start()\n\n...  # Call API methods\n\napp.leave_call(\n    -1001185324811,\n)\n\nidle()"
+      "code": "from pytgcalls import PyTgCalls\nfrom pytgcalls import idle\n...\n\napp = PyTgCalls(client)\napp.start()\n\n...  # Call API methods\n\napp.leave_call(\n    -1001185324811,\n)\n\nidle()"
     },
     "details": {
       "sections": [
@@ -6425,7 +6425,7 @@
     "description": "This is a convenience method that calls",
     "example": {
       "language": "python",
-      "code": "from pytgcalls import Client\nfrom pytgcalls import idle\n...\napp = Client(client)\n\n...  # Call API decorators / MtProto decorators\n\napp.run()"
+      "code": "from pytgcalls import PyTgCalls\nfrom pytgcalls import idle\n...\napp = PyTgCalls(client)\n\n...  # Call API decorators / MtProto decorators\n\napp.run()"
     },
     "details": {
       "sections": [
@@ -6453,7 +6453,7 @@
     "description": "This method start and then initialize NTgCalls core.",
     "example": {
       "language": "python",
-      "code": "from pytgcalls import Client\nfrom pytgcalls import idle\n...\napp = Client(client)\n\n...  # Call API decorators / MTProto decorators\n\napp.start()"
+      "code": "from pytgcalls import PyTgCalls\nfrom pytgcalls import idle\n...\napp = PyTgCalls(client)\n\n...  # Call API decorators / MTProto decorators\n\napp.start()"
     },
     "details": {
       "sections": [
@@ -6844,7 +6844,7 @@
     "title": "Install Guide",
     "lib": "PyTgCalls",
     "kind": "misc",
-    "description": "Being a modern Python library, requires Python 3.9+ to be installed in your system. We recommend using the latest versions of both Python 3 and pip. The easiest way to install and upgrade PyTgCalls to its latest stable version is by using pip: PyTgCalls is always evolving: although new releases on PyPI are only published when a significant number of changes are added, this doesn’t mean you can’t try new features right now! In case you’d like to try out the latest PyTgCalls’ features, the is constantly updated with new changes; you can install the development version straight from the branch using this command (note “master.zip” in the link): To verify that PyTgCalls is correctly installed, open a Python shell and import it. If no errors show up you are good to go.",
+    "description": "Being a modern Python library, requires Python 3.10+ to be installed in your system. We recommend using the latest versions of both Python 3 and pip. The easiest way to install and upgrade PyTgCalls to its latest stable version is by using pip: PyTgCalls is always evolving: although new releases on PyPI are only published when a significant number of changes are added, this doesn’t mean you can’t try new features right now! In case you’d like to try out the latest PyTgCalls’ features, the is constantly updated with new changes; you can install the development version straight from the branch using this command (note “master.zip” in the link): To verify that PyTgCalls is correctly installed, open a Python shell and import it. If no errors show up you are good to go.",
     "example": {
       "language": "bash",
       "code": "$ pip3 install -U py-tgcalls"
@@ -6861,7 +6861,7 @@
     "description": "This class offers methods to access information regarding media devices available on your system. This functionality proves valuable when you intend to stream content from either your screen or microphone.",
     "example": {
       "language": "python",
-      "code": "from pytgcalls import Client\nfrom pytgcalls import idle\nfrom pytgcalls import MediaDevices\n...\n\napp = PyTgCalls(client)\napp.start()\n\n...  # Call API methods\n\napp.play(\n    -1001185324811,\n    MediaDevices.get_audio_devices()[0],\n)\n\nidle()"
+      "code": "from pytgcalls import PyTgCalls\nfrom pytgcalls import idle\nfrom pytgcalls import MediaDevices\n...\n\napp = PyTgCalls(client)\napp.start()\n\n...  # Call API methods\n\napp.play(\n    -1001185324811,\n    MediaDevices.get_audio_devices()[0],\n)\n\nidle()"
     },
     "details": {
       "sections": [
@@ -7185,7 +7185,7 @@
     "description": "This method allows muting the userbot via MTProto APIs.",
     "example": {
       "language": "python",
-      "code": "from pytgcalls import Client\nfrom pytgcalls import idle\n...\n\napp = PyTgCalls(client)\napp.start()\n\n...  # Call API methods\n\napp.mute(\n    -1001185324811,\n)\n\nidle()"
+      "code": "from pytgcalls import PyTgCalls\nfrom pytgcalls import idle\n...\n\napp = PyTgCalls(client)\napp.start()\n\n...  # Call API methods\n\napp.mute(\n    -1001185324811,\n)\n\nidle()"
     },
     "details": {
       "sections": [
@@ -7225,7 +7225,7 @@
     "description": "This method allows pausing the streaming file.",
     "example": {
       "language": "python",
-      "code": "from pytgcalls import Client\nfrom pytgcalls import idle\n...\n\napp = PyTgCalls(client)\napp.start()\n\n...  # Call API methods\n\napp.pause(\n    -1001185324811,\n)\n\nidle()"
+      "code": "from pytgcalls import PyTgCalls\nfrom pytgcalls import idle\n...\n\napp = PyTgCalls(client)\napp.start()\n\n...  # Call API methods\n\napp.pause(\n    -1001185324811,\n)\n\nidle()"
     },
     "details": {
       "sections": [
@@ -7265,7 +7265,7 @@
     "description": "This method allows streaming audio or video to a group call or a private call.",
     "example": {
       "language": "python",
-      "code": "from pytgcalls import Client\nfrom pytgcalls import idle\n...\n\napp = PyTgCalls(client)\napp.start()\n\n...  # Call API methods\n\napp.play(\n    -1001185324811,\n    'test.mp4',\n)\n\nidle()"
+      "code": "from pytgcalls import PyTgCalls\nfrom pytgcalls import idle\n...\n\napp = PyTgCalls(client)\napp.start()\n\n...  # Call API methods\n\napp.play(\n    -1001185324811,\n    'test.mp4',\n)\n\nidle()"
     },
     "details": {
       "sections": [
@@ -7319,7 +7319,7 @@
     "description": "This method allows recording audio or video from a group call or a private call.",
     "example": {
       "language": "python",
-      "code": "from pytgcalls import Client\nfrom pytgcalls import idle\n...\n\napp = PyTgCalls(client)\napp.start()\n\n...  # Call API methods\n\napp.record(\n    -1001185324811,\n    'record.mp3',\n)\n\nidle()"
+      "code": "from pytgcalls import PyTgCalls\nfrom pytgcalls import idle\n...\n\napp = PyTgCalls(client)\napp.start()\n\n...  # Call API methods\n\napp.record(\n    -1001185324811,\n    'record.mp3',\n)\n\nidle()"
     },
     "details": {
       "sections": [
@@ -7373,7 +7373,7 @@
     "description": "This method allows resuming the streaming file.",
     "example": {
       "language": "python",
-      "code": "from pytgcalls import Client\nfrom pytgcalls import idle\n...\n\napp = PyTgCalls(client)\napp.start()\n\n...  # Call API methods\n\napp.resume(\n    -1001185324811,\n)\n\nidle()"
+      "code": "from pytgcalls import PyTgCalls\nfrom pytgcalls import idle\n...\n\napp = PyTgCalls(client)\napp.start()\n\n...  # Call API methods\n\napp.resume(\n    -1001185324811,\n)\n\nidle()"
     },
     "details": {
       "sections": [
@@ -7413,7 +7413,7 @@
     "description": "This method allows getting the played time of the stream.",
     "example": {
       "language": "python",
-      "code": "from pytgcalls import Client\nfrom pytgcalls import idle\n...\n\napp = PyTgCalls(client)\napp.start()\n\n...  # Call API methods\n\nprint(\n    app.time(\n        -1001185324811,\n    )\n)\n\nidle()"
+      "code": "from pytgcalls import PyTgCalls\nfrom pytgcalls import idle\n...\n\napp = PyTgCalls(client)\napp.start()\n\n...  # Call API methods\n\nprint(\n    app.time(\n        -1001185324811,\n    )\n)\n\nidle()"
     },
     "details": {
       "sections": [
@@ -7460,7 +7460,7 @@
     "description": "This method allows unmuting the userbot via MTProto APIs",
     "example": {
       "language": "python",
-      "code": "from pytgcalls import Client\nfrom pytgcalls import idle\n...\n\napp = PyTgCalls(client)\napp.start()\n\n...  # Call API methods\n\napp.unmute(\n    -1001185324811,\n)\n\nidle()"
+      "code": "from pytgcalls import PyTgCalls\nfrom pytgcalls import idle\n...\n\napp = PyTgCalls(client)\napp.start()\n\n...  # Call API methods\n\napp.unmute(\n    -1001185324811,\n)\n\nidle()"
     },
     "details": {
       "sections": [
