@@ -14,7 +14,11 @@ import (
 
 func FormatEntry(e *docs.DocEntry) string {
 	var sb strings.Builder
-	sb.WriteString(fmt.Sprintf("<b>%s</b> (%s %s)\n\n", e.Title, e.Lib, e.Kind))
+	if e.Kind == "example" {
+		sb.WriteString(fmt.Sprintf("💻 <b>%s</b>\n\n", e.Title))
+	} else {
+		sb.WriteString(fmt.Sprintf("<b>%s</b> (%s %s)\n\n", e.Title, e.Lib, e.Kind))
+	}
 	sb.WriteString(strings.TrimSpace(e.Description))
 	if e.Details.Signature != nil {
 		sig := strings.TrimSpace(*e.Details.Signature)
@@ -22,7 +26,11 @@ func FormatEntry(e *docs.DocEntry) string {
 			sb.WriteString(fmt.Sprintf("\n\n<code>%s</code>", sig))
 		}
 	}
-	sb.WriteString(fmt.Sprintf("\n\n<a href=\"%s\">View Online</a>", e.DocURL))
+	if e.Kind == "example" {
+		sb.WriteString(fmt.Sprintf("\n\n<a href=\"%s\">View Source on GitHub</a>", e.DocURL))
+	} else {
+		sb.WriteString(fmt.Sprintf("\n\n<a href=\"%s\">View Online</a>", e.DocURL))
+	}
 	return sb.String()
 }
 
@@ -168,11 +176,18 @@ func FormatOtherDetails(e *docs.DocEntry) string {
 		for _, item := range s.Items {
 			name := strings.TrimSpace(item.Name)
 			desc := strings.TrimSpace(item.Description)
+
+			line := ""
 			if name != "" {
-				sb.WriteString(fmt.Sprintf("- <code>%s</code>: %s\n", name, desc))
+				if item.URL != nil {
+					line = fmt.Sprintf("- <a href=\"%s\">%s</a>: %s\n", *item.URL, name, desc)
+				} else {
+					line = fmt.Sprintf("- <code>%s</code>: %s\n", name, desc)
+				}
 			} else {
-				sb.WriteString(fmt.Sprintf("- %s\n", desc))
+				line = fmt.Sprintf("- %s\n", desc)
 			}
+			sb.WriteString(line)
 		}
 		sb.WriteString("\n")
 	}

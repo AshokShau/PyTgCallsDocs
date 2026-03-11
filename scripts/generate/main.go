@@ -159,10 +159,55 @@ func parseMap(url string, configMap map[string]string) (docs.Documentation, erro
 
 	documentation := make(docs.Documentation)
 	for path, pageXML := range rawMap {
+		if path == "/PyTgCalls/Examples.xml" {
+			examples := parseExamplesPage(path, pageXML)
+			for _, ex := range examples {
+				documentation[ex.Path] = ex
+			}
+		}
 		documentation[path] = parsePage(path, pageXML, configMap)
 	}
 
 	return documentation, nil
+}
+
+func parseExamplesPage(path, pageXML string) []*docs.DocEntry {
+	var entries []*docs.DocEntry
+
+	tableRegex := regexp.MustCompile(`(?s)<table>(.*?)</table>`)
+	itemRegex := regexp.MustCompile(`(?s)<item>(.*?)</item>`)
+	columnRegex := regexp.MustCompile(`(?s)<column>(.*?)</column>`)
+	refShiRegex := regexp.MustCompile(`<ref-shi url="(.*?)">(.*?)</ref-shi>`)
+
+	tables := tableRegex.FindAllString(pageXML, -1)
+	for _, table := range tables {
+		items := itemRegex.FindAllString(table, -1)
+		for _, item := range items {
+			columns := columnRegex.FindAllStringSubmatch(item, -1)
+			if len(columns) >= 2 {
+				nameMatch := refShiRegex.FindStringSubmatch(columns[0][1])
+				if len(nameMatch) >= 3 {
+					url := nameMatch[1]
+					title := nameMatch[2]
+					description := strings.TrimSpace(columns[1][1])
+
+					fullURL := "https://github.com/pytgcalls/pytgcalls/tree/master/" + url
+					filename := filepathBase(url)
+
+					entries = append(entries, &docs.DocEntry{
+						Path:        fmt.Sprintf("/PyTgCalls/Examples/%s.xml", title),
+						Title:       fmt.Sprintf("Example: %s (%s)", title, filename),
+						Lib:         "PyTgCalls",
+						Kind:        "example",
+						Description: description,
+						DocURL:      fullURL,
+					})
+				}
+			}
+		}
+	}
+
+	return entries
 }
 
 type XMLNode struct {
@@ -234,6 +279,48 @@ func parsePage(path, pageXML string, configMap map[string]string) *docs.DocEntry
 	}
 
 	details := parseDetails(root, configMap)
+
+	// Handle tables in details
+	tableRegex := regexp.MustCompile(`(?s)<table>(.*?)</table>`)
+	itemRegex := regexp.MustCompile(`(?s)<item>(.*?)</item>`)
+	columnRegex := regexp.MustCompile(`(?s)<column>(.*?)</column>`)
+	refShiRegex := regexp.MustCompile(`<ref-shi url="(.*?)">(.*?)</ref-shi>`)
+
+	tables := tableRegex.FindAllString(pageXML, -1)
+	for _, table := range tables {
+		var section docs.Section
+		section.Title = "LIST"
+
+		items := itemRegex.FindAllString(table, -1)
+		for _, item := range items {
+			columns := columnRegex.FindAllStringSubmatch(item, -1)
+			if len(columns) >= 2 {
+				col1 := columns[0][1]
+				col2 := columns[1][1]
+
+				name := col1
+				var url *string
+				nameMatch := refShiRegex.FindStringSubmatch(col1)
+				if len(nameMatch) >= 3 {
+					u := nameMatch[1]
+					if !strings.HasPrefix(u, "http") {
+						u = "https://github.com/pytgcalls/pytgcalls/tree/master/" + u
+					}
+					url = &u
+					name = nameMatch[2]
+				}
+
+				section.Items = append(section.Items, docs.DocItem{
+					Name:        name,
+					Description: strings.TrimSpace(col2),
+					URL:         url,
+				})
+			}
+		}
+		if len(section.Items) > 0 {
+			details.Sections = append(details.Sections, section)
+		}
+	}
 
 	if description == "" {
 		description = findFirstDescription(root, configMap)

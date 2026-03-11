@@ -7299,9 +7299,430 @@
     "kind": "misc",
     "description": "This page contains example scripts to demonstrate how PyTgCalls looks like. Every script is working right away (assuming you correctly set up your credentials), meaning you can simply copy-paste them and run. The only things you have to modify are session names and target chats, where applicable. The examples listed below can be treated as building blocks for your own applications and are designed to be simple enough to give you a basic idea.",
     "details": {
+      "sections": [
+        {
+          "title": "LIST",
+          "items": [
+            {
+              "name": "additional_ffmpeg_parameters",
+              "type": null,
+              "description": "Append parameters to ffmpeg",
+              "source_config": null,
+              "value": null,
+              "url": "https://github.com/pytgcalls/pytgcalls/tree/master/example/additional_ffmpeg_parameters/additional_ffmpeg_parameters.py"
+            },
+            {
+              "name": "bridged_calls",
+              "type": null,
+              "description": "Create a bridge between two group calls",
+              "source_config": null,
+              "value": null,
+              "url": "https://github.com/pytgcalls/pytgcalls/tree/master/example/bridged_calls/example_bridged.py"
+            },
+            {
+              "name": "capture_mic",
+              "type": null,
+              "description": "Capture microphone",
+              "source_config": null,
+              "value": null,
+              "url": "https://github.com/pytgcalls/pytgcalls/tree/master/example/capture_mic/example_mic.py"
+            },
+            {
+              "name": "custom_api",
+              "type": null,
+              "description": "Use custom API server to bind PHP or other API to PyTgCalls",
+              "source_config": null,
+              "value": null,
+              "url": "https://github.com/pytgcalls/pytgcalls/tree/master/example/custom_api/example_api.py"
+            },
+            {
+              "name": "custom_filters",
+              "type": null,
+              "description": "Make custom filters to use it in PyTgCalls",
+              "source_config": null,
+              "value": null,
+              "url": "https://github.com/pytgcalls/pytgcalls/tree/master/example/custom_filters/example_custom.py"
+            },
+            {
+              "name": "docker_example",
+              "type": null,
+              "description": "Run PyTgCalls in Docker image",
+              "source_config": null,
+              "value": null,
+              "url": "https://github.com/pytgcalls/pytgcalls/tree/master/example/docker_example/docker_example.py"
+            },
+            {
+              "name": "external_capture",
+              "type": null,
+              "description": "Capture audio and video frames and receive them as updates",
+              "source_config": null,
+              "value": null,
+              "url": "https://github.com/pytgcalls/pytgcalls/tree/master/example/external_capture/example_external.py"
+            },
+            {
+              "name": "fifo_conversion",
+              "type": null,
+              "description": "Play a stream from fifo",
+              "source_config": null,
+              "value": null,
+              "url": "https://github.com/pytgcalls/pytgcalls/tree/master/example/fifo_conversion/example_fifo.py"
+            },
+            {
+              "name": "frame_sending",
+              "type": null,
+              "description": "Send audio frames manually from Python directly.",
+              "source_config": null,
+              "value": null,
+              "url": "https://github.com/pytgcalls/pytgcalls/tree/master/example/frame_sending/example_frame_sending.py"
+            },
+            {
+              "name": "multiple_clients",
+              "type": null,
+              "description": "Use multiple clients in one script",
+              "source_config": null,
+              "value": null,
+              "url": "https://github.com/pytgcalls/pytgcalls/tree/master/example/multiple_clients/example_multiple.py"
+            },
+            {
+              "name": "p2p_example",
+              "type": null,
+              "description": "Play a stream from a private call using PyTgCalls",
+              "source_config": null,
+              "value": null,
+              "url": "https://github.com/pytgcalls/pytgcalls/tree/master/example/p2p_example/example_p2p.py"
+            },
+            {
+              "name": "piped_audio_calls",
+              "type": null,
+              "description": "Play audio using ffmpeg for live conversion (with integrated ffmpeg)",
+              "source_config": null,
+              "value": null,
+              "url": "https://github.com/pytgcalls/pytgcalls/tree/master/example/piped_audio_calls/example_piped_audio.py"
+            },
+            {
+              "name": "piped_image_calls",
+              "type": null,
+              "description": "Play audio and image using ffmpeg for live conversion (with integrated ffmpeg)",
+              "source_config": null,
+              "value": null,
+              "url": "https://github.com/pytgcalls/pytgcalls/tree/master/example/piped_image_calls/example_piped_image.py"
+            },
+            {
+              "name": "raw_streaming",
+              "type": null,
+              "description": "Play PCM16L and RAW_VIDEO from disk",
+              "source_config": null,
+              "value": null,
+              "url": "https://github.com/pytgcalls/pytgcalls/tree/master/example/raw_streaming/example_video.py"
+            },
+            {
+              "name": "remote_piped_play",
+              "type": null,
+              "description": "Play a stream from a remote link using ffmpeg for live conversion (with integrated ffmpeg)",
+              "source_config": null,
+              "value": null,
+              "url": "https://github.com/pytgcalls/pytgcalls/tree/master/example/remote_piped_play/example_remote_piped.py"
+            },
+            {
+              "name": "remote_stream_with_header",
+              "type": null,
+              "description": "Play a stream from a remote link using ffmpeg for live conversion (with integrated ffmpeg) with additional headers",
+              "source_config": null,
+              "value": null,
+              "url": "https://github.com/pytgcalls/pytgcalls/tree/master/example/remote_stream_with_header/remote_stream_with_header.py"
+            },
+            {
+              "name": "screen_sharing",
+              "type": null,
+              "description": "Screen sharing",
+              "source_config": null,
+              "value": null,
+              "url": "https://github.com/pytgcalls/pytgcalls/tree/master/example/screen_sharing/example_desktop.py"
+            },
+            {
+              "name": "screen_sharing_mic",
+              "type": null,
+              "description": "Screen sharing with microphone",
+              "source_config": null,
+              "value": null,
+              "url": "https://github.com/pytgcalls/pytgcalls/tree/master/example/screen_sharing_mic/example_desktop_mic.py"
+            },
+            {
+              "name": "simple_calls",
+              "type": null,
+              "description": "A simple example about using PyTgCalls with High Level Methods",
+              "source_config": null,
+              "value": null,
+              "url": "https://github.com/pytgcalls/pytgcalls/tree/master/example/simple_calls/example_simple.py"
+            },
+            {
+              "name": "telethon_example",
+              "type": null,
+              "description": "A simple example about using PyTgCalls with Telethon",
+              "source_config": null,
+              "value": null,
+              "url": "https://github.com/pytgcalls/pytgcalls/tree/master/example/telethon_example/example_telethon.py"
+            },
+            {
+              "name": "video_calls",
+              "type": null,
+              "description": "Play audio and video using ffmpeg for live conversion (with integrated ffmpeg)",
+              "source_config": null,
+              "value": null,
+              "url": "https://github.com/pytgcalls/pytgcalls/tree/master/example/video_calls/example_piped_video.py"
+            },
+            {
+              "name": "whisper_transcription",
+              "type": null,
+              "description": "Transcribe audio from a group call or a private call using Whisper AI",
+              "source_config": null,
+              "value": null,
+              "url": "https://github.com/pytgcalls/pytgcalls/tree/master/example/whisper_transcription/example_transcription.py"
+            },
+            {
+              "name": "youtube_dl",
+              "type": null,
+              "description": "Example usage of PyTgCalls with YoutubeDL",
+              "source_config": null,
+              "value": null,
+              "url": "https://github.com/pytgcalls/pytgcalls/tree/master/example/youtube_dl/youtube_dl_example.py"
+            }
+          ]
+        }
+      ],
       "signature": null
     },
     "doc_url": "https://pytgcalls.github.io/PyTgCalls/Examples"
+  },
+  "/PyTgCalls/Examples/additional_ffmpeg_parameters.xml": {
+    "title": "Example: additional_ffmpeg_parameters (additional_ffmpeg_parameters.py)",
+    "lib": "PyTgCalls",
+    "kind": "example",
+    "description": "Append parameters to ffmpeg",
+    "details": {
+      "signature": null
+    },
+    "doc_url": "https://github.com/pytgcalls/pytgcalls/tree/master/example/additional_ffmpeg_parameters/additional_ffmpeg_parameters.py"
+  },
+  "/PyTgCalls/Examples/bridged_calls.xml": {
+    "title": "Example: bridged_calls (example_bridged.py)",
+    "lib": "PyTgCalls",
+    "kind": "example",
+    "description": "Create a bridge between two group calls",
+    "details": {
+      "signature": null
+    },
+    "doc_url": "https://github.com/pytgcalls/pytgcalls/tree/master/example/bridged_calls/example_bridged.py"
+  },
+  "/PyTgCalls/Examples/capture_mic.xml": {
+    "title": "Example: capture_mic (example_mic.py)",
+    "lib": "PyTgCalls",
+    "kind": "example",
+    "description": "Capture microphone",
+    "details": {
+      "signature": null
+    },
+    "doc_url": "https://github.com/pytgcalls/pytgcalls/tree/master/example/capture_mic/example_mic.py"
+  },
+  "/PyTgCalls/Examples/custom_api.xml": {
+    "title": "Example: custom_api (example_api.py)",
+    "lib": "PyTgCalls",
+    "kind": "example",
+    "description": "Use custom API server to bind PHP or other API to PyTgCalls",
+    "details": {
+      "signature": null
+    },
+    "doc_url": "https://github.com/pytgcalls/pytgcalls/tree/master/example/custom_api/example_api.py"
+  },
+  "/PyTgCalls/Examples/custom_filters.xml": {
+    "title": "Example: custom_filters (example_custom.py)",
+    "lib": "PyTgCalls",
+    "kind": "example",
+    "description": "Make custom filters to use it in PyTgCalls",
+    "details": {
+      "signature": null
+    },
+    "doc_url": "https://github.com/pytgcalls/pytgcalls/tree/master/example/custom_filters/example_custom.py"
+  },
+  "/PyTgCalls/Examples/docker_example.xml": {
+    "title": "Example: docker_example (docker_example.py)",
+    "lib": "PyTgCalls",
+    "kind": "example",
+    "description": "Run PyTgCalls in Docker image",
+    "details": {
+      "signature": null
+    },
+    "doc_url": "https://github.com/pytgcalls/pytgcalls/tree/master/example/docker_example/docker_example.py"
+  },
+  "/PyTgCalls/Examples/external_capture.xml": {
+    "title": "Example: external_capture (example_external.py)",
+    "lib": "PyTgCalls",
+    "kind": "example",
+    "description": "Capture audio and video frames and receive them as updates",
+    "details": {
+      "signature": null
+    },
+    "doc_url": "https://github.com/pytgcalls/pytgcalls/tree/master/example/external_capture/example_external.py"
+  },
+  "/PyTgCalls/Examples/fifo_conversion.xml": {
+    "title": "Example: fifo_conversion (example_fifo.py)",
+    "lib": "PyTgCalls",
+    "kind": "example",
+    "description": "Play a stream from fifo",
+    "details": {
+      "signature": null
+    },
+    "doc_url": "https://github.com/pytgcalls/pytgcalls/tree/master/example/fifo_conversion/example_fifo.py"
+  },
+  "/PyTgCalls/Examples/frame_sending.xml": {
+    "title": "Example: frame_sending (example_frame_sending.py)",
+    "lib": "PyTgCalls",
+    "kind": "example",
+    "description": "Send audio frames manually from Python directly.",
+    "details": {
+      "signature": null
+    },
+    "doc_url": "https://github.com/pytgcalls/pytgcalls/tree/master/example/frame_sending/example_frame_sending.py"
+  },
+  "/PyTgCalls/Examples/multiple_clients.xml": {
+    "title": "Example: multiple_clients (example_multiple.py)",
+    "lib": "PyTgCalls",
+    "kind": "example",
+    "description": "Use multiple clients in one script",
+    "details": {
+      "signature": null
+    },
+    "doc_url": "https://github.com/pytgcalls/pytgcalls/tree/master/example/multiple_clients/example_multiple.py"
+  },
+  "/PyTgCalls/Examples/p2p_example.xml": {
+    "title": "Example: p2p_example (example_p2p.py)",
+    "lib": "PyTgCalls",
+    "kind": "example",
+    "description": "Play a stream from a private call using PyTgCalls",
+    "details": {
+      "signature": null
+    },
+    "doc_url": "https://github.com/pytgcalls/pytgcalls/tree/master/example/p2p_example/example_p2p.py"
+  },
+  "/PyTgCalls/Examples/piped_audio_calls.xml": {
+    "title": "Example: piped_audio_calls (example_piped_audio.py)",
+    "lib": "PyTgCalls",
+    "kind": "example",
+    "description": "Play audio using ffmpeg for live conversion (with integrated ffmpeg)",
+    "details": {
+      "signature": null
+    },
+    "doc_url": "https://github.com/pytgcalls/pytgcalls/tree/master/example/piped_audio_calls/example_piped_audio.py"
+  },
+  "/PyTgCalls/Examples/piped_image_calls.xml": {
+    "title": "Example: piped_image_calls (example_piped_image.py)",
+    "lib": "PyTgCalls",
+    "kind": "example",
+    "description": "Play audio and image using ffmpeg for live conversion (with integrated ffmpeg)",
+    "details": {
+      "signature": null
+    },
+    "doc_url": "https://github.com/pytgcalls/pytgcalls/tree/master/example/piped_image_calls/example_piped_image.py"
+  },
+  "/PyTgCalls/Examples/raw_streaming.xml": {
+    "title": "Example: raw_streaming (example_video.py)",
+    "lib": "PyTgCalls",
+    "kind": "example",
+    "description": "Play PCM16L and RAW_VIDEO from disk",
+    "details": {
+      "signature": null
+    },
+    "doc_url": "https://github.com/pytgcalls/pytgcalls/tree/master/example/raw_streaming/example_video.py"
+  },
+  "/PyTgCalls/Examples/remote_piped_play.xml": {
+    "title": "Example: remote_piped_play (example_remote_piped.py)",
+    "lib": "PyTgCalls",
+    "kind": "example",
+    "description": "Play a stream from a remote link using ffmpeg for live conversion (with integrated ffmpeg)",
+    "details": {
+      "signature": null
+    },
+    "doc_url": "https://github.com/pytgcalls/pytgcalls/tree/master/example/remote_piped_play/example_remote_piped.py"
+  },
+  "/PyTgCalls/Examples/remote_stream_with_header.xml": {
+    "title": "Example: remote_stream_with_header (remote_stream_with_header.py)",
+    "lib": "PyTgCalls",
+    "kind": "example",
+    "description": "Play a stream from a remote link using ffmpeg for live conversion (with integrated ffmpeg) with additional headers",
+    "details": {
+      "signature": null
+    },
+    "doc_url": "https://github.com/pytgcalls/pytgcalls/tree/master/example/remote_stream_with_header/remote_stream_with_header.py"
+  },
+  "/PyTgCalls/Examples/screen_sharing.xml": {
+    "title": "Example: screen_sharing (example_desktop.py)",
+    "lib": "PyTgCalls",
+    "kind": "example",
+    "description": "Screen sharing",
+    "details": {
+      "signature": null
+    },
+    "doc_url": "https://github.com/pytgcalls/pytgcalls/tree/master/example/screen_sharing/example_desktop.py"
+  },
+  "/PyTgCalls/Examples/screen_sharing_mic.xml": {
+    "title": "Example: screen_sharing_mic (example_desktop_mic.py)",
+    "lib": "PyTgCalls",
+    "kind": "example",
+    "description": "Screen sharing with microphone",
+    "details": {
+      "signature": null
+    },
+    "doc_url": "https://github.com/pytgcalls/pytgcalls/tree/master/example/screen_sharing_mic/example_desktop_mic.py"
+  },
+  "/PyTgCalls/Examples/simple_calls.xml": {
+    "title": "Example: simple_calls (example_simple.py)",
+    "lib": "PyTgCalls",
+    "kind": "example",
+    "description": "A simple example about using PyTgCalls with High Level Methods",
+    "details": {
+      "signature": null
+    },
+    "doc_url": "https://github.com/pytgcalls/pytgcalls/tree/master/example/simple_calls/example_simple.py"
+  },
+  "/PyTgCalls/Examples/telethon_example.xml": {
+    "title": "Example: telethon_example (example_telethon.py)",
+    "lib": "PyTgCalls",
+    "kind": "example",
+    "description": "A simple example about using PyTgCalls with Telethon",
+    "details": {
+      "signature": null
+    },
+    "doc_url": "https://github.com/pytgcalls/pytgcalls/tree/master/example/telethon_example/example_telethon.py"
+  },
+  "/PyTgCalls/Examples/video_calls.xml": {
+    "title": "Example: video_calls (example_piped_video.py)",
+    "lib": "PyTgCalls",
+    "kind": "example",
+    "description": "Play audio and video using ffmpeg for live conversion (with integrated ffmpeg)",
+    "details": {
+      "signature": null
+    },
+    "doc_url": "https://github.com/pytgcalls/pytgcalls/tree/master/example/video_calls/example_piped_video.py"
+  },
+  "/PyTgCalls/Examples/whisper_transcription.xml": {
+    "title": "Example: whisper_transcription (example_transcription.py)",
+    "lib": "PyTgCalls",
+    "kind": "example",
+    "description": "Transcribe audio from a group call or a private call using Whisper AI",
+    "details": {
+      "signature": null
+    },
+    "doc_url": "https://github.com/pytgcalls/pytgcalls/tree/master/example/whisper_transcription/example_transcription.py"
+  },
+  "/PyTgCalls/Examples/youtube_dl.xml": {
+    "title": "Example: youtube_dl (youtube_dl_example.py)",
+    "lib": "PyTgCalls",
+    "kind": "example",
+    "description": "Example usage of PyTgCalls with YoutubeDL",
+    "details": {
+      "signature": null
+    },
+    "doc_url": "https://github.com/pytgcalls/pytgcalls/tree/master/example/youtube_dl/youtube_dl_example.py"
   },
   "/PyTgCalls/Filters.xml": {
     "title": "Filters",

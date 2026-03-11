@@ -13,6 +13,7 @@ type DocItem struct {
 	Description  string  `json:"description"`
 	SourceConfig *string `json:"source_config"`
 	Value        *string `json:"value"`
+	URL          *string `json:"url,omitempty"`
 }
 
 type Example struct {
@@ -81,7 +82,7 @@ func (d Documentation) Search(query string, limit int) []*DocEntry {
 	for _, entry := range d {
 		score := 0
 		title := strings.ToLower(entry.Title)
-		
+
 		if title == query {
 			score += 100
 		} else if strings.HasPrefix(title, query) {
@@ -93,6 +94,21 @@ func (d Documentation) Search(query string, limit int) []*DocEntry {
 		desc := strings.ToLower(entry.Description)
 		if strings.Contains(desc, query) {
 			score += 10
+		}
+
+		path := strings.ToLower(entry.Path)
+		if strings.Contains(path, query) {
+			score += 20
+		}
+
+		for _, section := range entry.Details.Sections {
+			for _, item := range section.Items {
+				if strings.Contains(strings.ToLower(item.Name), query) ||
+					strings.Contains(strings.ToLower(item.Description), query) {
+					score += 5
+					break
+				}
+			}
 		}
 
 		if score > 0 {
