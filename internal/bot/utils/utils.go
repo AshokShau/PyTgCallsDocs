@@ -186,7 +186,7 @@ func FormatOtherDetails(e *docs.DocEntry) string {
 
 func GetEntryKeyboard(e *docs.DocEntry, currentView string) *gotdbot.ReplyMarkupInlineKeyboard {
 	hash := sha256.Sum256([]byte(e.Path))
-	pathHash := hex.EncodeToString(hash[:8])
+	pathHash := hex.EncodeToString(hash[:16])
 
 	var row1 []gotdbot.InlineKeyboardButton
 	var row2 []gotdbot.InlineKeyboardButton

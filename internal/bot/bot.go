@@ -4,6 +4,7 @@ import (
 	"ashokshau/pytgdocs/internal/docs"
 	"crypto/sha256"
 	"encoding/hex"
+
 	"github.com/AshokShau/gotdbot"
 )
 
@@ -22,7 +23,7 @@ func New(client *gotdbot.Client, docData docs.Documentation) *Bot {
 
 	for p, entry := range docData {
 		hash := sha256.Sum256([]byte(p))
-		pathHash := hex.EncodeToString(hash[:8])
+		pathHash := hex.EncodeToString(hash[:16])
 		b.HashMap[pathHash] = entry
 	}
 

@@ -6,6 +6,7 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
+	"log/slog"
 	"strings"
 
 	"github.com/AshokShau/gotdbot"
@@ -79,7 +80,7 @@ func handleInlineQuery(b *bot.Bot, c *gotdbot.Client, ctx *gotdbot.Context) erro
 		formatted, _ := gotdbot.GetFormattedText(c, text, nil, "HTML")
 
 		hash := sha256.Sum256([]byte(entry.Path))
-		id := hex.EncodeToString(hash[:8])
+		id := hex.EncodeToString(hash[:16])
 
 		inlineResults = append(inlineResults, &gotdbot.InputInlineQueryResultArticle{
 			Id:          "doc_" + id,
@@ -104,12 +105,14 @@ func handleInlineCallbackQuery(b *bot.Bot, c *gotdbot.Client, ctx *gotdbot.Conte
 
 	data := string(dataBy)
 	if data == "" {
+		slog.Warn("Empty callback data received")
 		return nil
 	}
 
-	_ = c.AnswerCallbackQuery(300, cq.Id, "...", "", nil)
+	_ = c.AnswerCallbackQuery(0, cq.Id, "Loading...", "", nil)
 	parts := strings.SplitN(data, ":", 2)
 	if len(parts) < 2 {
+		slog.Warn("Invalid callback data format", "data", data)
 		return nil
 	}
 
@@ -118,6 +121,7 @@ func handleInlineCallbackQuery(b *bot.Bot, c *gotdbot.Client, ctx *gotdbot.Conte
 
 	entry, ok := b.HashMap[pathHash]
 	if !ok {
+		slog.Warn("Entry not found in HashMap", "pathHash", pathHash, "data", data)
 		return nil
 	}
 
@@ -133,17 +137,29 @@ func handleInlineCallbackQuery(b *bot.Bot, c *gotdbot.Client, ctx *gotdbot.Conte
 		text = utils.FormatRaises(entry)
 	case "details":
 		text = utils.FormatOtherDetails(entry)
+	default:
+		slog.Warn("Unknown view type in callback", "view", view, "data", data)
+		return nil
 	}
 
 	formatted, err := gotdbot.GetFormattedText(c, text, nil, "HTML")
 	if err != nil {
+		slog.Error("Failed to get formatted text", "error", err, "view", view, "entry", entry.Title)
 		return err
 	}
 
 	kb := utils.GetEntryKeyboard(entry, view)
-	return c.EditInlineMessageText(cq.InlineMessageId, gotdbot.InputMessageText{
+	err = c.EditInlineMessageText(cq.InlineMessageId, gotdbot.InputMessageText{
 		Text: formatted,
 	}, &gotdbot.EditInlineMessageTextOpts{
 		ReplyMarkup: kb,
 	})
+	if err != nil {
+		if strings.Contains(err.Error(), "MESSAGE_NOT_MODIFIED") {
+			return nil
+		}
+
+		slog.Error("Failed to edit inline message text", "error", err, "view", view, "entry", entry.Title)
+	}
+	return gotdbot.EndGroups
 }
