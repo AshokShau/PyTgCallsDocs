@@ -45,7 +45,7 @@ func main() {
 	)
 
 	slog.SetDefault(logger)
-	docData, err := docs.Load("docs.json")
+	docData, err := docs.Load("./docs.json")
 	if err != nil {
 		slog.Error("Failed to load docs.json", "error", err)
 		os.Exit(1)

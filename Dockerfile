@@ -5,7 +5,7 @@ WORKDIR /app
 COPY go.mod go.sum ./
 RUN go mod download
 
-COPY . /app/
+COPY . .
 
 RUN go generate
 
@@ -21,6 +21,7 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 COPY --from=builder /app/bot .
+COPY --from=builder /app/docs.json ./
 COPY --from=builder /app/libtdjson.so.* ./
 
 CMD ["./bot"]
