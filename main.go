@@ -47,7 +47,8 @@ func main() {
 	slog.SetDefault(logger)
 	docData, err := docs.Load("docs.json")
 	if err != nil {
-		slog.Warn("Failed to load docs.json, search will not work", "error", err)
+		slog.Error("Failed to load docs.json", "error", err)
+		os.Exit(1)
 	}
 
 	clientConfig := &gotdbot.ClientConfig{
