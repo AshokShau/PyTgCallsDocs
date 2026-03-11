@@ -93,7 +93,7 @@ func handleInlineQuery(b *bot.Bot, c *gotdbot.Client, ctx *gotdbot.Context) erro
 		})
 	}
 
-	return c.AnswerInlineQuery(0, iq.Id, "", inlineResults, nil)
+	return c.AnswerInlineQuery(300, iq.Id, "", inlineResults, nil)
 }
 
 func handleInlineCallbackQuery(b *bot.Bot, c *gotdbot.Client, ctx *gotdbot.Context) error {
@@ -161,6 +161,6 @@ func handleInlineCallbackQuery(b *bot.Bot, c *gotdbot.Client, ctx *gotdbot.Conte
 		}
 		slog.Error("Failed to edit inline message text", "error", err, "view", view, "entry", entry.Title)
 	}
-	
+
 	return gotdbot.EndGroups
 }
