@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"log/slog"
 	"strings"
+	"time"
 
 	"github.com/AshokShau/gotdbot"
 	"github.com/AshokShau/gotdbot/handlers"
@@ -98,6 +99,49 @@ func handleInlineQuery(b *bot.Bot, c *gotdbot.Client, ctx *gotdbot.Context) erro
 
 func handleInlineCallbackQuery(b *bot.Bot, c *gotdbot.Client, ctx *gotdbot.Context) error {
 	cq := ctx.Update.UpdateNewInlineCallbackQuery
+
+	userId := cq.SenderUserId
+	now := time.Now()
+
+	b.Mu.Lock()
+	if banUntil, ok := b.Bans[userId]; ok {
+		if now.Before(banUntil) {
+			if !b.Alerted[userId] {
+				b.Alerted[userId] = true
+				b.Mu.Unlock()
+				_ = c.AnswerCallbackQuery(0, cq.Id, "You are spamming! You are banned from using the bot for 10 minutes.", "", &gotdbot.AnswerCallbackQueryOpts{ShowAlert: true})
+				return gotdbot.EndGroups
+			}
+			b.Mu.Unlock()
+			_ = c.AnswerCallbackQuery(0, cq.Id, "", "", nil)
+			return gotdbot.EndGroups
+		} else {
+			delete(b.Bans, userId)
+			delete(b.Alerted, userId)
+		}
+	}
+
+	history := b.ClickHistory[userId]
+	history = append(history, now)
+
+	threshold := now.Add(-2 * time.Second)
+	var newHistory []time.Time
+	for _, t := range history {
+		if t.After(threshold) {
+			newHistory = append(newHistory, t)
+		}
+	}
+	b.ClickHistory[userId] = newHistory
+
+	if len(newHistory) >= 4 {
+		b.Bans[userId] = now.Add(10 * time.Minute)
+		b.Alerted[userId] = true
+		b.Mu.Unlock()
+		_ = c.AnswerCallbackQuery(300, cq.Id, "You are spamming! You are banned from using the bot for 10 minutes.", "", &gotdbot.AnswerCallbackQueryOpts{ShowAlert: true})
+		return gotdbot.EndGroups
+	}
+	b.Mu.Unlock()
+
 	var dataBy []byte
 	if p, ok := cq.Payload.(*gotdbot.CallbackQueryPayloadData); ok {
 		dataBy = p.Data
@@ -109,7 +153,7 @@ func handleInlineCallbackQuery(b *bot.Bot, c *gotdbot.Client, ctx *gotdbot.Conte
 		return nil
 	}
 
-	_ = c.AnswerCallbackQuery(0, cq.Id, "loading ...", "", nil)
+	_ = c.AnswerCallbackQuery(300, cq.Id, "loading ...", "", nil)
 	parts := strings.SplitN(data, ":", 2)
 	if len(parts) < 2 {
 		slog.Warn("Invalid callback data format", "data", data)
