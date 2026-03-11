@@ -1,0 +1,6 @@
+github.com/AshokShau/gotdbot v0.7.0 h1:rXd/n3upfQRRdEy0flR/k9DwGrYYHHnEpYBz7LPF5jM=
+github.com/AshokShau/gotdbot v0.7.0/go.mod h1:oaHOeC6pZoNp6Xp/jWRFw1yUif3/ASG2cxy6y/EMr3o=
+github.com/ebitengine/purego v0.10.0 h1:QIw4xfpWT6GWTzaW5XEKy3HXoqrJGx1ijYHzTF0/ISU=
+github.com/ebitengine/purego v0.10.0/go.mod h1:iIjxzd6CiRiOG0UyXP+V1+jWqUXVjPKLAI0mRfJZTmQ=
+github.com/joho/godotenv v1.5.1 h1:7eLL/+HRGLY0ldzfGMeQkb7vMd0as4CfYvUVzLqw0N0=
+github.com/joho/godotenv v1.5.1/go.mod h1:f4LDr5Voq0i2e/R5DDNOoa2zzDfwtkZa6DnEwAbqwq4=

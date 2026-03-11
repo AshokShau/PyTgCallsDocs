@@ -1,13 +1,26 @@
-FROM python:3.13-slim
+FROM golang:1.25 AS builder
 
 WORKDIR /app
 
-RUN apt-get update && apt-get install -y --no-install-recommends && rm -rf /var/lib/apt/lists/*
+COPY go.mod go.sum ./
+RUN go mod download
 
-RUN pip install --no-cache-dir uv
+COPY . .
 
-COPY . /app/
+RUN go generate
 
-RUN uv pip install -e . --system
+RUN CGO_ENABLED=0 GOOS=linux go build -o bot main.go
 
-CMD ["start"]
+FROM debian:bookworm-slim
+
+WORKDIR /app
+
+RUN apt-get update && apt-get install -y \
+    ca-certificates \
+    zlib1g \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY --from=builder /app/bot .
+COPY --from=builder /app/libtdjson.so.* ./
+
+CMD ["./bot"]
