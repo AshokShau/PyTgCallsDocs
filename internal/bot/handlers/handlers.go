@@ -1,0 +1,210 @@
+package handlers
+
+import (
+	"ashokshau/pytgdocs/internal/bot"
+	"ashokshau/pytgdocs/internal/bot/utils"
+	"crypto/sha256"
+	"encoding/hex"
+	"fmt"
+	"log/slog"
+	"strings"
+	"time"
+
+	"github.com/AshokShau/gotdbot"
+	"github.com/AshokShau/gotdbot/handlers"
+)
+
+func Register(b *bot.Bot) {
+	d := b.Client.Dispatcher
+
+	d.AddHandler(handlers.NewCommand("start", func(c *gotdbot.Client, ctx *gotdbot.Context) error {
+		me, _ := c.GetMe()
+		botUsername := me.Usernames.EditableUsername
+		welcomeText := fmt.Sprintf(`👋 <b>Welcome to PyTgCalls Documentation Bot!</b>
+
+I can help you find information about PyTgCalls and NTgCalls methods, classes, and more.
+
+• Use the 🔍 <b>Search</b> button to search the documentation
+• Or type your query directly in the chat
+• Visit our <a href="https://pytgcalls.github.io/">Documentation</a> for detailed guides
+
+• <code>@%s Quick start</code>
+• <code>@%s First, take a look at +Quick start+. To play in a voice chat, use the +play+ method.</code>
+
+• <code>@%s #10</code>: Bot shows results for pytgcalls/pytgcalls and pytgcalls/ntgcalls
+• <code>@%s nt#10</code>: Bot shows results for pytgcalls/ntgcalls
+
+
+Made with ❤️ by @AshokShau`, botUsername, botUsername, botUsername, botUsername)
+
+		_, err := ctx.EffectiveMessage.ReplyText(c, welcomeText, &gotdbot.SendTextMessageOpts{ParseMode: gotdbot.ParseModeHTML})
+		return err
+	}))
+
+	d.AddHandler(handlers.NewUpdateNewInlineQuery(nil, func(c *gotdbot.Client, ctx *gotdbot.Context) error {
+		return handleInlineQuery(b, c, ctx)
+	}))
+
+	d.AddHandler(handlers.NewUpdateNewInlineCallbackQuery(nil, func(c *gotdbot.Client, ctx *gotdbot.Context) error {
+		return handleInlineCallbackQuery(b, c, ctx)
+	}))
+}
+
+func handleInlineQuery(b *bot.Bot, c *gotdbot.Client, ctx *gotdbot.Context) error {
+	iq := ctx.Update.UpdateNewInlineQuery
+	if b.Docs == nil {
+		return nil
+	}
+
+	query := iq.Query
+	if query == "" {
+		return nil
+	}
+
+	var inlineResults []gotdbot.InputInlineQueryResult
+
+	if strings.Contains(query, "#") {
+		issueResults := utils.SearchGitHub(c, query)
+		inlineResults = append(inlineResults, issueResults...)
+	}
+
+	if strings.Contains(query, "+") {
+		customResults := utils.HandleCustomText(query, b.Docs, c)
+		if len(customResults) > 0 {
+			inlineResults = append(inlineResults, customResults...)
+		}
+	}
+
+	docResults := b.Docs.Search(query, 15)
+	for _, entry := range docResults {
+		text := utils.FormatEntry(entry)
+		formatted, _ := gotdbot.GetFormattedText(c, text, nil, "HTML")
+
+		hash := sha256.Sum256([]byte(entry.Path))
+		id := hex.EncodeToString(hash[:16])
+
+		inlineResults = append(inlineResults, &gotdbot.InputInlineQueryResultArticle{
+			Id:          "doc_" + id,
+			Title:       fmt.Sprintf("[%s] %s", entry.Lib, entry.Title),
+			Description: entry.Description,
+			InputMessageContent: &gotdbot.InputMessageText{
+				Text: formatted,
+			},
+			ReplyMarkup: utils.GetEntryKeyboard(entry, "main"),
+		})
+	}
+
+	return c.AnswerInlineQuery(300, iq.Id, "", inlineResults, nil)
+}
+
+func handleInlineCallbackQuery(b *bot.Bot, c *gotdbot.Client, ctx *gotdbot.Context) error {
+	cq := ctx.Update.UpdateNewInlineCallbackQuery
+
+	userId := cq.SenderUserId
+	now := time.Now()
+
+	b.Mu.Lock()
+	if banUntil, ok := b.Bans[userId]; ok {
+		if now.Before(banUntil) {
+			if !b.Alerted[userId] {
+				b.Alerted[userId] = true
+				b.Mu.Unlock()
+				_ = c.AnswerCallbackQuery(0, cq.Id, "You are spamming! You are banned from using the bot for 10 minutes.", "", &gotdbot.AnswerCallbackQueryOpts{ShowAlert: true})
+				return gotdbot.EndGroups
+			}
+			b.Mu.Unlock()
+			_ = c.AnswerCallbackQuery(0, cq.Id, "", "", nil)
+			return gotdbot.EndGroups
+		} else {
+			delete(b.Bans, userId)
+			delete(b.Alerted, userId)
+		}
+	}
+
+	history := b.ClickHistory[userId]
+	history = append(history, now)
+
+	threshold := now.Add(-2 * time.Second)
+	var newHistory []time.Time
+	for _, t := range history {
+		if t.After(threshold) {
+			newHistory = append(newHistory, t)
+		}
+	}
+	b.ClickHistory[userId] = newHistory
+
+	if len(newHistory) >= 4 {
+		b.Bans[userId] = now.Add(10 * time.Minute)
+		b.Alerted[userId] = true
+		b.Mu.Unlock()
+		_ = c.AnswerCallbackQuery(300, cq.Id, "You are spamming! You are banned from using the bot for 10 minutes.", "", &gotdbot.AnswerCallbackQueryOpts{ShowAlert: true})
+		return gotdbot.EndGroups
+	}
+	b.Mu.Unlock()
+
+	var dataBy []byte
+	if p, ok := cq.Payload.(*gotdbot.CallbackQueryPayloadData); ok {
+		dataBy = p.Data
+	}
+
+	data := string(dataBy)
+	if data == "" {
+		slog.Warn("Empty callback data received")
+		return nil
+	}
+
+	_ = c.AnswerCallbackQuery(300, cq.Id, "loading ...", "", nil)
+	parts := strings.SplitN(data, ":", 2)
+	if len(parts) < 2 {
+		slog.Warn("Invalid callback data format", "data", data)
+		return nil
+	}
+
+	view := parts[0]
+	pathHash := parts[1]
+
+	entry, ok := b.HashMap[pathHash]
+	if !ok {
+		slog.Warn("Entry not found in HashMap", "pathHash", pathHash, "data", data)
+		return nil
+	}
+
+	var text string
+	switch view {
+	case "main":
+		text = utils.FormatEntry(entry)
+	case "example":
+		text = utils.FormatExample(entry)
+	case "params":
+		text = utils.FormatParameters(entry)
+	case "raises":
+		text = utils.FormatRaises(entry)
+	case "details":
+		text = utils.FormatOtherDetails(entry)
+	default:
+		slog.Warn("Unknown view type in callback", "view", view, "data", data)
+		return nil
+	}
+
+	formatted, err := gotdbot.GetFormattedText(c, text, nil, "HTML")
+	if err != nil {
+		slog.Error("Failed to get formatted text", "error", err, "view", view, "entry", entry.Title)
+		return err
+	}
+
+	kb := utils.GetEntryKeyboard(entry, view)
+	err = c.EditInlineMessageText(cq.InlineMessageId, gotdbot.InputMessageText{
+		Text: formatted,
+	}, &gotdbot.EditInlineMessageTextOpts{
+		ReplyMarkup: kb,
+	})
+
+	if err != nil {
+		if strings.Contains(err.Error(), "MESSAGE_NOT_MODIFIED") {
+			return nil
+		}
+		slog.Error("Failed to edit inline message text", "error", err, "view", view, "entry", entry.Title)
+	}
+
+	return gotdbot.EndGroups
+}

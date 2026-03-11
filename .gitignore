@@ -1,6 +1,6 @@
 .idea
-__pycache__
-.venv
-pytgcallsdocs.egg-info
 .env
-/database
+coolifymanager
+libtdjson.so.*
+database
+

@@ -1,5 +1,6 @@
 **
-!*.py
-!src/
-!pyproject.toml
+!go.*
+!*.go
+!config
 !docs.json
+!internal
