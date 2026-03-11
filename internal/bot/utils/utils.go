@@ -303,7 +303,7 @@ func createGitHubResult(c *gotdbot.Client, repo, num string) *gotdbot.InputInlin
 	}
 }
 
-func HandleCustomText(query string, docData docs.Documentation, c *gotdbot.Client) *gotdbot.InputInlineQueryResultArticle {
+func HandleCustomText(query string, docData docs.Documentation, c *gotdbot.Client) []gotdbot.InputInlineQueryResult {
 	re := regexp.MustCompile(`\+([^+]+)\+`)
 	matches := re.FindAllStringSubmatch(query, -1)
 
@@ -311,32 +311,56 @@ func HandleCustomText(query string, docData docs.Documentation, c *gotdbot.Clien
 		return nil
 	}
 
-	// TODO: Add support for ntgcalls + pytgcalls with better Title and Description
+	var results []gotdbot.InputInlineQueryResult
 
-	replacedText := query
 	for _, match := range matches {
 		fullMatch := match[0]
 		docTitle := match[1]
 
-		results := docData.Search(docTitle, 1)
-		if len(results) > 0 {
-			entry := results[0]
+		docResults := docData.Search(docTitle, 2)
+		if len(docResults) > 0 {
+			var entry *docs.DocEntry
+			for _, r := range docResults {
+				if r.Lib == "PyTgCalls" {
+					entry = r
+					break
+				}
+			}
+			if entry == nil {
+				entry = docResults[0]
+			}
+
 			link := fmt.Sprintf("<a href=\"%s\">%s</a>", entry.DocURL, entry.Title)
-			replacedText = strings.Replace(replacedText, fullMatch, link, 1)
+			replacedText := strings.ReplaceAll(query, fullMatch, link)
+			for _, m := range matches {
+				if m[0] == fullMatch {
+					continue
+				}
+				otherDocResults := docData.Search(m[1], 1)
+				if len(otherDocResults) > 0 {
+					otherEntry := otherDocResults[0]
+					otherLink := fmt.Sprintf("<a href=\"%s\">%s</a>", otherEntry.DocURL, otherEntry.Title)
+					replacedText = strings.ReplaceAll(replacedText, m[0], otherLink)
+				}
+			}
+
+			formatted, err := gotdbot.GetFormattedText(c, replacedText, nil, "HTML")
+			if err != nil {
+				slog.Warn("Error getting custom text:", "error", err)
+				continue
+			}
+
+			hash := sha256.Sum256([]byte(query + entry.Path))
+			results = append(results, &gotdbot.InputInlineQueryResultArticle{
+				Id:          "custom_" + hex.EncodeToString(hash[:16]),
+				Title:       entry.Title,
+				Description: entry.Description,
+				InputMessageContent: &gotdbot.InputMessageText{
+					Text: formatted,
+				},
+			})
 		}
 	}
 
-	formatted, err := gotdbot.GetFormattedText(c, replacedText, nil, "HTML")
-	if err != nil {
-		slog.Warn("Error getting custom text:", "error", err)
-		return nil
-	}
-
-	return &gotdbot.InputInlineQueryResultArticle{
-		Id:    "custom_" + hex.EncodeToString([]byte(query))[:16],
-		Title: "Custom text with doc links",
-		InputMessageContent: &gotdbot.InputMessageText{
-			Text: formatted,
-		},
-	}
+	return results
 }

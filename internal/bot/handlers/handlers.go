@@ -68,9 +68,9 @@ func handleInlineQuery(b *bot.Bot, c *gotdbot.Client, ctx *gotdbot.Context) erro
 	}
 
 	if strings.Contains(query, "+") {
-		customResult := utils.HandleCustomText(query, b.Docs, c)
-		if customResult != nil {
-			inlineResults = append(inlineResults, customResult)
+		customResults := utils.HandleCustomText(query, b.Docs, c)
+		if len(customResults) > 0 {
+			inlineResults = append(inlineResults, customResults...)
 		}
 	}
 
@@ -109,7 +109,7 @@ func handleInlineCallbackQuery(b *bot.Bot, c *gotdbot.Client, ctx *gotdbot.Conte
 		return nil
 	}
 
-	_ = c.AnswerCallbackQuery(0, cq.Id, "Loading...", "", nil)
+	_ = c.AnswerCallbackQuery(0, cq.Id, "loading ...", "", nil)
 	parts := strings.SplitN(data, ":", 2)
 	if len(parts) < 2 {
 		slog.Warn("Invalid callback data format", "data", data)
@@ -154,12 +154,13 @@ func handleInlineCallbackQuery(b *bot.Bot, c *gotdbot.Client, ctx *gotdbot.Conte
 	}, &gotdbot.EditInlineMessageTextOpts{
 		ReplyMarkup: kb,
 	})
+
 	if err != nil {
 		if strings.Contains(err.Error(), "MESSAGE_NOT_MODIFIED") {
 			return nil
 		}
-
 		slog.Error("Failed to edit inline message text", "error", err, "view", view, "entry", entry.Title)
 	}
+	
 	return gotdbot.EndGroups
 }
