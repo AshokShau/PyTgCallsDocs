@@ -208,14 +208,14 @@ func GetEntryKeyboard(e *docs.DocEntry, currentView string) *gotdbot.ReplyMarkup
 
 	if currentView != "main" {
 		row1 = append(row1, gotdbot.InlineKeyboardButton{
-			Text: "📖 Description",
+			Text: "Description",
 			Type: &gotdbot.InlineKeyboardButtonTypeCallback{Data: []byte("main:" + pathHash)},
 		})
 	}
 
 	if e.Example != nil && currentView != "example" {
 		row1 = append(row1, gotdbot.InlineKeyboardButton{
-			Text: "💻 Example",
+			Text: "Example",
 			Type: &gotdbot.InlineKeyboardButtonTypeCallback{Data: []byte("example:" + pathHash)},
 		})
 	}
@@ -228,7 +228,7 @@ func GetEntryKeyboard(e *docs.DocEntry, currentView string) *gotdbot.ReplyMarkup
 	}
 	if hasParams && currentView != "params" {
 		row2 = append(row2, gotdbot.InlineKeyboardButton{
-			Text: "📝 Parameters",
+			Text: "Parameters",
 			Type: &gotdbot.InlineKeyboardButtonTypeCallback{Data: []byte("params:" + pathHash)},
 		})
 	}
@@ -241,7 +241,7 @@ func GetEntryKeyboard(e *docs.DocEntry, currentView string) *gotdbot.ReplyMarkup
 	}
 	if hasRaises && currentView != "raises" {
 		row2 = append(row2, gotdbot.InlineKeyboardButton{
-			Text: "⚠️ Raises",
+			Text: "Raises",
 			Type: &gotdbot.InlineKeyboardButtonTypeCallback{Data: []byte("raises:" + pathHash)},
 		})
 	}
@@ -255,7 +255,7 @@ func GetEntryKeyboard(e *docs.DocEntry, currentView string) *gotdbot.ReplyMarkup
 	}
 	if hasOthers && currentView != "details" {
 		row2 = append(row2, gotdbot.InlineKeyboardButton{
-			Text: "🔍 Details",
+			Text: "Details",
 			Type: &gotdbot.InlineKeyboardButtonTypeCallback{Data: []byte("details:" + pathHash)},
 		})
 	}

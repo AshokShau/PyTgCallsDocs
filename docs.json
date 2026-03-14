@@ -7100,6 +7100,136 @@
     },
     "doc_url": "https://pytgcalls.github.io/PyTgCalls/Changelogs"
   },
+  "/PyTgCalls/Changelogs/0.5.X.xml": {
+    "title": "Changelog 0.5.X: PyTgCalls v0.5.X",
+    "lib": "PyTgCalls",
+    "kind": "misc",
+    "description": "<b>Smoother Installation, Active Calls Resolved, and Enhanced Error Insight</b>\n\n<b>Changes & Fixes</b>\n\n- <b>Fixed PyPi builds: </b>Fixed an issue where PyTgCalls compiled without the JavaScript core\n- <b>Improved join_group_call error: </b>The join_group_call error is now more descriptive Bug Fixes: Addressed various bugs for a more stable experience.",
+    "details": {
+      "signature": null
+    },
+    "doc_url": "https://pytgcalls.github.io/PyTgCalls/Changelogs#05X"
+  },
+  "/PyTgCalls/Changelogs/0.6.X.xml": {
+    "title": "Changelog 0.6.X: PyTgCalls v0.6.X",
+    "lib": "PyTgCalls",
+    "kind": "misc",
+    "description": "<b>Multi-core Beta Support, Function Execution Without Node.js Core Waiting, and More</b>\n\n<b>What's new?</b>\n\n- <b>Multi-core support:</b> PyTgCalls now supports multiple cores for enhanced performance.\n- <b>Remote version check:</b> Added the ability to check for the latest version available on GitHub remotely.\n<b>Changes & Fixes</b>\n\n- <b>CustomAPI 2.0:</b> Upgraded to CustomAPI version 2.0 with new features and improvements.\n- <b>Security Fix:</b> Addressed a security vulnerability for a more secure experience.\n- <b>Function execution without Node.js Core waiting:</b> Users can now call functions without waiting for the Node.js Core.",
+    "details": {
+      "signature": null
+    },
+    "doc_url": "https://pytgcalls.github.io/PyTgCalls/Changelogs#06X"
+  },
+  "/PyTgCalls/Changelogs/0.7.X.xml": {
+    "title": "Changelog 0.7.X: PyTgCalls v0.7.X",
+    "lib": "PyTgCalls",
+    "kind": "misc",
+    "description": "<b>Code Cleanup, Full Asynchronous Support, and Enhanced Functionality</b>\n\n<b>What's new?</b>\n\n- <b>Custom Exceptions:</b> Added custom exceptions for more robust error handling.\n- <b>Platform Support:</b> Added support for Windows, macOS, and Linux Arm64.\n<b>Changes & Fixes</b>\n\n- <b>PyTgCalls Re-Base:</b> Code cleanup and fixes for a more streamlined and efficient codebase.\n- <b>Fully Async:</b> The library is now fully asynchronous for improved performance.\n- <b>Communication Update:</b> Removed the internal socket server for Node.js communication between Python, replaced with stdin and stdout.\n- <b>CustomAPI Renewed:</b> CustomAPI upgraded to version 2.1 with new features and improvements.\n- <b>RawUpdate Enhancement:</b> RawUpdate renewed with PyTgCalls Object Update for better handling of updates.\n- <b>Method Name Change:</b> .run() is now .start() and no longer blocks code execution.\n- <b>Logging Update:</b> Now logs are directed to Python Logging for improved logging capabilities.\n- <b>Voice Call Handling:</b> If the stream is deleted, the userbot will exit the voice call by printing an error in RawUpdate. Bug Fixes: Addressed various bugs for a more stable experience.",
+    "details": {
+      "signature": null
+    },
+    "doc_url": "https://pytgcalls.github.io/PyTgCalls/Changelogs#07X"
+  },
+  "/PyTgCalls/Changelogs/0.8.X.xml": {
+    "title": "Changelog 0.8.X: PyTgCalls v0.8.X",
+    "lib": "PyTgCalls",
+    "kind": "misc",
+    "description": "<b>Telethon Support, Group/Channel Join, Video Group Call, and More</b>\n\n<b>What's new?</b>\n\n-  <b>Internal FFmpeg Conversion:</b> Introduced internal FFmpeg conversion for AudioPiped, AudioVideoPiped, and AudioImagePiped for seamless multimedia handling.\n\n<pre><code>call_py.join_group_call(\n    -1001234567890,\n    AudioVideoPiped(\n        'input.webm',\n    ),\n    stream_type=StreamType().pulse_stream,\n)</code></pre>\n\n- <b>Remote Stream Support:</b> Added support for remote streams for more diverse streaming options.\n- <b>Stream Image with Audio:</b> Added the ability to stream images with audio using AudioImagePiped.\n- <b>GetParticipants and OnParticipantChange:</b> New functionalities for handling participants in group calls.\n- <b>Browser Constants as Headers:</b> Added browser constants as headers for FFmpeg.\n- <b>Python 3.10 Support:</b> Added compatibility with Python 3.10.\n<b>Changes & Fixes</b>\n\n- <b>Proportion Video Support:</b> Added support for all proportion video formats for a more versatile video experience.\n- <b>Communication Fix:</b> Addressed stderr overflow by adding a reader for improved Node.js communication.\n- <b>WebRTC Connection Retry:</b> Added automatic retry if WebRTC connection fails for more reliable connections.\n- <b>Lighter Buffer Reader:</b> Optimized the Buffer Reader for lighter resource usage.\n- <b>Multiple Ping Requests:</b> Now supports multiple ping requests for improved responsiveness.",
+    "details": {
+      "signature": null
+    },
+    "doc_url": "https://pytgcalls.github.io/PyTgCalls/Changelogs#08X"
+  },
+  "/PyTgCalls/Changelogs/0.9.X.xml": {
+    "title": "Changelog 0.9.X: Google Partnership!",
+    "lib": "PyTgCalls",
+    "kind": "misc",
+    "description": "<b>Py-TgCalls classified as one of most used projects on PyPI</b>\n\nAs we know, Google is in charge of financing Python. Due to the recent events with the <a href=\"https://gitprotect.io/blog/compromised-npm-packages-malware-and-github/\">Node.js situation</a>, PyPI ran for cover, thanks to the strong collaboration between Python and the Google Open Source Security Team they offered 4000 Titan Tokens for free available only in some regions of the world. PyPI to distribute these security tokens was based on a criterion, that is; any project in the top 1% of downloads in the previous 6 months is considered critical, at the moment only <b>3500 projects</b> are considered out of <b>350 thousand</b> are considered as such and py-tgcalls is considered a critical project. According to statistics last month, it was downloaded <b>684 thousand</b> times.",
+    "details": {
+      "signature": null
+    },
+    "doc_url": "https://pytgcalls.github.io/PyTgCalls/Changelogs#09X"
+  },
+  "/PyTgCalls/Changelogs/1.0.X.xml": {
+    "title": "Changelog 1.0.X: PyTgCalls v1.0.X",
+    "lib": "PyTgCalls",
+    "kind": "misc",
+    "description": "<b>NTgCalls, Hydrogram Support, New Documentation, and More</b>\n\n<b>What's new?</b>\n\n- <b>NTgCalls Integration:</b> The PyTgCalls core has been updated to use NTgCalls instead of TgCallsJS, making it more portable and eliminating overhead. Now, you only need to install ffmpeg on your machine, resulting in improved performance.\n- <b>Hydrogram Support:</b> Official support for Hydrogram, a new mtproto client based on Pyrogram, providing new possibilities and enhancing the overall experience.\n- <b>New Documentation:</b> Revamped documentation with improved clarity, comprehensive examples, and up-to-date guidance for developers. Bug Fixes: Addressed various bugs for a more stable experience.\n<b>Community Milestone</b>\n<b>Thank You All:</b> Celebrating over 100 thousand Downloads! The project has seen remarkable growth, averaging around 8,000 downloads per week since its launch. We appreciate the community's strong interest and support.\n<b>Deprecation Notice</b>\n<b>End-of-Life (EOL) Dates:</b> Due to changes in Pyrogram and significant time since the release of PyTgCalls 0.8.X, different versions are marked for end-of-life:\n\n- <b>0.8.0, 0.8.1, 0.8.2, 0.8.3, 0.8.4, 0.8.5:</b> Support ended due to outdated versions.\n- <b>0.8.6:</b> Support will continue until December 18 due to Pyrogram archiving.\n- <b>0.9.X:</b> Current Long-Term Support.\n- <b>1.0.X:</b> Latest version with high-support rate.",
+    "details": {
+      "signature": null
+    },
+    "doc_url": "https://pytgcalls.github.io/PyTgCalls/Changelogs#10X"
+  },
+  "/PyTgCalls/Changelogs/1.1.6.xml": {
+    "title": "Changelog 1.1.6: #PyTgCon2K24",
+    "lib": "PyTgCalls",
+    "kind": "misc",
+    "description": "<b>If you've crafted a public open repository, it's time to showcase your work in the PyTgCalls Contest! 🌟</b>\n\n<b>Here's how to join:</b>\n\n- <b>Visit the discussion page:</b> <a href=\"https://github.com/pytgcalls/pytgcalls/discussions/199\">PyTgCalls Contest</a>\n- <b> Share these details:</b> Your Repository Name, Brief Description of Your Bot, Link to Your Repository\n<b>Prizes and Recognition</b>\n\n- Encourage upvotes by reposting this message in your channels.\n- The bot with the highest upvotes earns a prestigious place in the PyTgCalls documentation.\n<b>Contest Rules</b>\n\n- Make sure your repository goes beyond minor tweaks of a fork.\n- Use the <a href=\"https://pypi.org/project/py-tgcalls/1.1.2/\">latest</a> PyTgCalls version).\n- Your repository should be public.  Join the contest now and showcase your PyTgCalls-powered bot for a chance to be featured prominently on the PyTgCalls documentation! Good luck!",
+    "details": {
+      "signature": null
+    },
+    "doc_url": "https://pytgcalls.github.io/PyTgCalls/Changelogs#116"
+  },
+  "/PyTgCalls/Changelogs/1.1.X.xml": {
+    "title": "Changelog 1.1.X: PyTgCalls v1.1.X",
+    "lib": "PyTgCalls",
+    "kind": "misc",
+    "description": "<b>Unified Stream Design, AutoStart GroupCalls and More</b>\n\n<b>What's new?</b>\n\n- <b>AutoStart of Group Calls:</b> Now GroupCalls will be started automatically if they are not started, if you want to know how to disable it, read here.\n-  <b>Unified Stream Design:</b> Now you can do whatever you want, streaming audio, video, both, recording the stream etc. with just one class!.\n\n<pre><code># Play audio and video from and MP4 file\n  call_py.join_group_call(\n      -1001234567890,\n-     AudioVideoPiped(\n+     MediaStream(\n          'input.mp4',\n      ),\n  )\n  \n  # Stream audio only from an MP4 file\n  call_py.join_group_call(\n      -1001234567890,\n-     AudioPiped(\n+     MediaStream(\n          'input.mp4',\n-     ),\n+         video_flags=MediaStream.IGNORE,\n- )\n+     ),\n- \n+ )\n- # Stream screen\n+ \n- call_py.join_group_call(\n+ # Stream screen\n-     -1001234567890,\n+ call_py.join_group_call(\n-     CaptureVideoDesktop(\n+     -1001234567890,\n-         MediaDevices.get_screen_devices()[0],\n+     MediaStream(\n-     ),\n+         MediaDevices.get_screen_devices()[0],\n- )\n+     ),\n+ )</code></pre>\n\nBug Fixes: Addressed various bugs for a more stable experience.\n<b>Deprecation Notice</b>\nAs we said in the last post, now PyTgCalls <b>0.8.6</b> has reached the <b>end of life</b>, so this update is completely incompatible with this or previous versions. We have also deprecated most of the Stream Piped methods, here's the list:\n\n- AudioImagePiped\n- AudioPiped\n- AudioVideoPiped\n- CaptureAudioDevice\n- CaptureAVDesktop\n- CaptureAVDeviceDesktop\n- CaptureVideoDesktop\n- VideoPiped",
+    "details": {
+      "signature": null
+    },
+    "doc_url": "https://pytgcalls.github.io/PyTgCalls/Changelogs#11X"
+  },
+  "/PyTgCalls/Changelogs/1.2.X.xml": {
+    "title": "Changelog 1.2.X: PyTgCalls v1.2.X",
+    "lib": "PyTgCalls",
+    "kind": "misc",
+    "description": "<b>Static Typing, YtDlp support and More</b>\n\n<b>What's new?</b>\n\n- <b>Static Typing:</b> PyTgCalls is now fully statically typed, ensuring that the types of each method and class are thoroughly checked.\n- <b>YtDlp Support:</b> MediaStream now supports links from YouTube using YtDlp, for example: <a href=\"https://www.youtube.com/watch?v=dQw4w9WgXcQ\">https://www.youtube.com/watch?v=iSbLHrrqmoM</a>\n-  <b>MediaStream Quality Support:</b> MediaStream now accepts enhanced quality options for audio and video parameters. For audio, use AudioQuality, and for video, use VideoQuality.\n\n<pre><code>call_py.join_group_call(\n      -1001234567890,\n      MediaStream(\n          'input.mp4',\n-         AudioParameters.from_quality(AudioQuality.STUDIO),\n+         AudioQuality.STUDIO,\n-         VideoParameters.from_quality(VideoQuality.FHD_1080p),\n+         VideoQuality.FHD_1080p,\n      ),\n  )</code></pre>\n\nBug Fixes: Addressed various bugs for a more stable experience.\n<b>Breaking Changes</b>\n\n- Now all raw methods like AudioParameters, VideoParameters, AudioStream, VideoStream, and Stream are all under <code>pytgcalls.types.raw</code> instead of <code>pytgcalls.types</code>.\n- The exception class <code>pytgcalls.exceptions.TelegramServerError</code> is now part of <code>ntgcalls.TelegramServerError</code>.\n<b>Additional Notes</b>\nWe're pleased to announce that pre-compiled wheels optimized for ARM64 devices are now available.",
+    "details": {
+      "signature": null
+    },
+    "doc_url": "https://pytgcalls.github.io/PyTgCalls/Changelogs#12X"
+  },
+  "/PyTgCalls/Changelogs/2.0.X.xml": {
+    "title": "Changelog 2.0.X: PyTgCalls v2.0.X",
+    "lib": "PyTgCalls",
+    "kind": "misc",
+    "description": "<b>Private Calls, Code Rework, Async Support and more!</b>\n\n<b>What's new?</b>\n\n- <b>Private Calls:</b> Now you can make private calls by just using a single method for also group calls, by using play().\n- <b>Code Rework:</b> The code has been reworked to improve performance, stability and to make it more readable.\n- <b>Async Support:</b> NTgCalls now supports asynchronous methods for improved performance.\n- <b>Filters for Updates:</b> Added filters for updates to allow for more granular control over updates, More Info.\n- <b>Improved Documentation:</b> Updated documentation with more examples, new UI and comprehensive guidance. Bug Fixes: Addressed various bugs for a more stable experience.\n<b>Breaking Changes</b>\n\n-  Now methods like <code>change_stream()</code> and <code>join_group_call()</code> was removed, now you can use <code>play()</code> for both private, group calls and changing streams.\n\n<pre><code># Change stream\n- call_py.change_stream(\n+ call_py.play(\n      -1001234567890,\n      AudioPiped(\n          'input.mp4',\n      ),\n  )\n  \n  # Join group call\n- call_py.join_group_call(\n+ call_py.play(\n      -1001234567890,\n      AudioPiped(\n          'input.mp4',\n      ),\n  )</code></pre>\n\n-  Now all listeners like <code>on_stream_end()</code> was unified in <code>on_update()</code> and with filters, for example:\n\n<pre><code>- ...\n+ from pytgcalls import filters\n- # On Closed Voice Chat\n+ from pytgcalls.types import ChatUpdate\n- @call_py.on_closed_voice_chat()\n+ ...\n- async def on_closed_voice_chat(client: PyTgCalls, update: Update):\n+ # On Closed Voice Chat\n-     print(update)\n+ @call_py.on_update(filters.chat_update(ChatUpdate.Status.CLOSED_VOICE_CHAT))\n- \n+ async def on_closed_voice_chat(client: PyTgCalls, update: Update):\n- # On stream end\n+     print(update)\n- @call_py.on_stream_end()\n+ \n- async def on_stream_end(client: PyTgCalls, update: Update):\n+ # On stream end\n-     print(update)\n+ @call_py.on_update(filters.stream_end)\n+ async def on_stream_end(client: PyTgCalls, update: Update):\n+     print(update)</code></pre>\n\n-  Reworked <code>GroupCall</code> type, now is Call and now is more powerful and easy to use.\n-  Removed <code>JoinedGroupCallParticipant</code> and <code>LeftGroupCallParticipant</code> classes, now you can see the action in GroupCallParticipant class.\n-  Removed all legacy types and input stream, now is a mandatory to use MediaStream for all streams.\n-  Now <code>ping()</code> from Client is not anymore a coroutine, now is a normal method.\n-  Removed <code>get_active_call()</code> and <code>get_call()</code>, now is a mandatory to use <code>calls()</code> from Client.\n-  Renamed <code>leave_group_call</code> to leave_call().\n-  Moved <code>MediaStream</code> flags under MediaStream.Flags instead of <code>MediaStream</code>.\n-  Now <code>invite_hash</code>, <code>join_as</code> and <code>auto_start</code> are part of GroupCallConfig instead of <code>join_group_call</code>.\n-  Renamed <code>additional_ffmpeg_parameters</code> to <code>ffmpeg_parameters</code> in MediaStream.\n-  For more info about breaking changes, check the Examples, if we missed something, please <a href=\"https://github.com/pytgcalls/docsdata/issues/new\">open an issue</a>.\n<b>Additional Notes</b>\nWe're pleased to announce that now is available an unofficial porting of NTgCalls for Rust, for more info, check the <a href=\"https://github.com/YouKnow-sys/ntgcalls-rs\">repository</a>.",
+    "details": {
+      "signature": null
+    },
+    "doc_url": "https://pytgcalls.github.io/PyTgCalls/Changelogs#20X"
+  },
+  "/PyTgCalls/Changelogs/2.1.X.xml": {
+    "title": "Changelog 2.1.X: PyTgCalls v2.1.X",
+    "lib": "PyTgCalls",
+    "kind": "misc",
+    "description": "<b>Enhanced Group Calls, Recording, and More!</b>\n\n<b>What's new?</b>\n\n- <b>Group Calls V2 – Stream Video & Screen Simultaneously:</b> Now you can stream both your screen and video at the same time! Learn more in pytgcalls.types.raw.Stream.\n- <b>Record Your Streams:</b> PyTgCalls now supports stream recording! Find out how to use it here.\n- <b>Performance & Stability Boost:</b> We've upgraded WebRTC to the latest version (<a href=\"https://chromiumdash.appspot.com/branches\">m132</a>) and optimized the codebase for better stability and speed.\n- <b>PyTgCalls Now Supports Java for Android:</b> You can now use PyTgCalls in Android apps with Java! Check out <a href=\"https://github.com/pytgcalls/Telegram-X\">Telegram-X</a> for usage details or find the library <a href=\"https://central.sonatype.com/artifact/io.github.pytgcalls/ntgcalls\">here</a>.\n- <b>Massive CPU Optimization:</b> CPU usage reduced by up to 60% and system calls decreased by 90%, making everything more efficient.\n- <b>Clearer C Binding Error Messages:</b> Debugging is now easier with detailed error messages for C bindings.\n- <b>Native Media Device Streaming:</b> Stream your microphone, camera, or screen directly with Media Devices. Learn more here.\n- <b>Better Performance with OpenH264:</b> Now supporting OpenH264 for lower CPU usage and improved performance.\n<b>Breaking Changes</b>\n\n-  Now the MediaDevices has been refactored, so was renamed the <code>get_screen_devices()</code> and <code>get_audio_devices()</code> to <code>screen_devices()</code> and <code>microphone_devices()</code>.\n\n<pre><code># Get screen devices\n- screen_devices = MediaDevices.get_screen_devices()\n+ screen_devices = MediaDevices.screen_devices()\n  \n  # Get microphone devices\n- audio_devices = MediaDevices.get_audio_devices()\n+ audio_devices = MediaDevices.microphone_devices()</code></pre>\n\n-  Some media management methods were renamed, for example, for example <code>pause_stream()</code> was changed to <code>pause()</code>\n\n<pre><code># Pause the stream\n- call_py.pause_stream(-1001234567890)\n+ call_py.pause(-1001234567890)\n  \n  # Resume the stream\n- call_py.resume_stream(-1001234567890)\n+ call_py.resume(-1001234567890)\n  \n  # Mute the stream\n- call_py.mute_stream(-1001234567890)\n+ call_py.mute(-1001234567890)\n  \n  # Unmute the stream\n- call_py.unmute_stream(-1001234567890)\n+ call_py.unmute(-1001234567890)\n  \n  # Get the current played time\n- call_py.played_time(-1001234567890)\n+ call_py.time(-1001234567890)</code></pre>\n\n-  To retrieve the current call status, use the <code>capture</code> field instead of <code>status</code> since now CallStatus can return also the current recording status.\n\n<pre><code># Get the current call status\n- call_py.calls[-1001234567890].status\n+ call_py.calls[-1001234567890].capture</code></pre>\n\n-  Now the <code>stream_end</code> filter requires brackets, since now accepts multiple parameters.\n\n<pre><code># On stream end\n- @call_py.on_update(filters.stream_end)\n+ @call_py.on_update(filters.stream_end())\n  async def on_stream_end(client: PyTgCalls, update: Update):\n      print(update)</code></pre>\n\n-  Removed <code>StreamAudioEnded</code> and <code>StreamVideoEnded</code> in favor of <code>StreamEnded</code> with the <code>stream_type</code> and <code>device</code> field.\n\n<pre><code># On stream ended\n  @call_py.on_update(filters.stream_end())\n- async def on_stream_ended(client: PyTgCalls, update: Update):\n+ async def on_stream_ended(client: PyTgCalls, update: StreamEnded):\n      # Check the stream type\n-     if isinstance(update, StreamAudioEnded):\n+     if update.stream_type == StreamEnded.Type.AUDIO:\n          print(update)\n-     elif isinstance(update, StreamVideoEnded):\n+     elif update.stream_type == StreamEnded.Type.VIDEO:\n          print(update)</code></pre>",
+    "details": {
+      "signature": null
+    },
+    "doc_url": "https://pytgcalls.github.io/PyTgCalls/Changelogs#21X"
+  },
+  "/PyTgCalls/Changelogs/2.2.11.xml": {
+    "title": "Changelog 2.2.11: PyTgCalls v2.2.11",
+    "lib": "PyTgCalls",
+    "kind": "misc",
+    "description": "<b>Enhanced Android Stability, Performance, and More!</b>\n\n<b>What's new?</b>\n\n- <b>Stream Change Control:</b> Added <code>keep_open</code> parameter to AudioDescription and VideoDescription, allowing you to force stream changes or let the StreamManager automatically detect them.\n- <b>JSON Performance Boost:</b> Replaced nlohmann JSON with Boost.JSON for improved parsing and serialization performance.\n- <b>Android Builds Now Stable:</b> Addressed the experimental-relative-c++-abi-vtables issue on x86_64, making Android builds fully stable and production-ready.\n- <b>Android Audio Improvements:</b> Now using Oboe for audio handling on Android, providing lower latency and better performance.\n- <b>Linux Performance Upgrades:</b> Updated to the latest versions of libX11, FFmpeg, mesa, glib, boost and libwebrtc for improved stability and performance. Bug Fixes: Addressed various bugs for a more stable experience.",
+    "details": {
+      "signature": null
+    },
+    "doc_url": "https://pytgcalls.github.io/PyTgCalls/Changelogs#2211"
+  },
+  "/PyTgCalls/Changelogs/2.2.X.xml": {
+    "title": "Changelog 2.2.X: PyTgCalls v2.2.X",
+    "lib": "PyTgCalls",
+    "kind": "misc",
+    "description": "<b>Support for Large Group Calls, RTMP Streams, and More!</b>\n\n<b>What's new?</b>\n\n- <b>Support for Large Group Calls:</b> PyTgCalls now supports group calls with 20 or more participants in channels, allowing the deprecation of the <code>UnMuteNeeded</code> exception.\n- <b>RTMP Stream Integration:</b> You can now connect to RTMP streams and record them using the record() method. This enables streaming external RTMP content directly into your group calls.\n- <b> Group Call Discarding Option:</b> The <code>close</code> parameter has been added to the leave_call() method, allowing you to fully terminate a group call when it's no longer needed.\n- <b>Enhanced Participant Caching:</b> The get_participants() method now supports proper caching for clients using the <code>no_update</code> parameter, ensuring accurate participant lists without triggering unnecessary updates.\n- <b>New ChatUpdate Event:</b> The ChatUpdate event has been introduced to track changes such as busy call status. You can now use the <code>filters.chat_update(ChatUpdate.Status.BUSY_CALL)</code> filter to monitor these updates.\n- <b>New Group Call Participant Event:</b> The UpdatedGroupCallParticipant event enables handling of actions like participants joining from another device or being kicked. Use <code>filters.call_participant(GroupCallParticipant.Action.KICKED)</code> to listen for such events.\n- <b>Improved Audio/Video Encoding Performance:</b> Audio and video encoding performance has been significantly improved thanks to an optimized FFmpeg build. The latest version takes advantage of advanced CPU instruction sets like AVX2, resulting in faster processing and lower latency. Bug Fixes: Addressed various bugs for a more stable experience.\n<b>Breaking Changes</b>\n\n-  Now the pytgcalls.GroupCallParticipant.Action has been moved from pytgcalls.GroupCallParticipant to pytgcalls.UpdatedGroupCallParticipant.\n\n<pre><code>@call_py.on_update(filters.call_participant())\n  async def participant_handler(_: PyTgCalls, update: UpdatedGroupCallParticipant):\n-     print(update.participant.user_id, update.participant.action)\n+     print(update.participant.user_id, update.action)</code></pre>\n\n<b>Additional Notes</b>\nThe repository <a href=\"https://github.com/AshokShau/TgMusicBot\">AshokShau/TgMusicBot</a> has won the #PyTgCon2K24 contest! It is now officially featured in the Quickstart section of the NTgCalls documentation. Check it out to see an excellent example of what you can build with PyTgCalls!",
+    "details": {
+      "signature": null
+    },
+    "doc_url": "https://pytgcalls.github.io/PyTgCalls/Changelogs#22X"
+  },
   "/PyTgCalls/Client.xml": {
     "title": "PyTgCalls Client",
     "lib": "PyTgCalls",

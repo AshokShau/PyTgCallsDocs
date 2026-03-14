@@ -7,6 +7,7 @@ import (
 	"encoding/hex"
 	"fmt"
 	"log/slog"
+	"runtime"
 	"strings"
 	"time"
 
@@ -14,8 +15,12 @@ import (
 	"github.com/AshokShau/gotdbot/handlers"
 )
 
+var startTime = time.Now()
+
 func Register(b *bot.Bot) {
 	d := b.Client.Dispatcher
+
+	d.AddHandler(handlers.NewCommand("ping", pingHandler))
 
 	d.AddHandler(handlers.NewCommand("start", func(c *gotdbot.Client, ctx *gotdbot.Context) error {
 		me, _ := c.GetMe()
@@ -78,7 +83,13 @@ func handleInlineQuery(b *bot.Bot, c *gotdbot.Client, ctx *gotdbot.Context) erro
 	docResults := b.Docs.Search(query, 15)
 	for _, entry := range docResults {
 		text := utils.FormatEntry(entry)
-		formatted, _ := gotdbot.GetFormattedText(c, text, nil, "HTML")
+		if len(text) > 1500 {
+			text = fmt.Sprintf("<blockquote expandable>%s</blockquote>", text)
+		}
+		formatted, err := gotdbot.GetFormattedText(c, text, nil, "HTML")
+		if err != nil {
+			return err
+		}
 
 		hash := sha256.Sum256([]byte(entry.Path))
 		id := hex.EncodeToString(hash[:16])
@@ -89,6 +100,9 @@ func handleInlineQuery(b *bot.Bot, c *gotdbot.Client, ctx *gotdbot.Context) erro
 			Description: entry.Description,
 			InputMessageContent: &gotdbot.InputMessageText{
 				Text: formatted,
+				LinkPreviewOptions: &gotdbot.LinkPreviewOptions{
+					IsDisabled: true,
+				},
 			},
 			ReplyMarkup: utils.GetEntryKeyboard(entry, "main"),
 		})
@@ -106,18 +120,12 @@ func handleInlineCallbackQuery(b *bot.Bot, c *gotdbot.Client, ctx *gotdbot.Conte
 	b.Mu.Lock()
 	if banUntil, ok := b.Bans[userId]; ok {
 		if now.Before(banUntil) {
-			if !b.Alerted[userId] {
-				b.Alerted[userId] = true
-				b.Mu.Unlock()
-				_ = c.AnswerCallbackQuery(0, cq.Id, "You are spamming! You are banned from using the bot for 10 minutes.", "", &gotdbot.AnswerCallbackQueryOpts{ShowAlert: true})
-				return gotdbot.EndGroups
-			}
 			b.Mu.Unlock()
-			_ = c.AnswerCallbackQuery(0, cq.Id, "", "", nil)
+			text := fmt.Sprintf("You are still banned for %d seconds!", int(banUntil.Sub(now).Seconds()))
+			_ = c.AnswerCallbackQuery(0, cq.Id, text, "", &gotdbot.AnswerCallbackQueryOpts{ShowAlert: true})
 			return gotdbot.EndGroups
 		} else {
 			delete(b.Bans, userId)
-			delete(b.Alerted, userId)
 		}
 	}
 
@@ -135,9 +143,8 @@ func handleInlineCallbackQuery(b *bot.Bot, c *gotdbot.Client, ctx *gotdbot.Conte
 
 	if len(newHistory) >= 4 {
 		b.Bans[userId] = now.Add(10 * time.Minute)
-		b.Alerted[userId] = true
 		b.Mu.Unlock()
-		_ = c.AnswerCallbackQuery(300, cq.Id, "You are spamming! You are banned from using the bot for 10 minutes.", "", &gotdbot.AnswerCallbackQueryOpts{ShowAlert: true})
+		_ = c.AnswerCallbackQuery(0, cq.Id, "You are spamming! You are banned from using the bot for 10 minutes.", "", &gotdbot.AnswerCallbackQueryOpts{ShowAlert: true})
 		return gotdbot.EndGroups
 	}
 	b.Mu.Unlock()
@@ -153,7 +160,7 @@ func handleInlineCallbackQuery(b *bot.Bot, c *gotdbot.Client, ctx *gotdbot.Conte
 		return nil
 	}
 
-	_ = c.AnswerCallbackQuery(300, cq.Id, "loading ...", "", nil)
+	_ = c.AnswerCallbackQuery(1, cq.Id, "loading ...", "", nil)
 	parts := strings.SplitN(data, ":", 2)
 	if len(parts) < 2 {
 		slog.Warn("Invalid callback data format", "data", data)
@@ -186,6 +193,10 @@ func handleInlineCallbackQuery(b *bot.Bot, c *gotdbot.Client, ctx *gotdbot.Conte
 		return nil
 	}
 
+	if len(text) > 1500 {
+		text = fmt.Sprintf("<blockquote expandable>%s</blockquote>", text)
+	}
+
 	formatted, err := gotdbot.GetFormattedText(c, text, nil, "HTML")
 	if err != nil {
 		slog.Error("Failed to get formatted text", "error", err, "view", view, "entry", entry.Title)
@@ -195,6 +206,9 @@ func handleInlineCallbackQuery(b *bot.Bot, c *gotdbot.Client, ctx *gotdbot.Conte
 	kb := utils.GetEntryKeyboard(entry, view)
 	err = c.EditInlineMessageText(cq.InlineMessageId, gotdbot.InputMessageText{
 		Text: formatted,
+		LinkPreviewOptions: &gotdbot.LinkPreviewOptions{
+			IsDisabled: true,
+		},
 	}, &gotdbot.EditInlineMessageTextOpts{
 		ReplyMarkup: kb,
 	})
@@ -207,4 +221,32 @@ func handleInlineCallbackQuery(b *bot.Bot, c *gotdbot.Client, ctx *gotdbot.Conte
 	}
 
 	return gotdbot.EndGroups
+}
+
+// pingHandler handles the /ping command.
+func pingHandler(c *gotdbot.Client, ctx *gotdbot.Context) error {
+	m := ctx.EffectiveMessage
+	start := time.Now()
+
+	updateLag := time.Since(time.Unix(int64(m.Date), 0)).Milliseconds()
+
+	msg, err := m.ReplyText(c, "⏱️ Pinging...", nil)
+	if err != nil {
+		return err
+	}
+
+	latency := time.Since(start).Milliseconds()
+	uptime := time.Since(startTime).Truncate(time.Second)
+
+	response := fmt.Sprintf(
+		"<b>📊 System Performance Metrics</b>\n\n"+
+			"⏱️ <b>Bot Latency:</b> <code>%d ms</code>\n"+
+			"🕒 <b>Uptime:</b> <code>%s</code>\n"+
+			"📩 <b>Update Lag:</b> <code>%d ms</code>\n"+
+			"⚙️ <b>Go Routines:</b> <code>%d</code>\n",
+		latency, uptime, updateLag, runtime.NumGoroutine(),
+	)
+
+	_, err = msg.EditText(c, response, &gotdbot.EditTextMessageOpts{ParseMode: "HTML"})
+	return err
 }

@@ -18,7 +18,6 @@ type Bot struct {
 	Mu           sync.RWMutex
 	ClickHistory map[int64][]time.Time
 	Bans         map[int64]time.Time
-	Alerted      map[int64]bool
 }
 
 func New(client *gotdbot.Client, docData docs.Documentation) *Bot {
@@ -28,7 +27,6 @@ func New(client *gotdbot.Client, docData docs.Documentation) *Bot {
 		HashMap:      make(map[string]*docs.DocEntry),
 		ClickHistory: make(map[int64][]time.Time),
 		Bans:         make(map[int64]time.Time),
-		Alerted:      make(map[int64]bool),
 	}
 
 	for p, entry := range docData {

@@ -164,11 +164,259 @@ func parseMap(url string, configMap map[string]string) (docs.Documentation, erro
 			for _, ex := range examples {
 				documentation[ex.Path] = ex
 			}
+		} else if path == "/PyTgCalls/Changelogs.xml" {
+			changelogs := parseChangelogsPage(path, pageXML, configMap)
+			for _, cl := range changelogs {
+				documentation[cl.Path] = cl
+			}
 		}
 		documentation[path] = parsePage(path, pageXML, configMap)
 	}
 
 	return documentation, nil
+}
+
+func parseChangelogsPage(path, pageXML string, configMap map[string]string) []*docs.DocEntry {
+	var entries []*docs.DocEntry
+
+	categoryRegex := regexp.MustCompile(`(?s)<category>(.*?)</category>`)
+	bannerRegex := regexp.MustCompile(`(?s)<banner\s+(.*?)/>`)
+	subtextRegex := regexp.MustCompile(`(?s)<subtext>(.*?)</subtext>`)
+	attrRegex := regexp.MustCompile(`(\w+)="([^"]*)"`)
+
+	categories := categoryRegex.FindAllStringSubmatch(pageXML, -1)
+	for _, catMatch := range categories {
+		catContent := catMatch[1]
+
+		bannerMatch := bannerRegex.FindStringSubmatch(catContent)
+		if len(bannerMatch) < 2 {
+			continue
+		}
+
+		attrs := make(map[string]string)
+		attrMatches := attrRegex.FindAllStringSubmatch(bannerMatch[1], -1)
+		for _, am := range attrMatches {
+			attrs[am[1]] = am[2]
+		}
+
+		version := attrs["version"]
+		if version == "" {
+			version = "Unknown"
+		}
+
+		title := attrs["bigtitle"]
+		if title == "" {
+			title = "Changelog"
+		}
+
+		description := attrs["description"]
+
+		var contentParts []string
+		if description != "" {
+			contentParts = append(contentParts, fmt.Sprintf("<b>%s</b>", description))
+		}
+
+		subtexts := subtextRegex.FindAllStringSubmatch(catContent, -1)
+		for _, stMatch := range subtexts {
+			contentParts = append(contentParts, collectFormattedText(stMatch[1], configMap))
+		}
+
+		fullContent := strings.Join(contentParts, "\n\n")
+
+		entries = append(entries, &docs.DocEntry{
+			Path:        fmt.Sprintf("/PyTgCalls/Changelogs/%s.xml", version),
+			Title:       fmt.Sprintf("Changelog %s: %s", version, title),
+			Lib:         "PyTgCalls",
+			Kind:        "misc",
+			Description: strings.TrimSpace(fullContent),
+			DocURL:      fmt.Sprintf("https://pytgcalls.github.io/PyTgCalls/Changelogs#%s", strings.ReplaceAll(version, ".", "")),
+		})
+	}
+
+	return entries
+}
+
+func collectFormattedText(innerXML string, configMap map[string]string) string {
+	decoder := xml.NewDecoder(strings.NewReader("<root>" + innerXML + "</root>"))
+	var sb strings.Builder
+
+	var inCode int
+	var traverse func()
+	traverse = func() {
+		for {
+			token, err := decoder.Token()
+			if err == io.EOF {
+				break
+			}
+			if err != nil {
+				break
+			}
+
+			switch t := token.(type) {
+			case xml.CharData:
+				text := string(t)
+				if inCode == 0 {
+					text = strings.ReplaceAll(text, "\n", " ")
+					re := regexp.MustCompile(`\s+`)
+					text = re.ReplaceAllString(text, " ")
+				}
+				sb.WriteString(text)
+			case xml.StartElement:
+				switch t.Name.Local {
+				case "b", "strong":
+					sb.WriteString("<b>")
+					traverse()
+					sb.WriteString("</b>")
+				case "i", "em":
+					sb.WriteString("<i>")
+					traverse()
+					sb.WriteString("</i>")
+				case "u", "ins":
+					sb.WriteString("<u>")
+					traverse()
+					sb.WriteString("</u>")
+				case "a":
+					var href string
+					for _, attr := range t.Attr {
+						if attr.Name.Local == "href" {
+							href = attr.Value
+						}
+					}
+					sb.WriteString(fmt.Sprintf("<a href=\"%s\">", href))
+					traverse()
+					sb.WriteString("</a>")
+				case "code":
+					sb.WriteString("<code>")
+					inCode++
+					traverse()
+					inCode--
+					sb.WriteString("</code>")
+				case "br":
+					sb.WriteString("\n")
+					traverse()
+				case "list":
+					sb.WriteString("\n")
+					traverse()
+				case "item":
+					sb.WriteString("\n- ")
+					traverse()
+				case "h3":
+					sb.WriteString("\n<b>")
+					traverse()
+					sb.WriteString("</b>\n")
+				case "config":
+					var id string
+					for _, attr := range t.Attr {
+						if attr.Name.Local == "id" {
+							id = attr.Value
+						}
+					}
+					if val, ok := configMap[id]; ok {
+						sb.WriteString(val)
+					}
+					traverse()
+				case "syntax-highlight":
+					sb.WriteString("\n<pre><code>")
+					inCode++
+					traverse()
+					inCode--
+					sb.WriteString("</code></pre>\n")
+				case "multisyntax":
+					isBlame := false
+					for _, attr := range t.Attr {
+						if attr.Name.Local == "as-blame" && attr.Value == "true" {
+							isBlame = true
+							break
+						}
+					}
+					if isBlame {
+						var codes []string
+						for {
+							innerToken, _ := decoder.Token()
+							if innerToken == nil {
+								break
+							}
+							if se, ok := innerToken.(xml.StartElement); ok && se.Name.Local == "syntax-highlight" {
+								codes = append(codes, collectTokenContent(decoder))
+							} else if ee, ok := innerToken.(xml.EndElement); ok && ee.Name.Local == "multisyntax" {
+								break
+							}
+						}
+						if len(codes) >= 2 {
+							sb.WriteString("\n<pre><code>")
+							sb.WriteString(generateDiff(codes[0], codes[1]))
+							sb.WriteString("</code></pre>\n")
+						}
+					} else {
+						traverse()
+					}
+				case "docs-ref":
+					traverse()
+				default:
+					traverse()
+				}
+			case xml.EndElement:
+				return
+			}
+		}
+	}
+
+	traverse()
+	return cleanResult(sb.String())
+}
+
+func cleanResult(s string) string {
+	preRegex := regexp.MustCompile(`(?s)<pre><code>(.*?)</code></pre>`)
+	codeRegex := regexp.MustCompile(`(?s)<code>(.*?)</code>`)
+
+	placeholders := make(map[string]string)
+	counter := 0
+
+	processed := preRegex.ReplaceAllStringFunc(s, func(m string) string {
+		placeholder := fmt.Sprintf("___PRE_CODE_%d___", counter)
+		placeholders[placeholder] = m
+		counter++
+		return "\n" + placeholder + "\n"
+	})
+
+	processed = codeRegex.ReplaceAllStringFunc(processed, func(m string) string {
+		placeholder := fmt.Sprintf("___CODE_%d___", counter)
+		placeholders[placeholder] = m
+		counter++
+		return placeholder
+	})
+
+	lines := strings.Split(processed, "\n")
+	var result []string
+	for _, line := range lines {
+		trimmed := strings.TrimSpace(line)
+		if strings.HasPrefix(trimmed, "___PRE_CODE_") || strings.HasPrefix(trimmed, "___CODE_") {
+			if val, ok := placeholders[trimmed]; ok {
+				if strings.HasPrefix(trimmed, "___PRE_CODE_") {
+					content := val[len("<pre><code>") : len(val)-len("</code></pre>")]
+					result = append(result, "<pre><code>"+dedent(content)+"</code></pre>")
+				} else {
+					result = append(result, val)
+				}
+				continue
+			}
+		}
+
+		if trimmed != "" {
+			result = append(result, trimmed)
+		} else if len(result) > 0 && result[len(result)-1] != "" {
+			result = append(result, "")
+		}
+	}
+
+	final := strings.TrimSpace(strings.Join(result, "\n"))
+	for ph, val := range placeholders {
+		if !strings.HasPrefix(ph, "___PRE_CODE_") {
+			final = strings.ReplaceAll(final, ph, val)
+		}
+	}
+
+	return final
 }
 
 func parseExamplesPage(path, pageXML string) []*docs.DocEntry {
@@ -758,6 +1006,59 @@ func parseItemBlock(inner XMLNode, configMap map[string]string) []docs.DocItem {
 		}
 	}
 	return items
+}
+
+func collectTokenContent(decoder *xml.Decoder) string {
+	var sb strings.Builder
+	depth := 1
+	for {
+		token, err := decoder.Token()
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			break
+		}
+		switch t := token.(type) {
+		case xml.StartElement:
+			depth++
+		case xml.EndElement:
+			depth--
+			if depth == 0 {
+				return sb.String()
+			}
+		case xml.CharData:
+			sb.WriteString(string(t))
+		}
+	}
+	return sb.String()
+}
+
+func generateDiff(oldCode, newCode string) string {
+	oldLines := strings.Split(dedent(oldCode), "\n")
+	newLines := strings.Split(dedent(newCode), "\n")
+
+	var sb strings.Builder
+	maxLen := len(oldLines)
+	if len(newLines) > maxLen {
+		maxLen = len(newLines)
+	}
+
+	for i := 0; i < maxLen; i++ {
+		if i < len(oldLines) && i < len(newLines) {
+			if strings.TrimSpace(oldLines[i]) == strings.TrimSpace(newLines[i]) {
+				sb.WriteString("  " + oldLines[i] + "\n")
+			} else {
+				sb.WriteString("- " + oldLines[i] + "\n")
+				sb.WriteString("+ " + newLines[i] + "\n")
+			}
+		} else if i < len(oldLines) {
+			sb.WriteString("- " + oldLines[i] + "\n")
+		} else if i < len(newLines) {
+			sb.WriteString("+ " + newLines[i] + "\n")
+		}
+	}
+	return strings.TrimSpace(sb.String())
 }
 
 func dedent(s string) string {
