@@ -17,6 +17,12 @@ import (
 
 var startTime = time.Now()
 
+const (
+	spamWindow    = 4 * time.Second
+	spamMaxClicks = 4
+	banDuration   = 10 * time.Minute
+)
+
 func Register(b *bot.Bot) {
 	d := b.Client.Dispatcher
 
@@ -115,35 +121,45 @@ func handleInlineCallbackQuery(b *bot.Bot, c *gotdbot.Client, ctx *gotdbot.Conte
 	cq := ctx.Update.UpdateNewInlineCallbackQuery
 
 	userId := cq.SenderUserId
+	if userId == 0 {
+		slog.Warn("Inline callback without sender user id", "callback_id", cq.Id)
+		return nil
+	}
+
 	now := time.Now()
 
 	b.Mu.Lock()
 	if banUntil, ok := b.Bans[userId]; ok {
 		if now.Before(banUntil) {
 			b.Mu.Unlock()
+			slog.Info("Blocked banned user callback", "user_id", userId, "ban_until", banUntil)
 			text := fmt.Sprintf("You are still banned for %d seconds!", int(banUntil.Sub(now).Seconds()))
 			_ = c.AnswerCallbackQuery(0, cq.Id, text, "", &gotdbot.AnswerCallbackQueryOpts{ShowAlert: true})
 			return gotdbot.EndGroups
 		} else {
 			delete(b.Bans, userId)
+			slog.Info("Expired user ban removed", "user_id", userId)
 		}
 	}
 
 	history := b.ClickHistory[userId]
 	history = append(history, now)
 
-	threshold := now.Add(-2 * time.Second)
+	threshold := now.Add(-spamWindow)
 	var newHistory []time.Time
 	for _, t := range history {
-		if t.After(threshold) {
+		if !t.Before(threshold) {
 			newHistory = append(newHistory, t)
 		}
 	}
 	b.ClickHistory[userId] = newHistory
 
-	if len(newHistory) >= 4 {
-		b.Bans[userId] = now.Add(10 * time.Minute)
+	if len(newHistory) >= spamMaxClicks {
+		banUntil := now.Add(banDuration)
+		b.Bans[userId] = banUntil
+		delete(b.ClickHistory, userId)
 		b.Mu.Unlock()
+		slog.Info("User banned for callback spam", "user_id", userId, "clicks", len(newHistory), "window", spamWindow.String(), "ban_until", banUntil)
 		_ = c.AnswerCallbackQuery(0, cq.Id, "You are spamming! You are banned from using the bot for 10 minutes.", "", &gotdbot.AnswerCallbackQueryOpts{ShowAlert: true})
 		return gotdbot.EndGroups
 	}
