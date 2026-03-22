@@ -206,18 +206,17 @@ func GetEntryKeyboard(e *docs.DocEntry, currentView string) *gotdbot.ReplyMarkup
 	hash := sha256.Sum256([]byte(e.Path))
 	pathHash := hex.EncodeToString(hash[:16])
 
-	var row1 []gotdbot.InlineKeyboardButton
-	var row2 []gotdbot.InlineKeyboardButton
+	var buttons []gotdbot.InlineKeyboardButton
 
 	if currentView != "main" {
-		row1 = append(row1, gotdbot.InlineKeyboardButton{
+		buttons = append(buttons, gotdbot.InlineKeyboardButton{
 			Text: "Description",
 			Type: &gotdbot.InlineKeyboardButtonTypeCallback{Data: []byte("main:" + pathHash)},
 		})
 	}
 
 	if e.Example != nil && currentView != "example" {
-		row1 = append(row1, gotdbot.InlineKeyboardButton{
+		buttons = append(buttons, gotdbot.InlineKeyboardButton{
 			Text: "Example",
 			Type: &gotdbot.InlineKeyboardButtonTypeCallback{Data: []byte("example:" + pathHash)},
 		})
@@ -227,10 +226,11 @@ func GetEntryKeyboard(e *docs.DocEntry, currentView string) *gotdbot.ReplyMarkup
 	for _, s := range e.Details.Sections {
 		if strings.Contains(strings.ToUpper(s.Title), "PARAMETERS") {
 			hasParams = true
+			break
 		}
 	}
 	if hasParams && currentView != "params" {
-		row2 = append(row2, gotdbot.InlineKeyboardButton{
+		buttons = append(buttons, gotdbot.InlineKeyboardButton{
 			Text: "Parameters",
 			Type: &gotdbot.InlineKeyboardButtonTypeCallback{Data: []byte("params:" + pathHash)},
 		})
@@ -240,45 +240,50 @@ func GetEntryKeyboard(e *docs.DocEntry, currentView string) *gotdbot.ReplyMarkup
 	for _, s := range e.Details.Sections {
 		if strings.Contains(strings.ToUpper(s.Title), "RAISES") {
 			hasRaises = true
+			break
 		}
 	}
 	if hasRaises && currentView != "raises" {
-		row2 = append(row2, gotdbot.InlineKeyboardButton{
+		buttons = append(buttons, gotdbot.InlineKeyboardButton{
 			Text: "Raises",
 			Type: &gotdbot.InlineKeyboardButtonTypeCallback{Data: []byte("raises:" + pathHash)},
 		})
 	}
 
 	hasOthers := len(e.Details.Members) > 0 || len(e.Details.Properties) > 0
-	for _, s := range e.Details.Sections {
-		title := strings.ToUpper(s.Title)
-		if !strings.Contains(title, "PARAMETERS") && !strings.Contains(title, "RAISES") {
-			hasOthers = true
+	if !hasOthers {
+		for _, s := range e.Details.Sections {
+			title := strings.ToUpper(s.Title)
+			if !strings.Contains(title, "PARAMETERS") && !strings.Contains(title, "RAISES") {
+				hasOthers = true
+				break
+			}
 		}
 	}
 	if hasOthers && currentView != "details" {
-		row2 = append(row2, gotdbot.InlineKeyboardButton{
+		buttons = append(buttons, gotdbot.InlineKeyboardButton{
 			Text: "Details",
 			Type: &gotdbot.InlineKeyboardButtonTypeCallback{Data: []byte("details:" + pathHash)},
 		})
 	}
 
+	buttons = append(buttons, gotdbot.InlineKeyboardButton{
+		Text: "🌐",
+		Type: &gotdbot.InlineKeyboardButtonTypeUrl{Url: e.DocURL},
+	})
+
 	kb := &gotdbot.ReplyMarkupInlineKeyboard{
 		Rows: [][]gotdbot.InlineKeyboardButton{},
 	}
-	if len(row1) > 0 {
-		kb.Rows = append(kb.Rows, row1)
-	}
-	if len(row2) > 0 {
-		kb.Rows = append(kb.Rows, row2)
+
+	for i := 0; i < len(buttons); i += 2 {
+		end := i + 2
+		if end > len(buttons) {
+			end = len(buttons)
+		}
+		kb.Rows = append(kb.Rows, buttons[i:end])
 	}
 
-	kb.Rows = append(kb.Rows, []gotdbot.InlineKeyboardButton{
-		{
-			Text: "🌐 View Online",
-			Type: &gotdbot.InlineKeyboardButtonTypeUrl{Url: e.DocURL},
-		},
-	})
 
 	return kb
 }
