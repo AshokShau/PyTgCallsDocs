@@ -5,6 +5,7 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
+	"html"
 	"log/slog"
 	"regexp"
 	"strings"
@@ -36,10 +37,12 @@ func FormatEntry(e *docs.DocEntry) string {
 
 func FormatExample(e *docs.DocEntry) string {
 	var sb strings.Builder
-	sb.WriteString(fmt.Sprintf("<b>Code Example for %s</b>\n\n", e.Title))
+	title := html.EscapeString(e.Title)
+	sb.WriteString(fmt.Sprintf("<b>Code Example for %s</b>\n\n", title))
 	if e.Example != nil {
-		code := strings.TrimSpace(e.Example.Code)
-		sb.WriteString(fmt.Sprintf("<pre><code class=\"language-%s\">%s</code></pre>", e.Example.Language, code))
+		language := html.EscapeString(strings.TrimSpace(e.Example.Language))
+		code := html.EscapeString(strings.TrimSpace(e.Example.Code))
+		sb.WriteString(fmt.Sprintf("<pre><code class=\"language-%s\">%s</code></pre>", language, code))
 	} else {
 		sb.WriteString("No example available.")
 	}
