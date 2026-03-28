@@ -3,7 +3,7 @@ module ashokshau/pytgdocs
 go 1.25.6
 
 require (
-	github.com/AshokShau/gotdbot v0.7.0
+	github.com/AshokShau/gotdbot v0.8.0
 	github.com/joho/godotenv v1.5.1
 )
 
