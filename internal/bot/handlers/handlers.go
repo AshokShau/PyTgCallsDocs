@@ -244,23 +244,20 @@ func pingHandler(c *gotdbot.Client, ctx *gotdbot.Context) error {
 	m := ctx.EffectiveMessage
 	start := time.Now()
 
-	updateLag := time.Since(time.Unix(int64(m.Date), 0)).Milliseconds()
-
 	msg, err := m.ReplyText(c, "⏱️ Pinging...", nil)
 	if err != nil {
 		return err
 	}
 
 	latency := time.Since(start).Milliseconds()
-	uptime := time.Since(startTime).Truncate(time.Second)
+	uptime := getFormattedDuration(time.Since(startTime))
 
 	response := fmt.Sprintf(
 		"<b>📊 System Performance Metrics</b>\n\n"+
 			"⏱️ <b>Bot Latency:</b> <code>%d ms</code>\n"+
 			"🕒 <b>Uptime:</b> <code>%s</code>\n"+
-			"📩 <b>Update Lag:</b> <code>%d ms</code>\n"+
 			"⚙️ <b>Go Routines:</b> <code>%d</code>\n",
-		latency, uptime, updateLag, runtime.NumGoroutine(),
+		latency, uptime, runtime.NumGoroutine(),
 	)
 
 	_, err = msg.EditText(c, response, &gotdbot.EditTextMessageOpts{ParseMode: "HTML"})

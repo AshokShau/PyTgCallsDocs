@@ -1,6 +1,6 @@
 package main
 
-//go:generate go run github.com/AshokShau/gotdbot/scripts/tools@latest
+//go:generate go run github.com/AshokShau/gotdbot/scripts/tools
 
 import (
 	"ashokshau/pytgdocs/config"
@@ -52,7 +52,7 @@ func main() {
 	}
 
 	clientConfig := &gotdbot.ClientOpts{
-		LibraryPath: "./libtdjson.so.1.8.62",
+		LibraryPath: "./libtdjson.so.1.8.63",
 		Logger:      logger,
 	}
 
