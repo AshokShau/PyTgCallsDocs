@@ -40,7 +40,7 @@ var shortcuts = map[string]Shortcut{
 	"paste": {
 		Title:       "Use a Pastebin",
 		Description: "Avoid sending large blocks of code or logs in chat.",
-		Text:        "Please use a pastebin service for long code snippets or logs to keep the chat clean.\n\nSuggested services:\n• https://paste.rs/\n• https://bin.sc/\n• https://pastebin.com/",
+		Text:        "Please use a pastebin service for long code snippets or logs to keep the chat clean.\n\nSuggested services:\n• https://paste.rs/\n• https://batbin.me/\n• https://pastebin.com/",
 	},
 	"permissions": {
 		Title:       "File Permissions",
@@ -106,6 +106,16 @@ var shortcuts = map[string]Shortcut{
 		Title:       "Documentation",
 		Description: "Official docs links.",
 		Text:        "Documentation:\n• https://pytgcalls.github.io\n\nRepositories:\n• https://github.com/pytgcalls/pytgcalls\n• https://github.com/pytgcalls/ntgcalls",
+	},
+	"howtoask": {
+		Title:       "How to Ask",
+		Description: "Guidelines for asking questions effectively.",
+		Text:        "Please follow the guidelines on how to ask questions: https://stackoverflow.com/help/how-to-ask",
+	},
+	"mcve": {
+		Title:       "Minimal Reproducible Example",
+		Description: "Provide a minimal reproducible example.",
+		Text:        "Please provide a <b>Minimal, Complete, and Verifiable example</b> (MCVE) that demonstrates your issue.\n\nMore info: https://stackoverflow.com/help/minimal-reproducible-example",
 	},
 }
 
