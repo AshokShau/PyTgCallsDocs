@@ -32,6 +32,7 @@ type Details struct {
 	Members    []DocItem `json:"members,omitempty"`
 	Properties []DocItem `json:"properties,omitempty"`
 	Parameters []DocItem `json:"parameters,omitempty"`
+	Methods    []DocItem `json:"methods,omitempty"`
 }
 
 type DocEntry struct {

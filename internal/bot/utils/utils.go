@@ -64,10 +64,19 @@ func FormatParameters(e *docs.DocEntry) string {
 			}
 			typ := ""
 			if p.Type != nil {
-				typ = " (" + *p.Type + ")"
+				t := *p.Type
+				if !strings.HasPrefix(t, "<") {
+					typ = " (<code>" + t + "</code>)"
+				} else {
+					typ = " (" + t + ")"
+				}
 			}
 			if name != "" {
-				sb.WriteString(fmt.Sprintf("- <code>%s</code>%s: %s\n", name, typ, desc))
+				if !strings.HasPrefix(name, "<") {
+					sb.WriteString(fmt.Sprintf("- <code>%s</code>%s: %s\n", name, typ, desc))
+				} else {
+					sb.WriteString(fmt.Sprintf("- %s%s: %s\n", name, typ, desc))
+				}
 			} else {
 				sb.WriteString(fmt.Sprintf("- %s %s\n", typ, desc))
 			}
@@ -80,10 +89,23 @@ func FormatParameters(e *docs.DocEntry) string {
 			for _, item := range s.Items {
 				name := strings.TrimSpace(item.Name)
 				desc := strings.TrimSpace(item.Description)
+				typ := ""
+				if item.Type != nil {
+					t := *item.Type
+					if !strings.HasPrefix(t, "<") {
+						typ = " (<code>" + t + "</code>)"
+					} else {
+						typ = " (" + t + ")"
+					}
+				}
 				if name != "" {
-					sb.WriteString(fmt.Sprintf("- <code>%s</code>: %s\n", name, desc))
+					if !strings.HasPrefix(name, "<") {
+						sb.WriteString(fmt.Sprintf("- <code>%s</code>%s: %s\n", name, typ, desc))
+					} else {
+						sb.WriteString(fmt.Sprintf("- %s%s: %s\n", name, typ, desc))
+					}
 				} else {
-					sb.WriteString(fmt.Sprintf("- %s\n", desc))
+					sb.WriteString(fmt.Sprintf("- %s %s\n", typ, desc))
 				}
 			}
 		}
@@ -151,7 +173,11 @@ func FormatOtherDetails(e *docs.DocEntry) string {
 			if m.Value != nil {
 				val = " = " + *m.Value
 			}
-			sb.WriteString(fmt.Sprintf("- <code>%s</code>%s: %s\n", m.Name, val, strings.TrimSpace(m.Description)))
+			name := m.Name
+			if !strings.HasPrefix(name, "<") {
+				name = "<code>" + name + "</code>"
+			}
+			sb.WriteString(fmt.Sprintf("- %s%s: %s\n", name, val, strings.TrimSpace(m.Description)))
 		}
 		sb.WriteString("\n")
 	}
@@ -162,9 +188,40 @@ func FormatOtherDetails(e *docs.DocEntry) string {
 		for _, p := range e.Details.Properties {
 			typ := ""
 			if p.Type != nil {
-				typ = " (" + *p.Type + ")"
+				t := *p.Type
+				if !strings.HasPrefix(t, "<") {
+					typ = " (<code>" + t + "</code>)"
+				} else {
+					typ = " (" + t + ")"
+				}
 			}
-			sb.WriteString(fmt.Sprintf("- <code>%s</code>%s: %s\n", p.Name, typ, strings.TrimSpace(p.Description)))
+			name := p.Name
+			if !strings.HasPrefix(name, "<") {
+				name = "<code>" + name + "</code>"
+			}
+			sb.WriteString(fmt.Sprintf("- %s%s: %s\n", name, typ, strings.TrimSpace(p.Description)))
+		}
+		sb.WriteString("\n")
+	}
+
+	if len(e.Details.Methods) > 0 {
+		hasAny = true
+		sb.WriteString("<b>METHODS:</b>\n")
+		for _, m := range e.Details.Methods {
+			typ := ""
+			if m.Type != nil {
+				t := *m.Type
+				if !strings.HasPrefix(t, "<") {
+					typ = " (<code>" + t + "</code>)"
+				} else {
+					typ = " (" + t + ")"
+				}
+			}
+			name := m.Name
+			if !strings.HasPrefix(name, "<") {
+				name = "<code>" + name + "</code>"
+			}
+			sb.WriteString(fmt.Sprintf("- %s%s: %s\n", name, typ, strings.TrimSpace(m.Description)))
 		}
 		sb.WriteString("\n")
 	}
@@ -184,8 +241,10 @@ func FormatOtherDetails(e *docs.DocEntry) string {
 			if name != "" {
 				if item.URL != nil {
 					line = fmt.Sprintf("- <a href=\"%s\">%s</a>: %s\n", *item.URL, name, desc)
-				} else {
+				} else if !strings.HasPrefix(name, "<") {
 					line = fmt.Sprintf("- <code>%s</code>: %s\n", name, desc)
+				} else {
+					line = fmt.Sprintf("- %s: %s\n", name, desc)
 				}
 			} else {
 				line = fmt.Sprintf("- %s\n", desc)
@@ -250,7 +309,7 @@ func GetEntryKeyboard(e *docs.DocEntry, currentView string) *gotdbot.ReplyMarkup
 		})
 	}
 
-	hasOthers := len(e.Details.Members) > 0 || len(e.Details.Properties) > 0
+	hasOthers := len(e.Details.Members) > 0 || len(e.Details.Properties) > 0 || len(e.Details.Methods) > 0
 	if !hasOthers {
 		for _, s := range e.Details.Sections {
 			title := strings.ToUpper(s.Title)

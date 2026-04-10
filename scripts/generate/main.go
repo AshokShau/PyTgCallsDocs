@@ -100,49 +100,22 @@ func resolveConfig(id string, rawOptions map[string]string, seen map[string]bool
 }
 
 func resolveContent(content string, rawOptions map[string]string, seen map[string]bool) string {
-	decoder := xml.NewDecoder(strings.NewReader("<root>" + content + "</root>"))
-	var parts []string
-
+	configRe := regexp.MustCompile(`<config\s+id="([^"]+)"\s*/>`)
 	for {
-		token, err := decoder.Token()
-		if err == io.EOF {
-			break
-		}
-		if err != nil {
-			break
-		}
-
-		switch t := token.(type) {
-		case xml.CharData:
-			parts = append(parts, string(t))
-		case xml.StartElement:
-			if t.Name.Local == "config" {
-				var refID string
-				for _, attr := range t.Attr {
-					if attr.Name.Local == "id" {
-						refID = attr.Value
-						break
-					}
-				}
-				if refID != "" {
-					parts = append(parts, resolveConfig(refID, rawOptions, seen))
-				}
-			} else if t.Name.Local == "br" {
-				parts = append(parts, "\n")
+		found := false
+		content = configRe.ReplaceAllStringFunc(content, func(m string) string {
+			match := configRe.FindStringSubmatch(m)
+			if len(match) > 1 {
+				found = true
+				return resolveConfig(match[1], rawOptions, seen)
 			}
+			return m
+		})
+		if !found {
+			break
 		}
 	}
-
-	joined := strings.Join(parts, "")
-	lines := strings.Split(joined, "\n")
-	var cleanLines []string
-	for _, line := range lines {
-		trimmed := strings.TrimSpace(line)
-		if trimmed != "" {
-			cleanLines = append(cleanLines, trimmed)
-		}
-	}
-	return strings.Join(cleanLines, "\n")
+	return content
 }
 
 func parseMap(url string, configMap map[string]string) (docs.Documentation, error) {
@@ -237,6 +210,10 @@ func parseChangelogsPage(path, pageXML string, configMap map[string]string) []*d
 }
 
 func collectFormattedText(innerXML string, configMap map[string]string) string {
+	if !strings.Contains(innerXML, "<") && !strings.Contains(innerXML, "&") {
+		re := regexp.MustCompile(`\s+`)
+		return strings.TrimSpace(re.ReplaceAllString(innerXML, " "))
+	}
 	decoder := xml.NewDecoder(strings.NewReader("<root>" + innerXML + "</root>"))
 	var sb strings.Builder
 
@@ -300,10 +277,15 @@ func collectFormattedText(innerXML string, configMap map[string]string) string {
 				case "item":
 					sb.WriteString("\n- ")
 					traverse()
+					sb.WriteString("\n")
 				case "h3":
 					sb.WriteString("\n<b>")
 					traverse()
 					sb.WriteString("</b>\n")
+				case "alert":
+					sb.WriteString("\n<blockquote>")
+					traverse()
+					sb.WriteString("</blockquote>\n")
 				case "config":
 					var id string
 					for _, attr := range t.Attr {
@@ -312,7 +294,7 @@ func collectFormattedText(innerXML string, configMap map[string]string) string {
 						}
 					}
 					if val, ok := configMap[id]; ok {
-						sb.WriteString(val)
+						sb.WriteString(collectFormattedText(val, configMap))
 					}
 					traverse()
 				case "syntax-highlight":
@@ -351,6 +333,33 @@ func collectFormattedText(innerXML string, configMap map[string]string) string {
 						traverse()
 					}
 				case "docs-ref":
+					var link string
+					for _, attr := range t.Attr {
+						if attr.Name.Local == "link" {
+							link = attr.Value
+						}
+					}
+					if link != "" {
+						if strings.HasPrefix(link, "/") {
+							link = "https://pytgcalls.github.io" + link
+						}
+						sb.WriteString(fmt.Sprintf("<a href=\"%s\">", link))
+						traverse()
+						sb.WriteString("</a>")
+					} else {
+						traverse()
+					}
+				case "shi", "shi-inline":
+					sb.WriteString("<code>")
+					inCode++
+					traverse()
+					inCode--
+					sb.WriteString("</code>")
+				case "sb":
+					sb.WriteString("<b>")
+					traverse()
+					sb.WriteString("</b>")
+				case "ref", "text", "subtext":
 					traverse()
 				default:
 					traverse()
@@ -528,6 +537,37 @@ func parsePage(path, pageXML string, configMap map[string]string) *docs.DocEntry
 
 	details := parseDetails(root, configMap)
 
+	for i := range details.Parameters {
+		details.Parameters[i].Name = collectFormattedText(details.Parameters[i].Name, configMap)
+		if details.Parameters[i].Type != nil {
+			t := collectFormattedText(*details.Parameters[i].Type, configMap)
+			details.Parameters[i].Type = &t
+		}
+		details.Parameters[i].Description = collectFormattedText(details.Parameters[i].Description, configMap)
+	}
+	for i := range details.Sections {
+		for j := range details.Sections[i].Items {
+			details.Sections[i].Items[j].Name = collectFormattedText(details.Sections[i].Items[j].Name, configMap)
+			if details.Sections[i].Items[j].Type != nil {
+				t := collectFormattedText(*details.Sections[i].Items[j].Type, configMap)
+				details.Sections[i].Items[j].Type = &t
+			}
+			details.Sections[i].Items[j].Description = collectFormattedText(details.Sections[i].Items[j].Description, configMap)
+		}
+	}
+	for i := range details.Members {
+		details.Members[i].Name = collectFormattedText(details.Members[i].Name, configMap)
+		details.Members[i].Description = collectFormattedText(details.Members[i].Description, configMap)
+	}
+	for i := range details.Properties {
+		details.Properties[i].Name = collectFormattedText(details.Properties[i].Name, configMap)
+		details.Properties[i].Description = collectFormattedText(details.Properties[i].Description, configMap)
+	}
+	for i := range details.Methods {
+		details.Methods[i].Name = collectFormattedText(details.Methods[i].Name, configMap)
+		details.Methods[i].Description = collectFormattedText(details.Methods[i].Description, configMap)
+	}
+
 	// Handle tables in details
 	tableRegex := regexp.MustCompile(`(?s)<table>(.*?)</table>`)
 	itemRegex := regexp.MustCompile(`(?s)<item>(.*?)</item>`)
@@ -634,10 +674,10 @@ func extractDescription(node XMLNode, configMap map[string]string) string {
 		if child.XMLName.Local == "config" {
 			id := getAttr(child, "id")
 			if id != "" {
-				return configMap[id]
+				return collectFormattedText(configMap[id], configMap)
 			}
 		} else if child.XMLName.Local == "text" {
-			return strings.TrimSpace(collectText(child.Content))
+			return collectFormattedText(child.Content, configMap)
 		}
 	}
 	return ""
@@ -648,7 +688,7 @@ func findFirstDescription(node XMLNode, configMap map[string]string) string {
 		if sub.XMLName.Local == "subtext" {
 			for _, txt := range sub.Nodes {
 				if txt.XMLName.Local == "text" {
-					content := strings.TrimSpace(collectText(txt.Content))
+					content := collectFormattedText(txt.Content, configMap)
 					if content != "" {
 						return content
 					}
@@ -656,7 +696,7 @@ func findFirstDescription(node XMLNode, configMap map[string]string) string {
 				if txt.XMLName.Local == "config" {
 					id := getAttr(txt, "id")
 					if id != "" {
-						return configMap[id]
+						return collectFormattedText(configMap[id], configMap)
 					}
 				}
 			}
@@ -667,6 +707,10 @@ func findFirstDescription(node XMLNode, configMap map[string]string) string {
 
 func cleanDescription(s string) string {
 	s = strings.TrimSpace(s)
+	// Don't collapse whitespace if it contains HTML tags that might need it (like blockquote or pre)
+	if strings.Contains(s, "<") {
+		return s
+	}
 	re := regexp.MustCompile(`\s+`)
 	return re.ReplaceAllString(s, " ")
 }
@@ -677,7 +721,7 @@ func parseDetails(root XMLNode, configMap map[string]string) docs.Details {
 	// Signature
 	for _, node := range root.Nodes {
 		if node.XMLName.Local == "category-title" {
-			sig := strings.TrimSpace(collectText(node.Content))
+			sig := collectFormattedText(node.Content, configMap)
 			details.Signature = &sig
 			break
 		}
@@ -688,35 +732,42 @@ func parseDetails(root XMLNode, configMap map[string]string) docs.Details {
 	var findCategories func(n XMLNode)
 	findCategories = func(n XMLNode) {
 		if n.XMLName.Local == "category" {
-			sectionTitle := ""
+			currentSectionTitle := ""
 			var rawItems []map[string]string
-			for _, child := range n.Nodes {
-				if child.XMLName.Local == "pg-title" {
-					sectionTitle = strings.TrimSpace(collectText(child.Content))
-				} else if child.XMLName.Local == "subtext" {
-					for _, item := range child.Nodes {
-						if item.XMLName.Local == "config" {
-							id := getAttr(item, "id")
-							rawItems = append(rawItems, map[string]string{"config_id": id, "resolved": configMap[id]})
-						} else if item.XMLName.Local == "category-title" {
-							rawItems = append(rawItems, map[string]string{"raw": strings.TrimSpace(collectText(item.Content))})
-						} else if item.XMLName.Local == "text" {
-							content := strings.TrimSpace(collectText(item.Content))
-							if content != "" {
-								rawItems = append(rawItems, map[string]string{"text": content})
+
+			var processNodes func(nodes []XMLNode)
+			processNodes = func(nodes []XMLNode) {
+				for _, child := range nodes {
+					if child.XMLName.Local == "pg-title" {
+						// If we already have items for a previous title, save them
+						if len(rawItems) > 0 {
+							if items := normalizeItems(rawItems, configMap); len(items) > 0 {
+								sections = append(sections, docs.Section{Title: currentSectionTitle, Items: items})
 							}
-						} else if item.XMLName.Local == "subtext" {
-							content := strings.TrimSpace(collectText(item.Content))
-							if content != "" {
-								rawItems = append(rawItems, map[string]string{"sub_text": content})
-							}
+							rawItems = nil
 						}
+						currentSectionTitle = strings.TrimSpace(collectText(child.Content))
+					} else if child.XMLName.Local == "config" {
+						id := getAttr(child, "id")
+						rawItems = append(rawItems, map[string]string{"config_id": id, "resolved": configMap[id]})
+					} else if child.XMLName.Local == "category-title" {
+						rawItems = append(rawItems, map[string]string{"raw": "<category-title>" + child.Content + "</category-title>"})
+					} else if child.XMLName.Local == "text" || child.XMLName.Local == "alert" || child.XMLName.Local == "br" || child.XMLName.Local == "list" || child.XMLName.Local == "item" {
+						tag := child.XMLName.Local
+						rawItems = append(rawItems, map[string]string{"text": "<" + tag + ">" + child.Content + "</" + tag + ">"})
+					} else if child.XMLName.Local == "subtext" {
+						processNodes(child.Nodes)
 					}
 				}
 			}
-			if items := normalizeItems(rawItems); len(items) > 0 {
-				sections = append(sections, docs.Section{Title: sectionTitle, Items: items})
+
+			processNodes(n.Nodes)
+			if len(rawItems) > 0 {
+				if items := normalizeItems(rawItems, configMap); len(items) > 0 {
+					sections = append(sections, docs.Section{Title: currentSectionTitle, Items: items})
+				}
 			}
+			return // Don't recurse into this category's children to avoid double processing
 		}
 		for _, child := range n.Nodes {
 			findCategories(child)
@@ -728,39 +779,52 @@ func parseDetails(root XMLNode, configMap map[string]string) docs.Details {
 	// Members, Properties, Parameters (from <subtext> blocks with <pg-title>)
 	for _, sub := range root.Nodes {
 		if sub.XMLName.Local == "subtext" {
-			pgTitle := ""
-			for _, child := range sub.Nodes {
-				if child.XMLName.Local == "pg-title" {
-					pgTitle = strings.ToUpper(collectText(child.Content))
-					break
+			var currentPGTitle string
+			var rawItems []map[string]string
+
+			var processSubtextNodes func(nodes []XMLNode)
+			processSubtextNodes = func(nodes []XMLNode) {
+				for _, child := range nodes {
+					if child.XMLName.Local == "pg-title" {
+						if len(rawItems) > 0 {
+							appendItemsByTitle(&details, currentPGTitle, normalizeItems(rawItems, configMap))
+							rawItems = nil
+						}
+						currentPGTitle = strings.ToUpper(collectText(child.Content))
+					} else if child.XMLName.Local == "config" {
+						id := getAttr(child, "id")
+						rawItems = append(rawItems, map[string]string{"config_id": id, "resolved": configMap[id]})
+					} else if child.XMLName.Local == "category-title" {
+						rawItems = append(rawItems, map[string]string{"raw": "<category-title>" + child.Content + "</category-title>"})
+					} else if child.XMLName.Local == "text" || child.XMLName.Local == "alert" || child.XMLName.Local == "br" || child.XMLName.Local == "list" || child.XMLName.Local == "item" {
+						tag := child.XMLName.Local
+						rawItems = append(rawItems, map[string]string{"text": "<" + tag + ">" + child.Content + "</" + tag + ">"})
+					} else if child.XMLName.Local == "subtext" {
+						processSubtextNodes(child.Nodes)
+					}
 				}
 			}
 
-			if pgTitle != "" {
-				if strings.Contains(pgTitle, "PARAMETERS") {
-					for _, inner := range sub.Nodes {
-						if inner.XMLName.Local == "subtext" {
-							details.Parameters = append(details.Parameters, parseItemBlock(inner, configMap)...)
-						}
-					}
-				} else if strings.Contains(pgTitle, "ENUMERATION MEMBERS") {
-					for _, inner := range sub.Nodes {
-						if inner.XMLName.Local == "subtext" {
-							details.Members = append(details.Members, parseMemberBlock(inner, configMap)...)
-						}
-					}
-				} else if strings.Contains(pgTitle, "PROPERTIES") {
-					for _, inner := range sub.Nodes {
-						if inner.XMLName.Local == "subtext" {
-							details.Properties = append(details.Properties, parsePropertyBlock(inner, configMap)...)
-						}
-					}
-				}
+			processSubtextNodes(sub.Nodes)
+			if len(rawItems) > 0 {
+				appendItemsByTitle(&details, currentPGTitle, normalizeItems(rawItems, configMap))
 			}
 		}
 	}
 
 	return details
+}
+
+func appendItemsByTitle(d *docs.Details, title string, items []docs.DocItem) {
+	if strings.Contains(title, "PARAMETERS") {
+		d.Parameters = append(d.Parameters, items...)
+	} else if strings.Contains(title, "ENUMERATION MEMBERS") {
+		d.Members = append(d.Members, items...)
+	} else if strings.Contains(title, "PROPERTIES") {
+		d.Properties = append(d.Properties, items...)
+	} else if strings.Contains(title, "METHODS") {
+		d.Methods = append(d.Methods, items...)
+	}
 }
 
 func collectText(innerXML string) string {
@@ -791,83 +855,259 @@ func getAttr(n XMLNode, name string) string {
 	return ""
 }
 
-func normalizeItems(rawItems []map[string]string) []docs.DocItem {
+func normalizeItems(rawItems []map[string]string, configMap map[string]string) []docs.DocItem {
 	var result []docs.DocItem
 	for _, item := range rawItems {
+		configID := item["config_id"]
 		if resolved, ok := item["resolved"]; ok {
-			text := strings.TrimSpace(resolved)
-
-			// Try to split resolved text into multiple items if it contains multiple "exception " prefixes
-			if strings.Contains(text, "\nexception ") {
-				parts := strings.Split(text, "\nexception ")
-				for i, p := range parts {
-					content := p
-					if i > 0 {
-						content = "exception " + p
-					}
-					content = strings.TrimSpace(content)
-					if content == "" {
+			// Detect multiple items in a single config block
+			if strings.Contains(resolved, "<category-title>") {
+				parts := strings.Split(resolved, "<category-title>")
+				for _, p := range parts {
+					if strings.TrimSpace(p) == "" {
 						continue
 					}
+					p = "<category-title>" + p
+					// Handle cases like <category-title>exception <ref>...</ref></category-title>
+					itemRe := regexp.MustCompile(`(?s)<category-title>(.*?)(?:<ref>|<docs-ref[^>]*>)(.*?)(?:</ref>|</docs-ref>)(?:\s*:\s*(.*?))?\s*</category-title>(.*)`)
+					match := itemRe.FindStringSubmatch(p)
+					if match != nil {
+						prefix := strings.TrimSpace(collectFormattedText(match[1], configMap))
+						name := strings.TrimSpace(collectFormattedText(match[2], configMap))
+						if prefix != "" {
+							name = prefix + " " + name
+						}
+						var typ *string
+						typeContent := strings.TrimSpace(match[3])
+						if strings.HasPrefix(typeContent, "<shi>") && strings.HasSuffix(typeContent, "</shi>") {
+							typeContent = typeContent[len("<shi>") : len(typeContent)-len("</shi>")]
+						}
+						typeText := strings.TrimSpace(collectFormattedText(typeContent, configMap))
+						if typeText != "" {
+							typ = &typeText
+						}
+						desc := match[4] // Preserve tags for later processing
+						result = append(result, docs.DocItem{Name: name, Type: typ, Description: strings.TrimSpace(desc), SourceConfig: &configID})
+					} else {
+						// Fallback if regex fails but it's a category-title part
+						desc := collectFormattedText(p, configMap)
+						if len(result) > 0 {
+							result[len(result)-1].Description = strings.TrimSpace(result[len(result)-1].Description + "\n" + desc)
+						} else {
+							result = append(result, docs.DocItem{Description: desc, SourceConfig: &configID})
+						}
+					}
+				}
+				continue
+			}
 
-					lines := strings.SplitN(content, "\n", 2)
+			// Special case for description-only configs
+			if !strings.Contains(resolved, "<category-title>") && (strings.Contains(resolved, "<subtext>") || strings.Contains(resolved, "<text>") || strings.Contains(resolved, "<config") || strings.Contains(resolved, "exception ")) {
+				desc := collectFormattedText(resolved, configMap)
+				
+				// Handle multi-exception description-only blocks
+				if strings.Contains(desc, "exception ") || strings.Contains(desc, "#NTG_") {
+					var parts []string
+					if strings.Contains(desc, "exception ") {
+						parts = strings.Split(desc, "exception ")
+						for i := 1; i < len(parts); i++ {
+							parts[i] = "exception " + parts[i]
+						}
+					} else {
+						// Split by #NTG_ if no "exception" but contains error codes
+						re := regexp.MustCompile(`(<b><code>#NTG_[A-Z_]+</code></b>)`)
+						parts = re.Split(desc, -1)
+						delims := re.FindAllString(desc, -1)
+						if len(parts) > 0 {
+							firstPart := parts[0]
+							newParts := []string{firstPart}
+							for i, d := range delims {
+								newParts = append(newParts, d+parts[i+1])
+							}
+							parts = newParts
+						}
+					}
+
+					for i, p := range parts {
+						p = strings.TrimSpace(p)
+						if p == "" {
+							continue
+						}
+						if i == 0 && !strings.Contains(p, "exception ") && !strings.Contains(p, "#NTG_") {
+							if len(result) > 0 {
+								result[len(result)-1].Description = strings.TrimSpace(result[len(result)-1].Description + "\n" + p)
+							} else {
+								result = append(result, docs.DocItem{Description: p, SourceConfig: &configID})
+							}
+							continue
+						}
+
+						// Try to extract name: rem
+						var name, rem string
+						if strings.HasPrefix(p, "exception ") {
+							lines := strings.SplitN(p, "\n", 2)
+							name = lines[0]
+							if len(lines) > 1 {
+								rem = lines[1]
+							}
+						} else {
+							// Handle error code blocks like <b><code>#NTG_...</code></b> <code>-1</code> description
+							re := regexp.MustCompile(`(?s)^(<b><code>#NTG_[A-Z_]+</code></b>(?:\s+<code>-?\d+</code>)?)(.*)`)
+							match := re.FindStringSubmatch(p)
+							if match != nil {
+								name = match[1]
+								rem = match[2]
+							} else {
+								name = p
+							}
+						}
+						result = append(result, docs.DocItem{Name: strings.TrimSpace(name), Description: strings.TrimSpace(rem), SourceConfig: &configID})
+					}
+					continue
+				}
+
+				// If the description contains a name: type pattern at the start, try to parse it
+				// This handles cases like <b>chat_id</b>: <code>int</code>
+				colonRe := regexp.MustCompile(`(?s)^<b>(.*?)(?:</b>|</u>|</i>)(?::| \-)\s*(?:<code>)?(.*?)(?:</code>)?(?:\n\s*|$)`)
+				match := colonRe.FindStringSubmatch(desc)
+				if match != nil {
+					name := strings.TrimSpace(match[1])
+					var typ *string
+					if match[2] != "" {
+						t := strings.TrimSpace(match[2])
+						typ = &t
+					}
+					rem := strings.TrimSpace(desc[len(match[0]):])
+					result = append(result, docs.DocItem{Name: name, Type: typ, Description: rem, SourceConfig: &configID})
+				} else if len(result) > 0 {
+					result[len(result)-1].Description = strings.TrimSpace(result[len(result)-1].Description + "\n" + desc)
+				} else {
+					result = append(result, docs.DocItem{Description: desc, SourceConfig: &configID})
+				}
+				continue
+			}
+
+			// Strip outer <subtext> if any
+			if strings.HasPrefix(resolved, "<subtext>") && strings.HasSuffix(resolved, "</subtext>") {
+				resolved = resolved[len("<subtext>") : len(resolved)-len("</subtext>")]
+			}
+			text := strings.TrimSpace(resolved)
+
+			// Detect parameters like "name: type\ndescription"
+			paramRe := regexp.MustCompile(`(?m)^(?:<category-title>.*?<ref>)?([a-zA-Z0-9_]+)(?:</ref>)?(?:\s*:\s*(?:<shi>)?(.*?)(?:</shi>)?)?(?:</category-title>)?$`)
+			matches := paramRe.FindAllStringSubmatchIndex(text, -1)
+
+			if len(matches) > 0 {
+				lastIdx := 0
+				for i, m := range matches {
+					// Text before this match belongs to previous item's description
+					if i > 0 {
+						result[len(result)-1].Description = strings.TrimSpace(result[len(result)-1].Description + "\n" + collectFormattedText(text[lastIdx:m[0]], configMap))
+					} else if m[0] > 0 {
+						prefix := strings.TrimSpace(text[:m[0]])
+						if prefix != "" {
+							if len(result) > 0 {
+								result[len(result)-1].Description = strings.TrimSpace(result[len(result)-1].Description + "\n" + collectFormattedText(prefix, configMap))
+							} else {
+								result = append(result, docs.DocItem{Description: collectFormattedText(prefix, configMap)})
+							}
+						}
+					}
+
+					name := text[m[2]:m[3]]
+					var typ *string
+					typeText := strings.TrimSpace(collectFormattedText(text[m[4]:m[5]], configMap))
+					if typeText != "" {
+						typ = &typeText
+					}
+					result = append(result, docs.DocItem{Name: name, Type: typ, SourceConfig: &configID})
+					lastIdx = m[1]
+				}
+				if lastIdx < len(text) {
+					result[len(result)-1].Description = collectFormattedText(text[lastIdx:], configMap)
+				}
+				continue
+			}
+
+			if strings.Contains(text, "exception ") {
+				parts := strings.Split(text, "exception ")
+				for i, p := range parts {
+					if i == 0 {
+						if strings.TrimSpace(p) != "" {
+							if len(result) > 0 {
+								result[len(result)-1].Description = strings.TrimSpace(result[len(result)-1].Description + "\n" + p)
+							} else {
+								result = append(result, docs.DocItem{Description: strings.TrimSpace(p)})
+							}
+						}
+						continue
+					}
+					content := "exception " + p
+					lines := strings.SplitN(strings.TrimSpace(content), "\n", 2)
 					firstLine := lines[0]
 					desc := ""
 					if len(lines) > 1 {
 						desc = strings.TrimSpace(lines[1])
 					}
 
-					configID := item["config_id"]
 					if strings.Contains(firstLine, ":") {
-						parts := strings.SplitN(firstLine, ":", 2)
-						name := strings.TrimSpace(parts[0])
-						typ := strings.TrimSpace(parts[1])
+						idx := strings.LastIndex(firstLine, ":")
+						name := strings.TrimSpace(firstLine[:idx])
+						typ := strings.TrimSpace(firstLine[idx+1:])
 						result = append(result, docs.DocItem{Name: name, Type: &typ, Description: desc, SourceConfig: &configID})
 					} else {
 						result = append(result, docs.DocItem{Name: firstLine, Description: desc, SourceConfig: &configID})
 					}
 				}
+				continue
+			}
+
+			lines := strings.SplitN(text, "\n", 2)
+			firstLine := lines[0]
+			desc := ""
+			if len(lines) > 1 {
+				desc = strings.TrimSpace(lines[1])
+			}
+
+			if strings.Contains(firstLine, ":") && !strings.Contains(firstLine, "(") {
+				idx := strings.LastIndex(firstLine, ":")
+				name := strings.TrimSpace(firstLine[:idx])
+				typ := strings.TrimSpace(firstLine[idx+1:])
+				result = append(result, docs.DocItem{Name: name, Type: &typ, Description: desc, SourceConfig: &configID})
+			} else if len(result) > 0 {
+				result[len(result)-1].Description = strings.TrimSpace(result[len(result)-1].Description + "\n" + text)
 			} else {
-				lines := strings.SplitN(text, "\n", 2)
-				firstLine := lines[0]
-				desc := ""
-				if len(lines) > 1 {
-					desc = strings.TrimSpace(lines[1])
-				}
-				configID := item["config_id"]
-				if strings.Contains(firstLine, ":") {
-					parts := strings.SplitN(firstLine, ":", 2)
-					name := strings.TrimSpace(parts[0])
-					typ := strings.TrimSpace(parts[1])
-					result = append(result, docs.DocItem{Name: name, Type: &typ, Description: desc, SourceConfig: &configID})
-				} else if len(result) > 0 && !strings.HasPrefix(firstLine, "exception ") {
-					result[len(result)-1].Description += "\n" + text
-				} else {
-					result = append(result, docs.DocItem{Name: firstLine, Description: desc, SourceConfig: &configID})
-				}
+				result = append(result, docs.DocItem{Name: firstLine, Description: desc, SourceConfig: &configID})
 			}
 		} else if raw, ok := item["raw"]; ok {
 			rawText := raw
 			var name string
 			var typ *string
+
 			if strings.Contains(rawText, ":") {
-				parts := strings.SplitN(rawText, ":", 2)
-				name = strings.TrimSpace(parts[0])
-				t := strings.TrimSpace(parts[1])
-				typ = &t
+				// Don't split at colons that are part of a URL or inside parentheses
+				colonRe := regexp.MustCompile(`([a-zA-Z0-9_]+)\s*:\s*([^:]+)`)
+				match := colonRe.FindStringSubmatch(rawText)
+				if match != nil && !strings.Contains(rawText, "://") && !strings.Contains(rawText, "(") {
+					name = strings.TrimSpace(match[1])
+					t := strings.TrimSpace(match[2])
+					typ = &t
+				} else {
+					name = strings.TrimSpace(rawText)
+				}
 			} else {
 				name = strings.TrimSpace(rawText)
 			}
 			result = append(result, docs.DocItem{Name: name, Type: typ})
 		} else if text, ok := item["text"]; ok {
 			if len(result) > 0 {
-				result[len(result)-1].Description += "\n" + strings.TrimSpace(text)
+				result[len(result)-1].Description = strings.TrimSpace(result[len(result)-1].Description + "\n" + strings.TrimSpace(text))
 			} else {
 				result = append(result, docs.DocItem{Name: "", Description: strings.TrimSpace(text)})
 			}
 		} else if subText, ok := item["sub_text"]; ok {
 			if len(result) > 0 {
-				result[len(result)-1].Description += "\n" + strings.TrimSpace(subText)
+				result[len(result)-1].Description = strings.TrimSpace(result[len(result)-1].Description + "\n" + strings.TrimSpace(subText))
 			}
 		}
 	}
@@ -987,7 +1227,7 @@ func parseItemBlock(inner XMLNode, configMap map[string]string) []docs.DocItem {
 				rawItems = append(rawItems, map[string]string{"config_id": id, "resolved": configMap[id]})
 			}
 
-			newItems := normalizeItems(rawItems)
+			newItems := normalizeItems(rawItems, configMap)
 			items = append(items, newItems...)
 			if len(items) > 0 {
 				current = &items[len(items)-1]
