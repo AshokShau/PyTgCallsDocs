@@ -86,6 +86,11 @@ func handleInlineQuery(b *bot.Bot, c *gotdbot.Client, ctx *gotdbot.Context) erro
 		}
 	}
 
+	shortcutResults := utils.SearchShortcuts(c, query)
+	if len(shortcutResults) > 0 {
+		inlineResults = append(inlineResults, shortcutResults...)
+	}
+
 	docResults := b.Docs.Search(query, 15)
 	for _, entry := range docResults {
 		text := utils.FormatEntry(entry)
