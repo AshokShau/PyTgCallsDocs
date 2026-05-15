@@ -42,15 +42,10 @@ var shortcuts = map[string]Shortcut{
 		Description: "Avoid sending large blocks of code or logs in chat.",
 		Text:        "Please use a pastebin service for long code snippets or logs to keep the chat clean.\n\nSuggested services:\n• https://paste.rs/\n• https://batbin.me/\n• https://pastebin.com/",
 	},
-	"permissions": {
-		Title:       "File Permissions",
-		Description: "Check your file permissions.",
-		Text:        "Make sure your files have the correct permissions. You can check them with <code>ls -l</code> and change them with <code>chmod</code> or <code>chown</code>.",
-	},
 	"error": {
 		Title:       "Reporting Errors",
 		Description: "How to report an error effectively.",
-		Text:        "When reporting an error, please provide:\n• The <b>full</b> error message/traceback\n• The <b>command</b> you ran\n• Your <b>environment</b> (OS, Python version, etc.)",
+		Text:        "When reporting an error, please provide:\n• The <b>full</b> error message/traceback\n• The <b>Code</b> you run\n• Your <b>environment</b> (OS, Python version, etc.)",
 	},
 	"best": {
 		Title:       "What is the 'best'?",
@@ -62,7 +57,7 @@ var shortcuts = map[string]Shortcut{
 		Description: "It's all about personal preference.",
 		Text:        "This often comes down to <b>Personal Preference</b>. There is no right or wrong answer; it depends on what you prefer and what works for you.",
 	},
-	"crashed": {
+	"gdb": {
 		Title:       "Crash Analysis",
 		Description: "How to capture a backtrace using GDB.",
 		Text:        "Hi,\nIt looks like your program is crashing or encountering unexpected behavior.\n\nTo help diagnose the issue, please capture a backtrace using GDB:\n<pre><code class=\"language-bash\">gdb -q -iex \"set confirm off\" \\\n      -iex \"set pagination off\" \\\n      -iex \"handle SIGPIPE pass nostop noprint\" \\\n      -iex \"handle SIGINT pass nostop noprint\" \\\n      -iex \"set logging enabled on\" \\\n      -iex \"set debuginfod enabled on\" \\\n      -ex run --args python3 YOUR_SCRIPT.py</code></pre>\n\nAfter the crash occurs, type:\n<code>bt</code>\n\nThen upload the full output to a paste service such as PasteBin (https://pastebin.com/) or BatBin (https://batbin.me/),\nand share the link here so others can help analyze it.",
