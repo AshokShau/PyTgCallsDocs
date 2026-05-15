@@ -8360,7 +8360,7 @@
       "signature": "<code>class</code> pytgcalls.types.<b>MediaStream</b>",
       "parameters": [
         {
-          "name": "media_path: Union[<code>str</code>, ScreenInfo, DeviceInfo]",
+          "name": "media_path: Union[<code>str</code>, ScreenInfo, DeviceInfo, <a href=\"https://pytgcalls.github.io/PyTgCalls/Available Enums/ExternalMedia\">ExternalMedia</a>]",
           "type": null,
           "description": "The audio, video, image or media device path.",
           "source_config": null,
