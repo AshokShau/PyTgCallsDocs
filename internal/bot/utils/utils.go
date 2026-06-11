@@ -343,7 +343,6 @@ func GetEntryKeyboard(e *docs.DocEntry, currentView string) *gotdbot.ReplyMarkup
 		kb.Rows = append(kb.Rows, buttons[i:end])
 	}
 
-
 	return kb
 }
 
@@ -372,7 +371,7 @@ func createGitHubResult(c *gotdbot.Client, repo, num string) *gotdbot.InputInlin
 	url := fmt.Sprintf("https://github.com/pytgcalls/%s/pull/%s", repo, num)
 	title := fmt.Sprintf("[%s] PR/Issue #%s", repo, num)
 
-	text, err := gotdbot.GetFormattedText(c, fmt.Sprintf("<a href=\"%s\">%s</a>", url, title), nil, "HTML")
+	text, err := c.GetFormattedText(fmt.Sprintf("<a href=\"%s\">%s</a>", url, title), nil, "HTML")
 	if err != nil {
 		slog.Warn("Error getting github result:", "error", err)
 		return nil
@@ -426,7 +425,7 @@ func HandleCustomText(query string, docData docs.Documentation, c *gotdbot.Clien
 				}
 			}
 
-			formatted, err := gotdbot.GetFormattedText(c, replacedText, nil, "HTML")
+			formatted, err := c.GetFormattedText(replacedText, nil, "HTML")
 			if err != nil {
 				slog.Warn("Error getting custom text:", "error", err)
 				continue

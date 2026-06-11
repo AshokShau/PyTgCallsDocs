@@ -540,8 +540,7 @@ func parsePage(path, pageXML string, configMap map[string]string) *docs.DocEntry
 	for i := range details.Parameters {
 		details.Parameters[i].Name = collectFormattedText(details.Parameters[i].Name, configMap)
 		if details.Parameters[i].Type != nil {
-			t := collectFormattedText(*details.Parameters[i].Type, configMap)
-			details.Parameters[i].Type = &t
+			details.Parameters[i].Type = new(collectFormattedText(*details.Parameters[i].Type, configMap))
 		}
 		details.Parameters[i].Description = collectFormattedText(details.Parameters[i].Description, configMap)
 	}
@@ -549,8 +548,7 @@ func parsePage(path, pageXML string, configMap map[string]string) *docs.DocEntry
 		for j := range details.Sections[i].Items {
 			details.Sections[i].Items[j].Name = collectFormattedText(details.Sections[i].Items[j].Name, configMap)
 			if details.Sections[i].Items[j].Type != nil {
-				t := collectFormattedText(*details.Sections[i].Items[j].Type, configMap)
-				details.Sections[i].Items[j].Type = &t
+				details.Sections[i].Items[j].Type = new(collectFormattedText(*details.Sections[i].Items[j].Type, configMap))
 			}
 			details.Sections[i].Items[j].Description = collectFormattedText(details.Sections[i].Items[j].Description, configMap)
 		}
@@ -721,8 +719,7 @@ func parseDetails(root XMLNode, configMap map[string]string) docs.Details {
 	// Signature
 	for _, node := range root.Nodes {
 		if node.XMLName.Local == "category-title" {
-			sig := collectFormattedText(node.Content, configMap)
-			details.Signature = &sig
+			details.Signature = new(collectFormattedText(node.Content, configMap))
 			break
 		}
 	}
@@ -904,7 +901,7 @@ func normalizeItems(rawItems []map[string]string, configMap map[string]string) [
 			// Special case for description-only configs
 			if !strings.Contains(resolved, "<category-title>") && (strings.Contains(resolved, "<subtext>") || strings.Contains(resolved, "<text>") || strings.Contains(resolved, "<config") || strings.Contains(resolved, "exception ")) {
 				desc := collectFormattedText(resolved, configMap)
-				
+
 				// Handle multi-exception description-only blocks
 				if strings.Contains(desc, "exception ") || strings.Contains(desc, "#NTG_") {
 					var parts []string
@@ -974,8 +971,7 @@ func normalizeItems(rawItems []map[string]string, configMap map[string]string) [
 					name := strings.TrimSpace(match[1])
 					var typ *string
 					if match[2] != "" {
-						t := strings.TrimSpace(match[2])
-						typ = &t
+						typ = new(strings.TrimSpace(match[2]))
 					}
 					rem := strings.TrimSpace(desc[len(match[0]):])
 					result = append(result, docs.DocItem{Name: name, Type: typ, Description: rem, SourceConfig: &configID})
@@ -1053,8 +1049,7 @@ func normalizeItems(rawItems []map[string]string, configMap map[string]string) [
 					if strings.Contains(firstLine, ":") {
 						idx := strings.LastIndex(firstLine, ":")
 						name := strings.TrimSpace(firstLine[:idx])
-						typ := strings.TrimSpace(firstLine[idx+1:])
-						result = append(result, docs.DocItem{Name: name, Type: &typ, Description: desc, SourceConfig: &configID})
+						result = append(result, docs.DocItem{Name: name, Type: new(strings.TrimSpace(firstLine[idx+1:])), Description: desc, SourceConfig: &configID})
 					} else {
 						result = append(result, docs.DocItem{Name: firstLine, Description: desc, SourceConfig: &configID})
 					}
@@ -1072,8 +1067,7 @@ func normalizeItems(rawItems []map[string]string, configMap map[string]string) [
 			if strings.Contains(firstLine, ":") && !strings.Contains(firstLine, "(") {
 				idx := strings.LastIndex(firstLine, ":")
 				name := strings.TrimSpace(firstLine[:idx])
-				typ := strings.TrimSpace(firstLine[idx+1:])
-				result = append(result, docs.DocItem{Name: name, Type: &typ, Description: desc, SourceConfig: &configID})
+				result = append(result, docs.DocItem{Name: name, Type: new(strings.TrimSpace(firstLine[idx+1:])), Description: desc, SourceConfig: &configID})
 			} else if len(result) > 0 {
 				result[len(result)-1].Description = strings.TrimSpace(result[len(result)-1].Description + "\n" + text)
 			} else {
@@ -1090,8 +1084,7 @@ func normalizeItems(rawItems []map[string]string, configMap map[string]string) [
 				match := colonRe.FindStringSubmatch(rawText)
 				if match != nil && !strings.Contains(rawText, "://") && !strings.Contains(rawText, "(") {
 					name = strings.TrimSpace(match[1])
-					t := strings.TrimSpace(match[2])
-					typ = &t
+					typ = new(strings.TrimSpace(match[2]))
 				} else {
 					name = strings.TrimSpace(rawText)
 				}
@@ -1124,8 +1117,7 @@ func parseMemberBlock(block XMLNode, configMap map[string]string) []docs.DocItem
 			var item docs.DocItem
 			if strings.Contains(raw, "=") {
 				parts := strings.SplitN(raw, "=", 2)
-				val := strings.TrimSpace(parts[1])
-				item = docs.DocItem{Name: strings.TrimSpace(parts[0]), Value: &val}
+				item = docs.DocItem{Name: strings.TrimSpace(parts[0]), Value: new(strings.TrimSpace(parts[1]))}
 			} else {
 				item = docs.DocItem{Name: raw}
 			}
@@ -1171,14 +1163,12 @@ func parsePropertyBlock(block XMLNode, configMap map[string]string) []docs.DocIt
 			if strings.Contains(raw, "->") {
 				parts := strings.SplitN(raw, "->", 2)
 				name = strings.TrimSpace(parts[0])
-				t := strings.TrimSpace(parts[1])
-				typeText = &t
+				typeText = new(strings.TrimSpace(parts[1]))
 			} else {
 				// Search for docs-ref inside category-title
 				for _, gc := range child.Nodes {
 					if gc.XMLName.Local == "docs-ref" {
-						t := strings.TrimSpace(collectText(gc.Content))
-						typeText = &t
+						typeText = new(strings.TrimSpace(collectText(gc.Content)))
 						break
 					}
 				}

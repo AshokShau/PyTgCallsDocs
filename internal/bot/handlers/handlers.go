@@ -12,7 +12,6 @@ import (
 	"time"
 
 	"github.com/AshokShau/gotdbot"
-	"github.com/AshokShau/gotdbot/handlers"
 )
 
 var startTime = time.Now()
@@ -24,13 +23,10 @@ const (
 )
 
 func Register(b *bot.Bot) {
-	d := b.Client.Dispatcher
-
-	d.AddHandler(handlers.NewCommand("ping", pingHandler))
-
-	d.AddHandler(handlers.NewCommand("start", func(c *gotdbot.Client, ctx *gotdbot.Context) error {
-		me, _ := c.GetMe()
-		botUsername := me.Usernames.EditableUsername
+	c := b.Client
+	c.OnCommand("ping", pingHandler)
+	c.OnCommand("start", func(c *gotdbot.Client, m *gotdbot.Message) error {
+		botUsername := c.Me.Usernames.EditableUsername
 		welcomeText := fmt.Sprintf(`👋 <b>Welcome to PyTgCalls Documentation Bot!</b>
 
 I can help you find information about PyTgCalls and NTgCalls methods, classes, and more.
@@ -48,21 +44,20 @@ I can help you find information about PyTgCalls and NTgCalls methods, classes, a
 
 Made with ❤️ by @AshokShau`, botUsername, botUsername, botUsername, botUsername)
 
-		_, err := ctx.EffectiveMessage.ReplyText(c, welcomeText, &gotdbot.SendTextMessageOpts{ParseMode: gotdbot.ParseModeHTML})
+		_, err := m.ReplyText(c, welcomeText, &gotdbot.SendTextMessageOpts{ParseMode: gotdbot.ParseModeHTML})
 		return err
-	}))
+	})
 
-	d.AddHandler(handlers.NewUpdateNewInlineQuery(nil, func(c *gotdbot.Client, ctx *gotdbot.Context) error {
+	c.OnUpdateNewInlineQuery(func(c *gotdbot.Client, ctx *gotdbot.UpdateNewInlineQuery) error {
 		return handleInlineQuery(b, c, ctx)
-	}))
+	}, nil)
 
-	d.AddHandler(handlers.NewUpdateNewInlineCallbackQuery(nil, func(c *gotdbot.Client, ctx *gotdbot.Context) error {
-		return handleInlineCallbackQuery(b, c, ctx)
-	}))
+	c.OnUpdateNewInlineCallbackQuery(func(c *gotdbot.Client, cq *gotdbot.UpdateNewInlineCallbackQuery) error {
+		return handleInlineCallbackQuery(b, c, cq)
+	}, nil)
 }
 
-func handleInlineQuery(b *bot.Bot, c *gotdbot.Client, ctx *gotdbot.Context) error {
-	iq := ctx.Update.UpdateNewInlineQuery
+func handleInlineQuery(b *bot.Bot, c *gotdbot.Client, iq *gotdbot.UpdateNewInlineQuery) error {
 	if b.Docs == nil {
 		return nil
 	}
@@ -97,7 +92,7 @@ func handleInlineQuery(b *bot.Bot, c *gotdbot.Client, ctx *gotdbot.Context) erro
 		if len(text) > 1500 {
 			text = fmt.Sprintf("<blockquote expandable>%s</blockquote>", text)
 		}
-		formatted, err := gotdbot.GetFormattedText(c, text, nil, "HTML")
+		formatted, err := c.GetFormattedText(text, nil, "HTML")
 		if err != nil {
 			return err
 		}
@@ -122,9 +117,7 @@ func handleInlineQuery(b *bot.Bot, c *gotdbot.Client, ctx *gotdbot.Context) erro
 	return c.AnswerInlineQuery(300, iq.Id, "", inlineResults, nil)
 }
 
-func handleInlineCallbackQuery(b *bot.Bot, c *gotdbot.Client, ctx *gotdbot.Context) error {
-	cq := ctx.Update.UpdateNewInlineCallbackQuery
-
+func handleInlineCallbackQuery(b *bot.Bot, c *gotdbot.Client, cq *gotdbot.UpdateNewInlineCallbackQuery) error {
 	userId := cq.SenderUserId
 	if userId == 0 {
 		slog.Warn("Inline callback without sender user id", "callback_id", cq.Id)
@@ -141,10 +134,10 @@ func handleInlineCallbackQuery(b *bot.Bot, c *gotdbot.Client, ctx *gotdbot.Conte
 			text := fmt.Sprintf("You are still banned for %d seconds!", int(banUntil.Sub(now).Seconds()))
 			_ = c.AnswerCallbackQuery(0, cq.Id, text, "", &gotdbot.AnswerCallbackQueryOpts{ShowAlert: true})
 			return gotdbot.EndGroups
-		} else {
-			delete(b.Bans, userId)
-			slog.Info("Expired user ban removed", "user_id", userId)
 		}
+
+		delete(b.Bans, userId)
+		slog.Info("Expired user ban removed", "user_id", userId)
 	}
 
 	history := b.ClickHistory[userId]
@@ -218,13 +211,14 @@ func handleInlineCallbackQuery(b *bot.Bot, c *gotdbot.Client, ctx *gotdbot.Conte
 		text = fmt.Sprintf("<blockquote expandable>%s</blockquote>", text)
 	}
 
-	formatted, err := gotdbot.GetFormattedText(c, text, nil, "HTML")
+	formatted, err := c.GetFormattedText(text, nil, "HTML")
 	if err != nil {
 		slog.Error("Failed to get formatted text", "error", err, "view", view, "entry", entry.Title)
 		return err
 	}
 
 	kb := utils.GetEntryKeyboard(entry, view)
+
 	err = c.EditInlineMessageText(cq.InlineMessageId, gotdbot.InputMessageText{
 		Text: formatted,
 		LinkPreviewOptions: &gotdbot.LinkPreviewOptions{
@@ -245,8 +239,7 @@ func handleInlineCallbackQuery(b *bot.Bot, c *gotdbot.Client, ctx *gotdbot.Conte
 }
 
 // pingHandler handles the /ping command.
-func pingHandler(c *gotdbot.Client, ctx *gotdbot.Context) error {
-	m := ctx.EffectiveMessage
+func pingHandler(c *gotdbot.Client, m *gotdbot.Message) error {
 	start := time.Now()
 
 	msg, err := m.ReplyText(c, "⏱️ Pinging...", nil)

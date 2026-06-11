@@ -132,7 +132,7 @@ func SearchShortcuts(c *gotdbot.Client, query string) []gotdbot.InputInlineQuery
 	var results []gotdbot.InputInlineQueryResult
 	for _, key := range keys {
 		s := shortcuts[key]
-		formatted, err := gotdbot.GetFormattedText(c, s.Text, nil, "HTML")
+		formatted, err := c.GetFormattedText(s.Text, nil, "HTML")
 		if err != nil {
 			slog.Warn("Failed to format shortcut text", "key", key, "error", err)
 			continue
