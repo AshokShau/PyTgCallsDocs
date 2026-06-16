@@ -134,7 +134,7 @@ func parseMap(url string, configMap map[string]string) (docs.Documentation, erro
 	documentation := make(docs.Documentation)
 	for path, pageXML := range rawMap {
 		if path == "/PyTgCalls/Examples.xml" {
-			examples := parseExamplesPage(path, pageXML)
+			examples := parseExamplesPage(path, pageXML, configMap)
 			for _, ex := range examples {
 				documentation[ex.Path] = ex
 			}
@@ -187,7 +187,7 @@ func parseChangelogsPage(path, pageXML string, configMap map[string]string) []*d
 
 		var contentParts []string
 		if description != "" {
-			contentParts = append(contentParts, fmt.Sprintf("<b>%s</b>", description))
+			contentParts = append(contentParts, fmt.Sprintf("<b>%s</b>", html.EscapeString(description)))
 		}
 
 		subtexts := subtextRegex.FindAllStringSubmatch(catContent, -1)
@@ -211,9 +211,14 @@ func parseChangelogsPage(path, pageXML string, configMap map[string]string) []*d
 }
 
 func collectFormattedText(innerXML string, configMap map[string]string) string {
+	innerXML = strings.TrimSpace(innerXML)
+	if innerXML == "" {
+		return ""
+	}
+
 	if !strings.Contains(innerXML, "<") && !strings.Contains(innerXML, "&") {
 		re := regexp.MustCompile(`\s+`)
-		return html.EscapeString(strings.TrimSpace(re.ReplaceAllString(innerXML, " ")))
+		return html.EscapeString(re.ReplaceAllString(innerXML, " "))
 	}
 	decoder := xml.NewDecoder(strings.NewReader("<root>" + innerXML + "</root>"))
 	var sb strings.Builder
@@ -429,7 +434,7 @@ func cleanResult(s string) string {
 	return final
 }
 
-func parseExamplesPage(path, pageXML string) []*docs.DocEntry {
+func parseExamplesPage(path, pageXML string, configMap map[string]string) []*docs.DocEntry {
 	var entries []*docs.DocEntry
 
 	tableRegex := regexp.MustCompile(`(?s)<table>(.*?)</table>`)
@@ -447,7 +452,7 @@ func parseExamplesPage(path, pageXML string) []*docs.DocEntry {
 				if len(nameMatch) >= 3 {
 					url := nameMatch[1]
 					title := nameMatch[2]
-					description := strings.TrimSpace(columns[1][1])
+					description := collectFormattedText(columns[1][1], configMap)
 
 					fullURL := "https://github.com/pytgcalls/pytgcalls/tree/master/" + url
 					filename := filepathBase(url)
@@ -538,35 +543,6 @@ func parsePage(path, pageXML string, configMap map[string]string) *docs.DocEntry
 
 	details := parseDetails(root, configMap)
 
-	for i := range details.Parameters {
-		details.Parameters[i].Name = collectFormattedText(details.Parameters[i].Name, configMap)
-		if details.Parameters[i].Type != nil {
-			details.Parameters[i].Type = new(collectFormattedText(*details.Parameters[i].Type, configMap))
-		}
-		details.Parameters[i].Description = collectFormattedText(details.Parameters[i].Description, configMap)
-	}
-	for i := range details.Sections {
-		for j := range details.Sections[i].Items {
-			details.Sections[i].Items[j].Name = collectFormattedText(details.Sections[i].Items[j].Name, configMap)
-			if details.Sections[i].Items[j].Type != nil {
-				details.Sections[i].Items[j].Type = new(collectFormattedText(*details.Sections[i].Items[j].Type, configMap))
-			}
-			details.Sections[i].Items[j].Description = collectFormattedText(details.Sections[i].Items[j].Description, configMap)
-		}
-	}
-	for i := range details.Members {
-		details.Members[i].Name = collectFormattedText(details.Members[i].Name, configMap)
-		details.Members[i].Description = collectFormattedText(details.Members[i].Description, configMap)
-	}
-	for i := range details.Properties {
-		details.Properties[i].Name = collectFormattedText(details.Properties[i].Name, configMap)
-		details.Properties[i].Description = collectFormattedText(details.Properties[i].Description, configMap)
-	}
-	for i := range details.Methods {
-		details.Methods[i].Name = collectFormattedText(details.Methods[i].Name, configMap)
-		details.Methods[i].Description = collectFormattedText(details.Methods[i].Description, configMap)
-	}
-
 	// Handle tables in details
 	tableRegex := regexp.MustCompile(`(?s)<table>(.*?)</table>`)
 	itemRegex := regexp.MustCompile(`(?s)<item>(.*?)</item>`)
@@ -598,8 +574,8 @@ func parsePage(path, pageXML string, configMap map[string]string) *docs.DocEntry
 				}
 
 				section.Items = append(section.Items, docs.DocItem{
-					Name:        name,
-					Description: strings.TrimSpace(col2),
+					Name:        collectFormattedText(name, configMap),
+					Description: collectFormattedText(col2, configMap),
 					URL:         url,
 				})
 			}
@@ -884,8 +860,8 @@ func normalizeItems(rawItems []map[string]string, configMap map[string]string) [
 						if typeText != "" {
 							typ = &typeText
 						}
-						desc := match[4] // Preserve tags for later processing
-						result = append(result, docs.DocItem{Name: name, Type: typ, Description: strings.TrimSpace(desc), SourceConfig: &configID})
+						desc := collectFormattedText(match[4], configMap)
+						result = append(result, docs.DocItem{Name: name, Type: typ, Description: desc, SourceConfig: &configID})
 					} else {
 						// Fallback if regex fails but it's a category-title part
 						desc := collectFormattedText(p, configMap)
@@ -972,7 +948,10 @@ func normalizeItems(rawItems []map[string]string, configMap map[string]string) [
 					name := strings.TrimSpace(match[1])
 					var typ *string
 					if match[2] != "" {
-						typ = new(strings.TrimSpace(match[2]))
+						typeText := strings.TrimSpace(collectFormattedText(match[2], configMap))
+						if typeText != "" {
+							typ = &typeText
+						}
 					}
 					rem := strings.TrimSpace(desc[len(match[0]):])
 					result = append(result, docs.DocItem{Name: name, Type: typ, Description: rem, SourceConfig: &configID})
@@ -1050,9 +1029,14 @@ func normalizeItems(rawItems []map[string]string, configMap map[string]string) [
 					if strings.Contains(firstLine, ":") {
 						idx := strings.LastIndex(firstLine, ":")
 						name := strings.TrimSpace(firstLine[:idx])
-						result = append(result, docs.DocItem{Name: name, Type: new(strings.TrimSpace(firstLine[idx+1:])), Description: desc, SourceConfig: &configID})
+						typeText := strings.TrimSpace(collectFormattedText(firstLine[idx+1:], configMap))
+						var typ *string
+						if typeText != "" {
+							typ = &typeText
+						}
+						result = append(result, docs.DocItem{Name: collectFormattedText(name, configMap), Type: typ, Description: collectFormattedText(desc, configMap), SourceConfig: &configID})
 					} else {
-						result = append(result, docs.DocItem{Name: firstLine, Description: desc, SourceConfig: &configID})
+						result = append(result, docs.DocItem{Name: collectFormattedText(firstLine, configMap), Description: collectFormattedText(desc, configMap), SourceConfig: &configID})
 					}
 				}
 				continue
@@ -1068,11 +1052,16 @@ func normalizeItems(rawItems []map[string]string, configMap map[string]string) [
 			if strings.Contains(firstLine, ":") && !strings.Contains(firstLine, "(") {
 				idx := strings.LastIndex(firstLine, ":")
 				name := strings.TrimSpace(firstLine[:idx])
-				result = append(result, docs.DocItem{Name: name, Type: new(strings.TrimSpace(firstLine[idx+1:])), Description: desc, SourceConfig: &configID})
+				typeText := strings.TrimSpace(collectFormattedText(firstLine[idx+1:], configMap))
+				var typ *string
+				if typeText != "" {
+					typ = &typeText
+				}
+				result = append(result, docs.DocItem{Name: collectFormattedText(name, configMap), Type: typ, Description: collectFormattedText(desc, configMap), SourceConfig: &configID})
 			} else if len(result) > 0 {
-				result[len(result)-1].Description = strings.TrimSpace(result[len(result)-1].Description + "\n" + text)
+				result[len(result)-1].Description = strings.TrimSpace(result[len(result)-1].Description + "\n" + collectFormattedText(text, configMap))
 			} else {
-				result = append(result, docs.DocItem{Name: firstLine, Description: desc, SourceConfig: &configID})
+				result = append(result, docs.DocItem{Name: collectFormattedText(firstLine, configMap), Description: collectFormattedText(desc, configMap), SourceConfig: &configID})
 			}
 		} else if raw, ok := item["raw"]; ok {
 			rawText := raw
@@ -1085,19 +1074,23 @@ func normalizeItems(rawItems []map[string]string, configMap map[string]string) [
 				match := colonRe.FindStringSubmatch(rawText)
 				if match != nil && !strings.Contains(rawText, "://") && !strings.Contains(rawText, "(") {
 					name = strings.TrimSpace(match[1])
-					typ = new(strings.TrimSpace(match[2]))
+					typeText := strings.TrimSpace(collectFormattedText(match[2], configMap))
+					if typeText != "" {
+						typ = &typeText
+					}
 				} else {
 					name = strings.TrimSpace(rawText)
 				}
 			} else {
 				name = strings.TrimSpace(rawText)
 			}
-			result = append(result, docs.DocItem{Name: name, Type: typ})
+			result = append(result, docs.DocItem{Name: collectFormattedText(name, configMap), Type: typ})
 		} else if text, ok := item["text"]; ok {
+			desc := collectFormattedText(text, configMap)
 			if len(result) > 0 {
-				result[len(result)-1].Description = strings.TrimSpace(result[len(result)-1].Description + "\n" + strings.TrimSpace(text))
+				result[len(result)-1].Description = strings.TrimSpace(result[len(result)-1].Description + "\n" + desc)
 			} else {
-				result = append(result, docs.DocItem{Name: "", Description: strings.TrimSpace(text)})
+				result = append(result, docs.DocItem{Name: "", Description: desc})
 			}
 		} else if subText, ok := item["sub_text"]; ok {
 			if len(result) > 0 {
@@ -1118,14 +1111,14 @@ func parseMemberBlock(block XMLNode, configMap map[string]string) []docs.DocItem
 			var item docs.DocItem
 			if strings.Contains(raw, "=") {
 				parts := strings.SplitN(raw, "=", 2)
-				item = docs.DocItem{Name: strings.TrimSpace(parts[0]), Value: new(strings.TrimSpace(parts[1]))}
+				item = docs.DocItem{Name: collectFormattedText(parts[0], configMap), Value: new(collectFormattedText(parts[1], configMap))}
 			} else {
-				item = docs.DocItem{Name: raw}
+				item = docs.DocItem{Name: collectFormattedText(raw, configMap)}
 			}
 			items = append(items, item)
 			current = &items[len(items)-1]
 		} else if child.XMLName.Local == "subtext" || child.XMLName.Local == "text" {
-			desc := strings.TrimSpace(collectText(child.Content))
+			desc := collectFormattedText(child.Content, configMap)
 			if desc != "" {
 				if current != nil {
 					if current.Description != "" {
@@ -1137,7 +1130,7 @@ func parseMemberBlock(block XMLNode, configMap map[string]string) []docs.DocItem
 			}
 		} else if child.XMLName.Local == "config" {
 			id := getAttr(child, "id")
-			text := strings.TrimSpace(configMap[id])
+			text := collectFormattedText(configMap[id], configMap)
 			if text != "" {
 				if current != nil {
 					if current.Description != "" {
@@ -1164,20 +1157,20 @@ func parsePropertyBlock(block XMLNode, configMap map[string]string) []docs.DocIt
 			if strings.Contains(raw, "->") {
 				parts := strings.SplitN(raw, "->", 2)
 				name = strings.TrimSpace(parts[0])
-				typeText = new(strings.TrimSpace(parts[1]))
+				typeText = new(collectFormattedText(parts[1], configMap))
 			} else {
 				// Search for docs-ref inside category-title
 				for _, gc := range child.Nodes {
 					if gc.XMLName.Local == "docs-ref" {
-						typeText = new(strings.TrimSpace(collectText(gc.Content)))
+						typeText = new(collectFormattedText(gc.Content, configMap))
 						break
 					}
 				}
 			}
-			items = append(items, docs.DocItem{Name: strings.TrimSpace(name), Type: typeText})
+			items = append(items, docs.DocItem{Name: collectFormattedText(name, configMap), Type: typeText})
 			current = &items[len(items)-1]
 		} else if child.XMLName.Local == "subtext" || child.XMLName.Local == "text" {
-			desc := strings.TrimSpace(collectText(child.Content))
+			desc := collectFormattedText(child.Content, configMap)
 			if desc != "" {
 				if current != nil {
 					if current.Description != "" {
@@ -1189,7 +1182,7 @@ func parsePropertyBlock(block XMLNode, configMap map[string]string) []docs.DocIt
 			}
 		} else if child.XMLName.Local == "config" {
 			id := getAttr(child, "id")
-			text := strings.TrimSpace(configMap[id])
+			text := collectFormattedText(configMap[id], configMap)
 			if text != "" {
 				if current != nil {
 					if current.Description != "" {
@@ -1224,7 +1217,7 @@ func parseItemBlock(inner XMLNode, configMap map[string]string) []docs.DocItem {
 				current = &items[len(items)-1]
 			}
 		} else if child.XMLName.Local == "subtext" || child.XMLName.Local == "text" {
-			desc := strings.TrimSpace(collectText(child.Content))
+			desc := collectFormattedText(child.Content, configMap)
 			if desc != "" {
 				if current != nil {
 					if current.Description != "" {

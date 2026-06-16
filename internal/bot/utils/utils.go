@@ -15,10 +15,14 @@ import (
 
 func FormatEntry(e *docs.DocEntry) string {
 	var sb strings.Builder
+	title := html.EscapeString(e.Title)
+	lib := html.EscapeString(e.Lib)
+	kind := html.EscapeString(e.Kind)
+
 	if e.Kind == "example" {
-		sb.WriteString(fmt.Sprintf("💻 <b>%s</b>\n\n", e.Title))
+		sb.WriteString(fmt.Sprintf("💻 <b>%s</b>\n\n", title))
 	} else {
-		sb.WriteString(fmt.Sprintf("<b>%s</b> (%s %s)\n\n", e.Title, e.Lib, e.Kind))
+		sb.WriteString(fmt.Sprintf("<b>%s</b> (%s %s)\n\n", title, lib, kind))
 	}
 	sb.WriteString(strings.TrimSpace(e.Description))
 	if e.Details.Signature != nil {
@@ -51,7 +55,8 @@ func FormatExample(e *docs.DocEntry) string {
 
 func FormatParameters(e *docs.DocEntry) string {
 	var sb strings.Builder
-	sb.WriteString(fmt.Sprintf("<b>Parameters for %s</b>\n\n", e.Title))
+	title := html.EscapeString(e.Title)
+	sb.WriteString(fmt.Sprintf("<b>Parameters for %s</b>\n\n", title))
 
 	hasParams := false
 	if len(e.Details.Parameters) > 0 {
@@ -119,7 +124,8 @@ func FormatParameters(e *docs.DocEntry) string {
 
 func FormatRaises(e *docs.DocEntry) string {
 	var sb strings.Builder
-	sb.WriteString(fmt.Sprintf("<b>Exceptions for %s</b>\n\n", e.Title))
+	title := html.EscapeString(e.Title)
+	sb.WriteString(fmt.Sprintf("<b>Exceptions for %s</b>\n\n", title))
 
 	hasRaises := false
 	for _, s := range e.Details.Sections {
@@ -161,7 +167,8 @@ func FormatRaises(e *docs.DocEntry) string {
 
 func FormatOtherDetails(e *docs.DocEntry) string {
 	var sb strings.Builder
-	sb.WriteString(fmt.Sprintf("<b>Details for %s</b>\n\n", e.Title))
+	title := html.EscapeString(e.Title)
+	sb.WriteString(fmt.Sprintf("<b>Details for %s</b>\n\n", title))
 
 	hasAny := false
 
