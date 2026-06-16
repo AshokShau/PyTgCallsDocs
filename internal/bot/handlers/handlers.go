@@ -218,7 +218,6 @@ func handleInlineCallbackQuery(b *bot.Bot, c *gotdbot.Client, cq *gotdbot.Update
 	}
 
 	kb := utils.GetEntryKeyboard(entry, view)
-
 	err = c.EditInlineMessageText(cq.InlineMessageId, gotdbot.InputMessageText{
 		Text: formatted,
 		LinkPreviewOptions: &gotdbot.LinkPreviewOptions{

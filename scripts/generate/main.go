@@ -6,6 +6,7 @@ import (
 	"encoding/xml"
 	"flag"
 	"fmt"
+	"html"
 	"io"
 	"log/slog"
 	"net/http"
@@ -212,7 +213,7 @@ func parseChangelogsPage(path, pageXML string, configMap map[string]string) []*d
 func collectFormattedText(innerXML string, configMap map[string]string) string {
 	if !strings.Contains(innerXML, "<") && !strings.Contains(innerXML, "&") {
 		re := regexp.MustCompile(`\s+`)
-		return strings.TrimSpace(re.ReplaceAllString(innerXML, " "))
+		return html.EscapeString(strings.TrimSpace(re.ReplaceAllString(innerXML, " ")))
 	}
 	decoder := xml.NewDecoder(strings.NewReader("<root>" + innerXML + "</root>"))
 	var sb strings.Builder
@@ -237,7 +238,7 @@ func collectFormattedText(innerXML string, configMap map[string]string) string {
 					re := regexp.MustCompile(`\s+`)
 					text = re.ReplaceAllString(text, " ")
 				}
-				sb.WriteString(text)
+				sb.WriteString(html.EscapeString(text))
 			case xml.StartElement:
 				switch t.Name.Local {
 				case "b", "strong":
@@ -259,7 +260,7 @@ func collectFormattedText(innerXML string, configMap map[string]string) string {
 							href = attr.Value
 						}
 					}
-					sb.WriteString(fmt.Sprintf("<a href=\"%s\">", href))
+					sb.WriteString(fmt.Sprintf("<a href=\"%s\">", html.EscapeString(href)))
 					traverse()
 					sb.WriteString("</a>")
 				case "code":
@@ -343,7 +344,7 @@ func collectFormattedText(innerXML string, configMap map[string]string) string {
 						if strings.HasPrefix(link, "/") {
 							link = "https://pytgcalls.github.io" + link
 						}
-						sb.WriteString(fmt.Sprintf("<a href=\"%s\">", link))
+						sb.WriteString(fmt.Sprintf("<a href=\"%s\">", html.EscapeString(link)))
 						traverse()
 						sb.WriteString("</a>")
 					} else {
@@ -633,13 +634,13 @@ func extractFullDescription(node XMLNode, configMap map[string]string) string {
 	var process func(n XMLNode)
 	process = func(n XMLNode) {
 		if strings.TrimSpace(n.Text) != "" {
-			parts = append(parts, strings.TrimSpace(n.Text))
+			parts = append(parts, html.EscapeString(strings.TrimSpace(n.Text)))
 		}
 		for _, child := range n.Nodes {
 			if child.XMLName.Local == "config" {
 				id := getAttr(child, "id")
 				if id != "" {
-					parts = append(parts, configMap[id])
+					parts = append(parts, collectFormattedText(configMap[id], configMap))
 				}
 			} else if child.XMLName.Local == "docs-ref" {
 				link := getAttr(child, "link")
@@ -647,9 +648,9 @@ func extractFullDescription(node XMLNode, configMap map[string]string) string {
 				if link == "/PyTgCalls" {
 					parts = append(parts, "Py-TgCalls")
 				} else if text != "" {
-					parts = append(parts, text)
+					parts = append(parts, html.EscapeString(text))
 				} else {
-					parts = append(parts, filepathBase(link))
+					parts = append(parts, html.EscapeString(filepathBase(link)))
 				}
 			} else if child.XMLName.Local == "text" || child.XMLName.Local == "subtext" {
 				process(child)
@@ -1277,15 +1278,15 @@ func generateDiff(oldCode, newCode string) string {
 	for i := 0; i < maxLen; i++ {
 		if i < len(oldLines) && i < len(newLines) {
 			if strings.TrimSpace(oldLines[i]) == strings.TrimSpace(newLines[i]) {
-				sb.WriteString("  " + oldLines[i] + "\n")
+				sb.WriteString("  " + html.EscapeString(oldLines[i]) + "\n")
 			} else {
-				sb.WriteString("- " + oldLines[i] + "\n")
-				sb.WriteString("+ " + newLines[i] + "\n")
+				sb.WriteString("- " + html.EscapeString(oldLines[i]) + "\n")
+				sb.WriteString("+ " + html.EscapeString(newLines[i]) + "\n")
 			}
 		} else if i < len(oldLines) {
-			sb.WriteString("- " + oldLines[i] + "\n")
+			sb.WriteString("- " + html.EscapeString(oldLines[i]) + "\n")
 		} else if i < len(newLines) {
-			sb.WriteString("+ " + newLines[i] + "\n")
+			sb.WriteString("+ " + html.EscapeString(newLines[i]) + "\n")
 		}
 	}
 	return strings.TrimSpace(sb.String())
