@@ -29,7 +29,7 @@ func main() {
 	}
 
 	clientConfig := &gotdbot.ClientOpts{
-		LibraryPath: "./libtdjson.so.1.8.65",
+		LibraryPath: "./libtdjson.so.1.8.67",
 	}
 
 	client, err := gotdbot.NewClient(int32(cfg.ApiID), cfg.ApiHash, cfg.Token, clientConfig)
