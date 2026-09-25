@@ -24,6 +24,21 @@ type Option struct {
 	Content string `xml:",innerxml"`
 }
 
+var labelMap = map[string]string{
+	"python":    "Python",
+	"c":         "C",
+	"node":      "Node.js",
+	"java":      "Java",
+	"rust":      "Rust",
+	"pyrogram":  "PyrogramMod",
+	"telethon":  "Telethon",
+	"hydrogram": "Hydrogram",
+	"x86":       "x86_64",
+	"arm":       "ARM64",
+	"shared":    "Shared",
+	"static":    "Static",
+}
+
 func main() {
 	out := flag.String("out", "docs.json", "Output JSON file path")
 	flag.Parse()
@@ -355,6 +370,35 @@ func collectFormattedText(innerXML string, configMap map[string]string) string {
 					} else {
 						traverse()
 					}
+				case "github-ref":
+					var user, reponame string
+					for _, attr := range t.Attr {
+						if attr.Name.Local == "user" {
+							user = attr.Value
+						} else if attr.Name.Local == "reponame" {
+							reponame = attr.Value
+						}
+					}
+					if user != "" && reponame != "" {
+						sb.WriteString(fmt.Sprintf("<a href=\"https://github.com/%s/%s\">%s/%s</a>", html.EscapeString(user), html.EscapeString(reponame), html.EscapeString(user), html.EscapeString(reponame)))
+					}
+					traverse()
+				case "ref-shi":
+					var url string
+					for _, attr := range t.Attr {
+						if attr.Name.Local == "url" {
+							url = attr.Value
+						}
+					}
+					text := collectTokenContent(decoder)
+					if url != "" {
+						if !strings.HasPrefix(url, "http") {
+							url = "https://github.com/pytgcalls/pytgcalls/tree/master/" + url
+						}
+						sb.WriteString(fmt.Sprintf("<a href=\"%s\">%s</a>", html.EscapeString(url), html.EscapeString(text)))
+					} else {
+						sb.WriteString(html.EscapeString(text))
+					}
 				case "shi", "shi-inline":
 					sb.WriteString("<code>")
 					inCode++
@@ -524,26 +568,109 @@ func parsePage(path, pageXML string, configMap map[string]string) *docs.DocEntry
 		description = extractDescription(root, configMap)
 	}
 
-	var example *docs.Example
-	for _, node := range root.Nodes {
-		if node.XMLName.Local == "syntax-highlight" {
-			lang := "python"
-			for _, attr := range node.Attrs {
-				if attr.Name.Local == "language" {
-					lang = attr.Value
-				}
-			}
-			example = &docs.Example{
-				Language: lang,
-				Code:     dedent(collectText(node.Content)),
-			}
-			break
+	var tabs []docs.Tab
+	seenTabs := make(map[string]bool)
+
+	tabRe := regexp.MustCompile(`<tab\s+id="([^"]+)">([^<]+)</tab>`)
+	for _, match := range tabRe.FindAllStringSubmatch(pageXML, -1) {
+		id := match[1]
+		label := match[2]
+		if !seenTabs[id] {
+			seenTabs[id] = true
+			tabs = append(tabs, docs.Tab{ID: id, Label: label})
 		}
 	}
 
-	details := parseDetails(root, configMap)
+	langDetails := make(map[string]*docs.Details)
+	var defaultLang string
 
-	// Handle tables in details
+	var findLangBlocks func(n XMLNode)
+	findLangBlocks = func(n XMLNode) {
+		if n.XMLName.Local == "lang-block" {
+			lang := getAttr(n, "language")
+			isDefault := getAttr(n, "default") == "true"
+			if lang != "" {
+				if !seenTabs[lang] {
+					seenTabs[lang] = true
+					label := labelMap[lang]
+					if label == "" {
+						label = strings.Title(lang)
+					}
+					tabs = append(tabs, docs.Tab{ID: lang, Label: label})
+				}
+
+				dt := parseDetails(n, configMap)
+				langDetails[lang] = &dt
+
+				if isDefault || defaultLang == "" || lang == "python" {
+					if isDefault || defaultLang == "" || defaultLang != "python" {
+						defaultLang = lang
+					}
+				}
+			}
+			return
+		}
+		for _, child := range n.Nodes {
+			findLangBlocks(child)
+		}
+	}
+	findLangBlocks(root)
+
+	examples := make(map[string]*docs.Example)
+	var defaultExample *docs.Example
+
+	shRe := regexp.MustCompile(`(?s)<syntax-highlight\s+([^>]*)>(.*?)</syntax-highlight>`)
+	for _, match := range shRe.FindAllStringSubmatch(pageXML, -1) {
+		attrsStr := match[1]
+		code := dedent(collectText(match[2]))
+
+		idMatch := regexp.MustCompile(`id="([^"]+)"`).FindStringSubmatch(attrsStr)
+		langMatch := regexp.MustCompile(`language="([^"]+)"`).FindStringSubmatch(attrsStr)
+
+		var id, lang string
+		if idMatch != nil {
+			id = idMatch[1]
+		}
+		if langMatch != nil {
+			lang = langMatch[1]
+		}
+		if id == "" {
+			id = lang
+		}
+		if id == "" {
+			id = "python"
+		}
+		if lang == "" {
+			lang = id
+		}
+
+		ex := &docs.Example{
+			Language: lang,
+			Code:     code,
+		}
+		examples[id] = ex
+
+		if defaultExample == nil || id == "python" || id == defaultLang {
+			defaultExample = ex
+		}
+	}
+
+	var details docs.Details
+	if len(langDetails) > 0 {
+		if defaultLang != "" && langDetails[defaultLang] != nil {
+			details = *langDetails[defaultLang]
+		} else if langDetails["python"] != nil {
+			details = *langDetails["python"]
+		} else {
+			for _, dt := range langDetails {
+				details = *dt
+				break
+			}
+		}
+	} else {
+		details = parseDetails(root, configMap)
+	}
+
 	tableRegex := regexp.MustCompile(`(?s)<table>(.*?)</table>`)
 	itemRegex := regexp.MustCompile(`(?s)<item>(.*?)</item>`)
 	columnRegex := regexp.MustCompile(`(?s)<column>(.*?)</column>`)
@@ -594,15 +721,27 @@ func parsePage(path, pageXML string, configMap map[string]string) *docs.DocEntry
 	}
 	docURL := fmt.Sprintf("https://pytgcalls.github.io/%s/%s", lib, pathSuffix)
 
-	return &docs.DocEntry{
+	entry := &docs.DocEntry{
 		Title:       title,
 		Lib:         lib,
 		Kind:        kind,
 		Description: cleanDescription(description),
-		Example:     example,
+		Example:     defaultExample,
 		Details:     details,
 		DocURL:      docURL,
 	}
+
+	if len(tabs) > 0 {
+		entry.Tabs = tabs
+	}
+	if len(examples) > 0 {
+		entry.Examples = examples
+	}
+	if len(langDetails) > 0 {
+		entry.LangDetails = langDetails
+	}
+
+	return entry
 }
 
 func extractFullDescription(node XMLNode, configMap map[string]string) string {
@@ -613,6 +752,10 @@ func extractFullDescription(node XMLNode, configMap map[string]string) string {
 			parts = append(parts, html.EscapeString(strings.TrimSpace(n.Text)))
 		}
 		for _, child := range n.Nodes {
+			if child.XMLName.Local == "lang-block" {
+				continue
+			}
+
 			if child.XMLName.Local == "config" {
 				id := getAttr(child, "id")
 				if id != "" {
@@ -646,6 +789,9 @@ func filepathBase(path string) string {
 
 func extractDescription(node XMLNode, configMap map[string]string) string {
 	for _, child := range node.Nodes {
+		if child.XMLName.Local == "lang-block" {
+			continue
+		}
 		if child.XMLName.Local == "config" {
 			id := getAttr(child, "id")
 			if id != "" {
@@ -660,6 +806,9 @@ func extractDescription(node XMLNode, configMap map[string]string) string {
 
 func findFirstDescription(node XMLNode, configMap map[string]string) string {
 	for _, sub := range node.Nodes {
+		if sub.XMLName.Local == "lang-block" {
+			continue
+		}
 		if sub.XMLName.Local == "subtext" {
 			for _, txt := range sub.Nodes {
 				if txt.XMLName.Local == "text" {
@@ -682,10 +831,10 @@ func findFirstDescription(node XMLNode, configMap map[string]string) string {
 
 func cleanDescription(s string) string {
 	s = strings.TrimSpace(s)
-	// Don't collapse whitespace if it contains HTML tags that might need it (like blockquote or pre)
 	if strings.Contains(s, "<") {
 		return s
 	}
+
 	re := regexp.MustCompile(`\s+`)
 	return re.ReplaceAllString(s, " ")
 }
@@ -836,8 +985,8 @@ func normalizeItems(rawItems []map[string]string, configMap map[string]string) [
 		if resolved, ok := item["resolved"]; ok {
 			// Detect multiple items in a single config block
 			if strings.Contains(resolved, "<category-title>") {
-				parts := strings.Split(resolved, "<category-title>")
-				for _, p := range parts {
+				parts := strings.SplitSeq(resolved, "<category-title>")
+				for p := range parts {
 					if strings.TrimSpace(p) == "" {
 						continue
 					}
@@ -1145,93 +1294,6 @@ func parseMemberBlock(block XMLNode, configMap map[string]string) []docs.DocItem
 	return items
 }
 
-func parsePropertyBlock(block XMLNode, configMap map[string]string) []docs.DocItem {
-	var items []docs.DocItem
-	var current *docs.DocItem
-
-	for _, child := range block.Nodes {
-		if child.XMLName.Local == "category-title" {
-			raw := strings.TrimSpace(collectText(child.Content))
-			name := raw
-			var typeText *string
-			if strings.Contains(raw, "->") {
-				parts := strings.SplitN(raw, "->", 2)
-				name = strings.TrimSpace(parts[0])
-				typeText = new(collectFormattedText(parts[1], configMap))
-			} else {
-				// Search for docs-ref inside category-title
-				for _, gc := range child.Nodes {
-					if gc.XMLName.Local == "docs-ref" {
-						typeText = new(collectFormattedText(gc.Content, configMap))
-						break
-					}
-				}
-			}
-			items = append(items, docs.DocItem{Name: collectFormattedText(name, configMap), Type: typeText})
-			current = &items[len(items)-1]
-		} else if child.XMLName.Local == "subtext" || child.XMLName.Local == "text" {
-			desc := collectFormattedText(child.Content, configMap)
-			if desc != "" {
-				if current != nil {
-					if current.Description != "" {
-						current.Description += "\n" + desc
-					} else {
-						current.Description = desc
-					}
-				}
-			}
-		} else if child.XMLName.Local == "config" {
-			id := getAttr(child, "id")
-			text := collectFormattedText(configMap[id], configMap)
-			if text != "" {
-				if current != nil {
-					if current.Description != "" {
-						current.Description += "\n" + text
-					} else {
-						current.Description = text
-					}
-				}
-			}
-		}
-	}
-	return items
-}
-
-func parseItemBlock(inner XMLNode, configMap map[string]string) []docs.DocItem {
-	var items []docs.DocItem
-	var current *docs.DocItem
-
-	for _, child := range inner.Nodes {
-		if child.XMLName.Local == "category-title" || child.XMLName.Local == "config" {
-			var rawItems []map[string]string
-			if child.XMLName.Local == "category-title" {
-				rawItems = append(rawItems, map[string]string{"raw": strings.TrimSpace(collectText(child.Content))})
-			} else {
-				id := getAttr(child, "id")
-				rawItems = append(rawItems, map[string]string{"config_id": id, "resolved": configMap[id]})
-			}
-
-			newItems := normalizeItems(rawItems, configMap)
-			items = append(items, newItems...)
-			if len(items) > 0 {
-				current = &items[len(items)-1]
-			}
-		} else if child.XMLName.Local == "subtext" || child.XMLName.Local == "text" {
-			desc := collectFormattedText(child.Content, configMap)
-			if desc != "" {
-				if current != nil {
-					if current.Description != "" {
-						current.Description += "\n" + desc
-					} else {
-						current.Description = desc
-					}
-				}
-			}
-		}
-	}
-	return items
-}
-
 func collectTokenContent(decoder *xml.Decoder) string {
 	var sb strings.Builder
 	depth := 1
@@ -1263,12 +1325,9 @@ func generateDiff(oldCode, newCode string) string {
 	newLines := strings.Split(dedent(newCode), "\n")
 
 	var sb strings.Builder
-	maxLen := len(oldLines)
-	if len(newLines) > maxLen {
-		maxLen = len(newLines)
-	}
+	maxLen := max(len(newLines), len(oldLines))
 
-	for i := 0; i < maxLen; i++ {
+	for i := range maxLen {
 		if i < len(oldLines) && i < len(newLines) {
 			if strings.TrimSpace(oldLines[i]) == strings.TrimSpace(newLines[i]) {
 				sb.WriteString("  " + html.EscapeString(oldLines[i]) + "\n")

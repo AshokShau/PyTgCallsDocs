@@ -175,7 +175,7 @@ func handleInlineCallbackQuery(b *bot.Bot, c *gotdbot.Client, cq *gotdbot.Update
 	}
 
 	_ = c.AnswerCallbackQuery(1, cq.Id, "loading ...", "", nil)
-	parts := strings.SplitN(data, ":", 2)
+	parts := strings.SplitN(data, ":", 3)
 	if len(parts) < 2 {
 		slog.Warn("Invalid callback data format", "data", data)
 		return nil
@@ -183,6 +183,10 @@ func handleInlineCallbackQuery(b *bot.Bot, c *gotdbot.Client, cq *gotdbot.Update
 
 	view := parts[0]
 	pathHash := parts[1]
+	var lang string
+	if len(parts) >= 3 {
+		lang = parts[2]
+	}
 
 	entry, ok := b.HashMap[pathHash]
 	if !ok {
@@ -193,15 +197,15 @@ func handleInlineCallbackQuery(b *bot.Bot, c *gotdbot.Client, cq *gotdbot.Update
 	var text string
 	switch view {
 	case "main":
-		text = utils.FormatEntry(entry)
+		text = utils.FormatEntry(entry, lang)
 	case "example":
-		text = utils.FormatExample(entry)
+		text = utils.FormatExample(entry, lang)
 	case "params":
-		text = utils.FormatParameters(entry)
+		text = utils.FormatParameters(entry, lang)
 	case "raises":
-		text = utils.FormatRaises(entry)
+		text = utils.FormatRaises(entry, lang)
 	case "details":
-		text = utils.FormatOtherDetails(entry)
+		text = utils.FormatOtherDetails(entry, lang)
 	default:
 		slog.Warn("Unknown view type in callback", "view", view, "data", data)
 		return nil
@@ -217,7 +221,7 @@ func handleInlineCallbackQuery(b *bot.Bot, c *gotdbot.Client, cq *gotdbot.Update
 		return err
 	}
 
-	kb := utils.GetEntryKeyboard(entry, view)
+	kb := utils.GetEntryKeyboard(entry, view, lang)
 	err = c.EditInlineMessageText(cq.InlineMessageId, gotdbot.InputMessageText{
 		Text: formatted,
 		LinkPreviewOptions: &gotdbot.LinkPreviewOptions{

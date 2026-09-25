@@ -7,4 +7,4 @@ require (
 	github.com/joho/godotenv v1.5.1
 )
 
-require github.com/ebitengine/purego v0.10.2 // indirect
+require github.com/ebitengine/purego v0.11.1 // indirect

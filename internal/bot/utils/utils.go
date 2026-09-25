@@ -13,7 +13,55 @@ import (
 	"github.com/AshokShau/gotdbot"
 )
 
-func FormatEntry(e *docs.DocEntry) string {
+func GetDefaultLang(e *docs.DocEntry) string {
+	if len(e.Tabs) > 0 {
+		for _, tab := range e.Tabs {
+			if tab.ID == "python" {
+				return "python"
+			}
+		}
+		return e.Tabs[0].ID
+	}
+	return ""
+}
+
+func GetOptLang(e *docs.DocEntry, opts []string) string {
+	if len(opts) > 0 && opts[0] != "" {
+		return opts[0]
+	}
+	return GetDefaultLang(e)
+}
+
+func GetDetailsForLang(e *docs.DocEntry, lang string) *docs.Details {
+	if lang != "" && e.LangDetails != nil {
+		if dt, ok := e.LangDetails[lang]; ok && dt != nil {
+			return dt
+		}
+	}
+	return &e.Details
+}
+
+func GetExampleForLang(e *docs.DocEntry, lang string) *docs.Example {
+	if lang != "" && e.Examples != nil {
+		if ex, ok := e.Examples[lang]; ok && ex != nil {
+			return ex
+		}
+	}
+	if e.Example != nil {
+		return e.Example
+	}
+	if len(e.Examples) > 0 {
+		for _, ex := range e.Examples {
+			return ex
+		}
+	}
+	return nil
+}
+
+func FormatEntry(e *docs.DocEntry, opts ...string) string {
+	lang := GetOptLang(e, opts)
+	details := GetDetailsForLang(e, lang)
+
 	var sb strings.Builder
 	title := html.EscapeString(e.Title)
 	lib := html.EscapeString(e.Lib)
@@ -25,12 +73,14 @@ func FormatEntry(e *docs.DocEntry) string {
 		sb.WriteString(fmt.Sprintf("<b>%s</b> (%s %s)\n\n", title, lib, kind))
 	}
 	sb.WriteString(strings.TrimSpace(e.Description))
-	if e.Details.Signature != nil {
-		sig := strings.TrimSpace(*e.Details.Signature)
+
+	if details.Signature != nil {
+		sig := strings.TrimSpace(*details.Signature)
 		if sig != "" {
 			sb.WriteString(fmt.Sprintf("\n\n<code>%s</code>", sig))
 		}
 	}
+
 	if e.Kind == "example" {
 		sb.WriteString(fmt.Sprintf("\n\n<a href=\"%s\">View Source on GitHub</a>", e.DocURL))
 	} else {
@@ -39,13 +89,16 @@ func FormatEntry(e *docs.DocEntry) string {
 	return sb.String()
 }
 
-func FormatExample(e *docs.DocEntry) string {
+func FormatExample(e *docs.DocEntry, opts ...string) string {
+	lang := GetOptLang(e, opts)
+	ex := GetExampleForLang(e, lang)
+
 	var sb strings.Builder
 	title := html.EscapeString(e.Title)
 	sb.WriteString(fmt.Sprintf("<b>Code Example for %s</b>\n\n", title))
-	if e.Example != nil {
-		language := html.EscapeString(strings.TrimSpace(e.Example.Language))
-		code := html.EscapeString(strings.TrimSpace(e.Example.Code))
+	if ex != nil {
+		language := html.EscapeString(strings.TrimSpace(ex.Language))
+		code := html.EscapeString(strings.TrimSpace(ex.Code))
 		sb.WriteString(fmt.Sprintf("<pre><code class=\"language-%s\">%s</code></pre>", language, code))
 	} else {
 		sb.WriteString("No example available.")
@@ -53,15 +106,18 @@ func FormatExample(e *docs.DocEntry) string {
 	return sb.String()
 }
 
-func FormatParameters(e *docs.DocEntry) string {
+func FormatParameters(e *docs.DocEntry, opts ...string) string {
+	lang := GetOptLang(e, opts)
+	details := GetDetailsForLang(e, lang)
+
 	var sb strings.Builder
 	title := html.EscapeString(e.Title)
 	sb.WriteString(fmt.Sprintf("<b>Parameters for %s</b>\n\n", title))
 
 	hasParams := false
-	if len(e.Details.Parameters) > 0 {
+	if len(details.Parameters) > 0 {
 		hasParams = true
-		for _, p := range e.Details.Parameters {
+		for _, p := range details.Parameters {
 			name := strings.TrimSpace(p.Name)
 			desc := strings.TrimSpace(p.Description)
 			if name == "" && desc == "" {
@@ -88,7 +144,7 @@ func FormatParameters(e *docs.DocEntry) string {
 		}
 	}
 
-	for _, s := range e.Details.Sections {
+	for _, s := range details.Sections {
 		if strings.Contains(strings.ToUpper(s.Title), "PARAMETERS") {
 			hasParams = true
 			for _, item := range s.Items {
@@ -122,13 +178,16 @@ func FormatParameters(e *docs.DocEntry) string {
 	return strings.TrimSpace(sb.String())
 }
 
-func FormatRaises(e *docs.DocEntry) string {
+func FormatRaises(e *docs.DocEntry, opts ...string) string {
+	lang := GetOptLang(e, opts)
+	details := GetDetailsForLang(e, lang)
+
 	var sb strings.Builder
 	title := html.EscapeString(e.Title)
 	sb.WriteString(fmt.Sprintf("<b>Exceptions for %s</b>\n\n", title))
 
 	hasRaises := false
-	for _, s := range e.Details.Sections {
+	for _, s := range details.Sections {
 		if strings.Contains(strings.ToUpper(s.Title), "RAISES") {
 			hasRaises = true
 			for _, item := range s.Items {
@@ -165,17 +224,20 @@ func FormatRaises(e *docs.DocEntry) string {
 	return strings.TrimSpace(sb.String())
 }
 
-func FormatOtherDetails(e *docs.DocEntry) string {
+func FormatOtherDetails(e *docs.DocEntry, opts ...string) string {
+	lang := GetOptLang(e, opts)
+	details := GetDetailsForLang(e, lang)
+
 	var sb strings.Builder
 	title := html.EscapeString(e.Title)
 	sb.WriteString(fmt.Sprintf("<b>Details for %s</b>\n\n", title))
 
 	hasAny := false
 
-	if len(e.Details.Members) > 0 {
+	if len(details.Members) > 0 {
 		hasAny = true
 		sb.WriteString("<b>MEMBERS:</b>\n")
-		for _, m := range e.Details.Members {
+		for _, m := range details.Members {
 			val := ""
 			if m.Value != nil {
 				val = " = " + *m.Value
@@ -189,10 +251,10 @@ func FormatOtherDetails(e *docs.DocEntry) string {
 		sb.WriteString("\n")
 	}
 
-	if len(e.Details.Properties) > 0 {
+	if len(details.Properties) > 0 {
 		hasAny = true
 		sb.WriteString("<b>PROPERTIES:</b>\n")
-		for _, p := range e.Details.Properties {
+		for _, p := range details.Properties {
 			typ := ""
 			if p.Type != nil {
 				t := *p.Type
@@ -211,10 +273,10 @@ func FormatOtherDetails(e *docs.DocEntry) string {
 		sb.WriteString("\n")
 	}
 
-	if len(e.Details.Methods) > 0 {
+	if len(details.Methods) > 0 {
 		hasAny = true
 		sb.WriteString("<b>METHODS:</b>\n")
-		for _, m := range e.Details.Methods {
+		for _, m := range details.Methods {
 			typ := ""
 			if m.Type != nil {
 				t := *m.Type
@@ -233,7 +295,7 @@ func FormatOtherDetails(e *docs.DocEntry) string {
 		sb.WriteString("\n")
 	}
 
-	for _, s := range e.Details.Sections {
+	for _, s := range details.Sections {
 		title := strings.ToUpper(s.Title)
 		if strings.Contains(title, "PARAMETERS") || strings.Contains(title, "RAISES") {
 			continue
@@ -268,57 +330,88 @@ func FormatOtherDetails(e *docs.DocEntry) string {
 	return strings.TrimSpace(sb.String())
 }
 
-func GetEntryKeyboard(e *docs.DocEntry, currentView string) *gotdbot.ReplyMarkupInlineKeyboard {
+func GetEntryKeyboard(e *docs.DocEntry, currentView string, opts ...string) *gotdbot.ReplyMarkupInlineKeyboard {
 	hash := sha256.Sum256([]byte(e.Path))
 	pathHash := hex.EncodeToString(hash[:16])
 
-	var buttons []gotdbot.InlineKeyboardButton
+	lang := GetOptLang(e, opts)
+	details := GetDetailsForLang(e, lang)
+
+	kb := &gotdbot.ReplyMarkupInlineKeyboard{
+		Rows: [][]gotdbot.InlineKeyboardButton{},
+	}
+
+	if len(e.Tabs) > 1 {
+		var tabRow []gotdbot.InlineKeyboardButton
+		for _, tab := range e.Tabs {
+			label := tab.Label
+			if tab.ID == lang {
+				label = "• " + label + " •"
+			}
+			cbd := fmt.Sprintf("%s:%s:%s", currentView, pathHash, tab.ID)
+			tabRow = append(tabRow, gotdbot.InlineKeyboardButton{
+				Text: label,
+				Type: &gotdbot.InlineKeyboardButtonTypeCallback{Data: []byte(cbd)},
+			})
+		}
+		kb.Rows = append(kb.Rows, tabRow)
+	}
+
+	var viewButtons []gotdbot.InlineKeyboardButton
+
+	cbdSuffix := pathHash
+	if lang != "" {
+		cbdSuffix = pathHash + ":" + lang
+	}
 
 	if currentView != "main" {
-		buttons = append(buttons, gotdbot.InlineKeyboardButton{
+		viewButtons = append(viewButtons, gotdbot.InlineKeyboardButton{
 			Text: "Description",
-			Type: &gotdbot.InlineKeyboardButtonTypeCallback{Data: []byte("main:" + pathHash)},
+			Type: &gotdbot.InlineKeyboardButtonTypeCallback{Data: []byte("main:" + cbdSuffix)},
 		})
 	}
 
-	if e.Example != nil && currentView != "example" {
-		buttons = append(buttons, gotdbot.InlineKeyboardButton{
+	hasEx := GetExampleForLang(e, lang) != nil
+	if hasEx && currentView != "example" {
+		viewButtons = append(viewButtons, gotdbot.InlineKeyboardButton{
 			Text: "Example",
-			Type: &gotdbot.InlineKeyboardButtonTypeCallback{Data: []byte("example:" + pathHash)},
+			Type: &gotdbot.InlineKeyboardButtonTypeCallback{Data: []byte("example:" + cbdSuffix)},
 		})
 	}
 
-	hasParams := len(e.Details.Parameters) > 0
-	for _, s := range e.Details.Sections {
-		if strings.Contains(strings.ToUpper(s.Title), "PARAMETERS") {
-			hasParams = true
-			break
+	hasParams := len(details.Parameters) > 0
+	if !hasParams {
+		for _, s := range details.Sections {
+			if strings.Contains(strings.ToUpper(s.Title), "PARAMETERS") {
+				hasParams = true
+				break
+			}
 		}
 	}
 	if hasParams && currentView != "params" {
-		buttons = append(buttons, gotdbot.InlineKeyboardButton{
+		viewButtons = append(viewButtons, gotdbot.InlineKeyboardButton{
 			Text: "Parameters",
-			Type: &gotdbot.InlineKeyboardButtonTypeCallback{Data: []byte("params:" + pathHash)},
+			Type: &gotdbot.InlineKeyboardButtonTypeCallback{Data: []byte("params:" + cbdSuffix)},
 		})
 	}
 
 	hasRaises := false
-	for _, s := range e.Details.Sections {
+	for _, s := range details.Sections {
 		if strings.Contains(strings.ToUpper(s.Title), "RAISES") {
 			hasRaises = true
 			break
 		}
 	}
 	if hasRaises && currentView != "raises" {
-		buttons = append(buttons, gotdbot.InlineKeyboardButton{
+		viewButtons = append(viewButtons, gotdbot.InlineKeyboardButton{
 			Text: "Raises",
-			Type: &gotdbot.InlineKeyboardButtonTypeCallback{Data: []byte("raises:" + pathHash)},
+			Type: &gotdbot.InlineKeyboardButtonTypeCallback{Data: []byte("raises:" + cbdSuffix)},
 		})
 	}
 
-	hasOthers := len(e.Details.Members) > 0 || len(e.Details.Properties) > 0 || len(e.Details.Methods) > 0
+	hasOthers := len(details.Members) > 0 || len(details.Properties) > 0 || len(details.Methods) > 0
 	if !hasOthers {
-		for _, s := range e.Details.Sections {
+		for _, s := range details.Sections {
 			title := strings.ToUpper(s.Title)
 			if !strings.Contains(title, "PARAMETERS") && !strings.Contains(title, "RAISES") {
 				hasOthers = true
@@ -327,27 +420,20 @@ func GetEntryKeyboard(e *docs.DocEntry, currentView string) *gotdbot.ReplyMarkup
 		}
 	}
 	if hasOthers && currentView != "details" {
-		buttons = append(buttons, gotdbot.InlineKeyboardButton{
+		viewButtons = append(viewButtons, gotdbot.InlineKeyboardButton{
 			Text: "Details",
-			Type: &gotdbot.InlineKeyboardButtonTypeCallback{Data: []byte("details:" + pathHash)},
+			Type: &gotdbot.InlineKeyboardButtonTypeCallback{Data: []byte("details:" + cbdSuffix)},
 		})
 	}
 
-	buttons = append(buttons, gotdbot.InlineKeyboardButton{
+	viewButtons = append(viewButtons, gotdbot.InlineKeyboardButton{
 		Text: "🌐",
 		Type: &gotdbot.InlineKeyboardButtonTypeUrl{Url: e.DocURL},
 	})
 
-	kb := &gotdbot.ReplyMarkupInlineKeyboard{
-		Rows: [][]gotdbot.InlineKeyboardButton{},
-	}
-
-	for i := 0; i < len(buttons); i += 2 {
-		end := i + 2
-		if end > len(buttons) {
-			end = len(buttons)
-		}
-		kb.Rows = append(kb.Rows, buttons[i:end])
+	for i := 0; i < len(viewButtons); i += 2 {
+		end := min(i+2, len(viewButtons))
+		kb.Rows = append(kb.Rows, viewButtons[i:end])
 	}
 
 	return kb

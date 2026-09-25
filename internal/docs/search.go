@@ -16,6 +16,11 @@ type DocItem struct {
 	URL          *string `json:"url,omitempty"`
 }
 
+type Tab struct {
+	ID    string `json:"id"`
+	Label string `json:"label"`
+}
+
 type Example struct {
 	Language string `json:"language"`
 	Code     string `json:"code"`
@@ -36,14 +41,17 @@ type Details struct {
 }
 
 type DocEntry struct {
-	Path        string   `json:"-"`
-	Title       string   `json:"title"`
-	Lib         string   `json:"lib"`
-	Kind        string   `json:"kind"`
-	Description string   `json:"description"`
-	Example     *Example `json:"example,omitempty"`
-	Details     Details  `json:"details"`
-	DocURL      string   `json:"doc_url"`
+	Path        string              `json:"-"`
+	Title       string              `json:"title"`
+	Lib         string              `json:"lib"`
+	Kind        string              `json:"kind"`
+	Description string              `json:"description"`
+	Example     *Example            `json:"example,omitempty"`
+	Examples    map[string]*Example `json:"examples,omitempty"`
+	Tabs        []Tab               `json:"tabs,omitempty"`
+	Details     Details             `json:"details"`
+	LangDetails map[string]*Details `json:"lang_details,omitempty"`
+	DocURL      string              `json:"doc_url"`
 }
 
 type Documentation map[string]*DocEntry
